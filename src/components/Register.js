@@ -24,7 +24,8 @@ export function Register(){
         setError('');
         try {
             await signup(user.email, user.password);
-            navigate('/');
+            //navigate('/');
+            navigate('/cargar');
         } catch (error) {
             if(error.code === "auth/weak-password"){
                 setError("Contrasenia debil, deberia tener al menos 6 caracteres")
