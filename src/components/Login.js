@@ -7,6 +7,7 @@ export function Login(){
     const [user, setUser] = useState({
         email: '',
         password: '',
+        clave: '',
     });
 
     const { login, resetPassword}= useAuth();
