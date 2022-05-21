@@ -2,6 +2,12 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Alert } from "./Alert";
 import { Link, useNavigate } from "react-router-dom";
+import { getFirestore, doc, getDoc, setDoc } from '@firebase/firestore'
+import { db } from "../firebase";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
 
 export function Login(){
     const [user, setUser] = useState({
@@ -24,11 +30,32 @@ export function Login(){
         e.preventDefault();
         setError('');
         try {
-            await login(user.email, user.password);
-            navigate('/');
+            //aca ver lo del codigo de validacion
+            const userRef = doc(db,`Persona/${user.email}`)
+            const snapshot = await getDoc(userRef)
+            //los console log estos devuelven la clave
+            //console.log(snapshot.data().user.clave)
+            //console.log(user.clave)
+            if (snapshot.exists){
+                const mismaClave= (Number (snapshot.data().user.clave)) != (Number (user.clave))
+                if(!mismaClave){
+                    await login(user.email, user.password);
+                    navigate('/');
+                }            
+                else{
+                    MySwal.fire(`Codigo de validación incorrecto`)
+                    throw error;                    
+                }
+            }
+            else{
+                throw error;
+            }
         } catch (error) {
-            if(error.code === "auth/weak-password"){
+            if(error.code === "auth/wrong-password"){
                 setError("Contrasenia debil, deberia tener al menos 6 caracteres")
+            }
+            if(error.code === "Cannot read properties of undefined (reading 'user')"){
+                setError("Email no registrado")
             }
             setError(error.message);
         }
@@ -50,12 +77,16 @@ export function Login(){
             {error && <Alert message={error}/>}
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <div className="mb-4">
-                    <label htmlFor="email" className="block text-gray-700 text-sm font-fold mb-2">email</label>
+                    <label htmlFor="email" className="block text-gray-700 text-sm font-fold mb-2">Email</label>
                     <input type="email" name="email" placeholder="yourEmail@company" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="password" className="block text-gray-700 text-sm font-fold mb-2">password</label>
+                    <label htmlFor="password" className="block text-gray-700 text-sm font-fold mb-2">Contraseña</label>
                     <input type="password" name="password" placeholder="******" id="password" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="clave" className="block text-gray-700 text-sm font-fold mb-2">Codigo de validación</label>
+                    <input type="number" name="clave" placeholder="1234" id="clave" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
                 </div>
                 <div className="flex items-center justify-between">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">login</button>

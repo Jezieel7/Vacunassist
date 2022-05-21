@@ -24,8 +24,9 @@ export const createUserDocument = async (user) =>{
   if(!user) return; //esto por si meten huevadas, igual no se si funciona, no lo probe
   //crear referencia al documento (uso email para identificar a los panas)
   const userRef = doc(db,`Persona/${user.email}`)
-  // buscar documento, al final no lo uso esto pero lo dejo por que anda
-  const snapshot = await getDoc(userRef)
+  // buscar documento, al final no lo uso esto pero lo dejo por si sirve despues
+  //const snapshot = await getDoc(userRef)
+  user.clave= 1234 //implementar algun metodo que devuelva un numero aleatorio
    // crea el documento del user que se esta registrando
   await setDoc(userRef, {user});
     

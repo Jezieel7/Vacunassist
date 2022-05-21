@@ -20,6 +20,7 @@ export function Register(){
         fechaNac: '',
         apellido: '',
         DNI: '',
+        clave: '',
     });
 
     const {signup}= useAuth();
@@ -39,6 +40,7 @@ export function Register(){
             await signup(user.email, user.password);
             //aca hacer lo de renaper, y la sweet alert, antes de crear el doc (?)
             await createUserDocument(user)
+            MySwal.fire(`Tu codigo de validación es: ${user.clave}, por favor, anotela`)
             //navigate('/');
             navigate('/cargar');
         } catch (error) {
