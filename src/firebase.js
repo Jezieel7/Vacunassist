@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import {getAuth} from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc } from '@firebase/firestore'
+import { getFirestore, doc, setDoc, updateDoc } from '@firebase/firestore'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -42,4 +42,10 @@ export const createUserDocument = async (user) =>{
       console.log('error creando usuario', error)
     }*/
   
+}
+
+export const createUserData = async (user, zona, factorRiesgo) =>{
+  if(!user) return;
+  const userRef = doc(db,`Persona/${user.email}`);
+  await updateDoc(userRef, {zona:zona, factorRiesgo:factorRiesgo});
 }

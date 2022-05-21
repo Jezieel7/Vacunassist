@@ -37,7 +37,7 @@ export function Login(){
             //console.log(snapshot.data().user.clave)
             //console.log(user.clave)
             if (snapshot.exists){
-                const mismaClave= (Number (snapshot.data().user.clave)) != (Number (user.clave))
+                const mismaClave= (Number (snapshot.data().user.clave)) !== (Number (user.clave))
                 if(!mismaClave){
                     await login(user.email, user.password);
                     navigate('/');
