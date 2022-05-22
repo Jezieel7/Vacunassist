@@ -2,7 +2,9 @@ import React,{useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createUserData } from "../firebase";
 import { useAuth } from "../context/AuthContext";
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal);
 const Cargar = () => {
     //HU: Cargar info
     const [ zona, setZona ] = useState( '' ) //valor x defecto
@@ -18,9 +20,29 @@ const Cargar = () => {
 
     const navigate = useNavigate()
     const {user} = useAuth();
+
+    function calculoDeEdad(fecha) {
+        let hoy = new Date();
+        let cumpleanos = new Date(fecha);
+        let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+        let m = hoy.getMonth() - cumpleanos.getMonth();
+        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+            edad--;
+        }
+        console.log(edad);
+        return edad;
+    }
+
     const store= async (e) => { //funcion para almacenar
         e.preventDefault()
-        await createUserData(user, zona, factorRiesgo);
+        await createUserData(user, zona, factorRiesgo, cantidadDosisCOVID, tieneVacuna, fechaVacGripe, dosisAmarilla, añoDosisAmarilla);
+        if((calculoDeEdad(user.fechaNac) > 60 && user.cantidadDosisCOVID < 2) || factorRiesgo){
+            MySwal.fire("Se le asigno un turno automaticamente");
+            //asignarle turno automaticamente.
+        }else{
+            MySwal.fire("Se le notifico a los administradores su solicitud de turno");
+            //solicitar turno a administradores.
+        }
         navigate('/') //nos lleva a home
     } //en el return es lo que se ve en pantalla, para is2, copiar y pegar desde el div classsname mb-3 hasta su cierre para cada dato
     return (
@@ -40,14 +62,23 @@ const Cargar = () => {
                           />    
                       </div>
                       <div className='mb-3'>
-                          <label className='form-label'>¿Sos una persona con factores de riesgo?</label>
+                          <label className='form-label' for="factor-riesgo">¿Sos una persona con factores de riesgo?</label>
                           <input
-                              value={factorRiesgo}
+                              value={true}
                               onChange={(e) => setFactorRiesgo(e.target.value)}
-                              type="text"
+                              type="radio"
                               className='form-control'
+                              name="factor-riesgo"
                               required
-                          />    
+                          /> Si
+                          <input
+                              value={false}
+                              onChange={(e) => setFactorRiesgo(e.target.value)}
+                              type="radio"
+                              className='form-control'
+                              name="factor-riesgo"
+                              required
+                          /> No    
                       </div>
                       <h1> Datos Vacuna COVID-19 </h1>
                       <div className='mb-3'>
@@ -64,14 +95,23 @@ const Cargar = () => {
                       </div>  
                       <h1> Datos Vacuna GRIPE </h1>
                       <div className='mb-3'>
-                          <label className='form-label'>¿Posee la vacuna para la gripe?</label>
+                          <label className='form-label' for="tiene-gripe">¿Posee la vacuna para la gripe?</label>
                           <input
-                              value={tieneVacuna}
+                              value={true}
                               onChange={(e) => setTieneVacuna(e.target.value)}
-                              type="text"
+                              type="radio"
                               className='form-control'
+                              name="tiene-gripe"
                               required
-                          />    
+                          /> Si
+                         <input
+                              value={false}
+                              onChange={(e) => setTieneVacuna(e.target.value)}
+                              type="radio"
+                              className='form-control'
+                              name="tiene-gripe"
+                              required
+                          /> No  
                       </div>
                       <div className='mb-3'>
                           <label className='form-label'>¿En qué fecha se la dió?</label>
@@ -85,14 +125,23 @@ const Cargar = () => {
                       </div> 
                       <h1> Datos Vacuna FIEBRE AMARILLA </h1>
                       <div className='mb-3'>
-                          <label className='form-label'>¿Tiene la vacuna de la fiebre amarilla?</label>
+                          <label className='form-label' for="fiebre-amarilla">¿Tiene la vacuna de la fiebre amarilla?</label>
                           <input
-                              value={dosisAmarilla}
+                              value={true}
                               onChange={(e) => setDosisAmarilla(e.target.value)}
-                              type="text"
+                              type="radio"
                               className='form-control'
+                              name="fiebre-amarilla"
                               required
-                          />    
+                          /> Si 
+                          <input
+                              value={false}
+                              onChange={(e) => setDosisAmarilla(e.target.value)}
+                              type="radio"
+                              className='form-control'
+                              name="fiebre-amarilla"
+                              required
+                          /> No
                       </div>
                       <div className='mb-3'>
                           <label className='form-label'>Año en que se la aplicó</label>
@@ -102,7 +151,7 @@ const Cargar = () => {
                               type="number"
                               className='form-control'
                               required
-                              min={1500}
+                              min={1900}
                               max={2022}
                           />    
                       </div>

@@ -26,7 +26,7 @@ export const createUserDocument = async (user) =>{
   const userRef = doc(db,`Persona/${user.email}`)
   // buscar documento, al final no lo uso esto pero lo dejo por si sirve despues
   //const snapshot = await getDoc(userRef)
-  user.clave= 1234 //implementar algun metodo que devuelva un numero aleatorio
+  user.clave= Math.floor(Math.random()*10000); //implementar algun metodo que devuelva un numero aleatorio
    // crea el documento del user que se esta registrando
   await setDoc(userRef, {user});
     
@@ -43,9 +43,10 @@ export const createUserDocument = async (user) =>{
     }*/
   
 }
-
-export const createUserData = async (user, zona, factorRiesgo) =>{
+export const createUserData = async (user, zona, factorRiesgo, cantidadDosisCOVID, tieneVacuna, fechaVacGripe, dosisAmarilla, añoDosisAmarilla) =>{
   if(!user) return;
   const userRef = doc(db,`Persona/${user.email}`);
-  await updateDoc(userRef, {zona:zona, factorRiesgo:factorRiesgo});
+  await updateDoc(userRef, {zona:zona, factorRiesgo:factorRiesgo, cantidadDosisCOVID:cantidadDosisCOVID,
+                            tieneVacuna:tieneVacuna, fechaVacGripe:fechaVacGripe, dosisAmarilla:dosisAmarilla,
+                            anioDosisAmarilla:añoDosisAmarilla});
 }
