@@ -38,10 +38,13 @@ export default function Cargar({ user, setUser }){
                           <input type="radio" name="hasYellowFever" className='form-control' value={true} onChange={handleChange} required/> Si 
                           <input type="radio" name="hasYellowFever" className='form-control' value={false} onChange={handleChange} required/> No
                       </div>
-                      <div className='mb-3'>
-                          <label className='form-label' htmlFor="doseYearYellowFever">Año en que se la aplicó</label>
-                          <input type="number" name="doseYearYellowFever" className='form-control' onChange={handleChange} required min={1900} max={2022}/>    
-                      </div>
+                      { (user.hasYellowFever) ?
+                            <div className='mb-3'>
+                                <label className='form-label' htmlFor="doseYearYellowFever">Año en que se la aplicó</label>
+                                <input type="number" name="doseYearYellowFever" className='form-control' onChange={handleChange} required min={1900} max={2022}/>    
+                            </div>
+                        : "none"
+                      }
               </div>
           </div>
       </div>

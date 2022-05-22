@@ -7,7 +7,6 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useAuth } from "../context/AuthContext";
 import { Alert } from "./Alert";
-
 const MySwal = withReactContent(Swal);
 export function Form() {
   const [page, setPage] = useState(0);
@@ -24,7 +23,7 @@ export function Form() {
     doseAmountCovid: '',
     hasVaccineFlu: '',
     vaccinationDateFlu: '',
-    hasYellowFever: '',
+    hasYellowFever: false,
     doseYearYellowFever: ''
   });
   const FormTitles = ["Registro", "Datos importantes"];
@@ -50,20 +49,28 @@ export function Form() {
     }
     console.log(edad);
     return edad;
-}
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
         await signup(user.email, user.password);
         await createUserDocument(user)
-        MySwal.fire(`Tu codigo de validación es: ${user.key}, por favor, anotela`)
+        MySwal.fire(`Su codigo de validación es: ${user.key}, por favor, anotela`)
         console.log(user.doseAmountCovid)
-        if(((calculoDeEdad(user.birthDate) > 60) && (user.doseAmountCovid < 2)) || user.riskFactor == true){
-            MySwal.fire("Se le asigno un turno automaticamente");
-        }else if(user.doseAmountCovid == 2){
+        if((calculoDeEdad(user.birthDate) > 60)){
+          if((user.doseAmountCovid < 2)){
+            MySwal.fire("Se le asigno un turno para la vacuna del COVID-19 automaticamente");
+          }
+          if(user.hasVaccineFlu == false){
+            MySwal.fire("Se le asigno un turno para la vacuna de la gripe dentro de los proximos 3 meses automaticamente");
+          }
+        }else if(user.riskFactor == true){
+          MySwal.fire("Se le asigno un turno para la vacuna del COVID-19 automaticamente");
+        }else if(!(user.doseAmountCovid == 2)){
+          MySwal.fire("Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19");
         }else{
-            MySwal.fire("Se le notifico a los administradores su solicitud de turno");
+          MySwal.fire("Se le asigno un turno para la vacuna de la gripe dentro de los proximos 6 meses automaticamente");
         }
         navigate('/')
     } catch (error) {

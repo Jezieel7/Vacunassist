@@ -4,7 +4,6 @@ import { Login } from './components/Login';
 import { Form } from './components/Form';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-
 function App(){
   return ( 
     <div className="bg-slate-300 h-screen text-black flex">
@@ -22,6 +21,4 @@ function App(){
     </div>
   );
 }
-//<Route path="register" element={<Register/>}/>
-//<Route path="cargar" element={<Cargar/>}/>
 export default App;
