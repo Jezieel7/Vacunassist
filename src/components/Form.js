@@ -24,7 +24,10 @@ export function Form() {
     hasVaccineFlu: '',
     vaccinationDateFlu: '',
     hasYellowFever: false,
-    doseYearYellowFever: ''
+    doseYearYellowFever: '',
+    turnCovid: '',
+    turnFlu: '',
+    turnYellowFever: '' 
   });
   const FormTitles = ["Registro", "Datos importantes"];
   const PageDisplay = () => {
@@ -96,7 +99,7 @@ export function Form() {
                  setPage((currPage) => currPage - 1);
                }}
              >
-               Prev
+               {page === FormTitles.length - 1 ? "Prev" : ""}
              </button>
              <button
                onClick={() => {

@@ -9,8 +9,10 @@ export default function Cargar({ user, setUser }){
               <div className='col'>
                   <h1> Datos Importantes </h1>
                   <div className='mb-3'>
-                          <label htmlFor="zone" className='form-label'>Vacunatorio</label>
-                          <input type="text" name="zone" placeholder="Municipalidad" className='form-control' onChange={handleChange} required/>    
+                  <label className='form-label' htmlFor="zone">Vacunatorio de preferencia</label>
+                          <input type="radio" name="zone" className='form-control' value={"Municipalidad"} onChange={handleChange} required/> Municipalidad
+                          <input type="radio" name="zone" className='form-control' value={"Terminal"} onChange={handleChange} required/> Terminal
+                          <input type="radio" name="zone" className='form-control' value={"Cementerio"} onChange={handleChange} required/> Cementerio    
                       </div>
                       <div className='mb-3'>
                           <label className='form-label' htmlFor="riskFactor">¿Sos una persona con factores de riesgo?</label>

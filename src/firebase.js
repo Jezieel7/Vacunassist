@@ -21,7 +21,11 @@ export const createUserDocument = async (user) =>{
   if(!user) return; //esto por si meten huevadas, igual no se si funciona, no lo probe
   //crear referencia al documento (uso email para identificar a los panas)
   const userRef = doc(db,`Persona/${user.email}`)
-  user.key= Math.floor(Math.random()*10000);
+  let numero= Math.floor(Math.random()*10000);
+  while(numero < 1000 || numero > 10000){
+    numero= Math.floor(Math.random()*10000);
+  }
+  user.key= numero
    // crea el documento del user que se esta registrando
   await setDoc(userRef, {user});
 }
