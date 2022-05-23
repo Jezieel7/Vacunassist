@@ -7,7 +7,7 @@ export default function Cargar({ user, setUser }){
       <div className='container'>
           <div className='row'>
               <div className='col'>
-                  <h1> Datos Importantes </h1>
+                  <h1>   </h1>
                   <div className='mb-3'>
                   <label className='form-label' htmlFor="zone">Vacunatorio de preferencia</label>
                           <input type="radio" name="zone" className='form-control' value={"Municipalidad"} onChange={handleChange} required/> Municipalidad
