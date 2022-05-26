@@ -40,6 +40,7 @@ export function Form() {
   const {signup}= useAuth();
   const [error, setError] = useState();
   const navigate = useNavigate()
+
   function calculoDeEdad(BirthDate) {
     let hoy = new Date();
     console.log(hoy)
@@ -47,12 +48,23 @@ export function Form() {
     console.log(BirthDate)
     let edad = hoy.getFullYear() - cumpleanios.getFullYear();
     let m = hoy.getMonth() - cumpleanios.getMonth();
-    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanios.getDate())) {
+    if (m < 0 || (m == 0 && hoy.getDate() < cumpleanios.getDate())) { //aca no seria m==0 en vez de m===0 ???
         edad--;
     }
     console.log(edad);
     return edad;
   }
+  function calculoGripe(vaccinationDateFlu){ //esta funcion es igual a la de calculo de edad pero weno
+    let hoy = new Date()
+    let ultimaVacGripe = new Date(vaccinationDateFlu)
+    let años= hoy.getFullYear() - ultimaVacGripe.getFullYear();
+    let m = hoy.getMonth() - ultimaVacGripe.getMonth();
+    if (m < 0 || (m == 0 && hoy.getDate() < ultimaVacGripe.getDate())) { //aca no seria m==0 en vez de m===0 ???
+        años--;
+    }
+    return años;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -61,16 +73,16 @@ export function Form() {
         await createUserDocument(user)
         MySwal.fire(`Su codigo de validación es: ${user.key}, por favor, anotela`)
         console.log(user.doseAmountCovid)
-        if((calculoDeEdad(user.birthDate) > 60)){
-          if((user.doseAmountCovid < 2)){
+        if((calculoDeEdad(user.birthDate) > 60)){ //si es mayor de 60 años (riesgo)
+          if((user.doseAmountCovid < 2)){ //si no tiene las 2 dosis de covid, se asigna automatico
             MySwal.fire("Se le asigno un turno para la vacuna del COVID-19 automaticamente");
           }
-          if(user.hasVaccineFlu == false){
+          if((user.hasVaccineFlu == false)||(calculoGripe(user.vaccinationDateFlu) > 1)){
             MySwal.fire("Se le asigno un turno para la vacuna de la gripe dentro de los proximos 3 meses automaticamente");
           }
-        }else if(user.riskFactor == true){
+        }else if(user.riskFactor == true){ //si no tiene 60 años, pero tiene factores de riesgo, se asigna automaticamente
           MySwal.fire("Se le asigno un turno para la vacuna del COVID-19 automaticamente");
-        }else if(!(user.doseAmountCovid == 2)){
+        }else if(!(user.doseAmountCovid == 2)){ //si no tiene las 2 dosis, se asigna manual
           MySwal.fire("Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19");
         }else{
           MySwal.fire("Se le asigno un turno para la vacuna de la gripe dentro de los proximos 6 meses automaticamente");
