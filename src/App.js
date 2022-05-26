@@ -4,6 +4,7 @@ import { Login } from './components/Login';
 import { Form } from './components/Form';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import MyTurns from './components/MyTurns';
 function App(){
   return ( 
     <div className="bg-slate-300 h-screen text-black flex">
@@ -12,6 +13,11 @@ function App(){
           <Route path="/" element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }/>
+          <Route path="/MyTurns" element={
+            <ProtectedRoute>
+              <MyTurns />
             </ProtectedRoute>
           }/>
           <Route path="login" element={<Login/>}/>

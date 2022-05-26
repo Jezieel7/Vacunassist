@@ -44,6 +44,7 @@ export function Login(){
                 throw error;
             }
         } catch (error) {
+            console.log(error.code) //si chilla, borrar esto
             if(error.code === "auth/wrong-password"){
                 setError("Contrasenia debil, deberia tener al menos 6 caracteres")
             }
