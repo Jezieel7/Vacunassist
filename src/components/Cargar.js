@@ -10,9 +10,12 @@ export default function Cargar({ user, setUser }){
                   <h1>   </h1>
                   <div className='mb-3'>
                   <label className='form-label' htmlFor="zone">Vacunatorio de preferencia</label>
-                          <input type="radio" name="zone" className='form-control' value={"Municipalidad"} onChange={handleChange} required/> Municipalidad
-                          <input type="radio" name="zone" className='form-control' value={"Terminal"} onChange={handleChange} required/> Terminal
-                          <input type="radio" name="zone" className='form-control' value={"Cementerio"} onChange={handleChange} required/> Cementerio    
+                          <br></br>
+                          <input type="radio" name="zone" className='form-control' value={"Municipalidad"} onChange={handleChange} required/> Municipalidad (51 e/10 y 11 Nro. 770)
+                          <br></br>
+                          <input type="radio" name="zone" className='form-control' value={"Terminal"} onChange={handleChange} required/> Terminal (3 e/ 41 y 42 Nro. 480)
+                          <br></br>
+                          <input type="radio" name="zone" className='form-control' value={"Cementerio"} onChange={handleChange} required/> Cementerio (138 e/73 y 74 Nro. 2035)    
                       </div>
                       <div className='mb-3'>
                           <label className='form-label' htmlFor="riskFactor">¿Sos una persona con factores de riesgo?</label>

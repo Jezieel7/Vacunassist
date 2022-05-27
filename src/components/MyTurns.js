@@ -58,36 +58,40 @@ export default function MyTurns(){
                         <a href="./data">VER MI PERFIL</a>
                     </button>
                 </div>
-                    <h1>MIS Turnos</h1>
+                    <h1>Mis Turnos</h1>
                     <form onSubmit={update}>
                         <div className='mb-3'>
-                            <label className='form-label'>turno covid</label>
+                            <label className='form-label'>Turno de la vacuna COVID-19: </label>
                             <input
                                 value={turnCovid}
                                 type="text"
+                                size={82}
                                 className='form-control'
                                 disabled
                             />     
                         </div>
                         <div className='mb-3'>
-                            <label className='form-label'>turno gripe</label>
+                            <label className='form-label'>Turno de la vacuna de gripe: </label>
                             <input
                                 value={turnFlu} 
                                 type="text"
+                                size={84}
                                 className='form-control'
                                 disabled
                             />   
                         </div>
                         <div className='mb-3'>
-                            <label className='form-label'>turno fiebre amarilla</label>
+                            <label className='form-label'>Turno de la vacuna de fiebre amarilla: </label>
                             <input
                                 value={turnYellowFever}
                                 type="text"
+                                size={75}
                                 className='form-control'
                                 disabled
                             />      
                         </div>
                         <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA</button>
+                        <p>Direcciones de vacunatorios: Municipalidad (51 e/10 y 11 Nro. 770), Terminal (3 e/ 41 y 42 Nro. 480), Cementerio (138 e/73 y 74 Nro. 2035).</p>
                     </form>
                 </div>
             </div>

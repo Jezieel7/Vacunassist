@@ -76,23 +76,28 @@ export function Form() {
         let boolFlu = false; 
         if((calculoDeEdad(user.birthDate) > 60)){ 
           if((user.doseAmountCovid < 2)){ 
-            boolCovid = true; 
+            boolCovid = true; //AUTOMATICO, DE RIESGO = MAYOR DE 60, CON MENOS DE 2 DOSIS
           } 
-        }else if(user.riskFactor == true){ 
-          boolCovid = true; 
         }else{ 
-          boolCovid = true; 
-        } 
+          if(user.riskFactor == "true"){
+            if(user.doseAmountCovid < 2){
+              boolCovid = true; //AUTOMATICO, DE RIESGO = MENOR DE 60, PERO CON FACTORES DE RIESGO Y MENOS DE 2 DOSIS
+            }  
+          }else{
+            if(user.doseAmountCovid < 2){
+              boolCovid = true; //MANUAL, NO ES DE RIESGO = MENOR DE 60, MENOS DE 2 DOSIS
+            }
+          }
+        }   
         //VACUNA GRIPE 
-        if((calculoDeEdad(user.birthDate) > 60) || (user.hasVaccineFlu == false)){ 
-          boolFlu = true; 
-        }else{ 
-          if(user.hasVaccineFlu == false){ 
-            boolFlu = true; 
-          }else if(calculoGripe(user.vaccinationDateFlu)){ 
-            boolFlu = true; 
-          } 
+        if(user.hasVaccineFlu == "false"){ //MIRAR CASO DE SI TIENE +60 AÑOS, SIN VACUNA, Y CON VACUNA VENCIDA, ESTO EN FIREBASE.JS
+          boolFlu = true; //AUTOMATICO, NO TIENE VACUNA GRIPE
+        }else{
+          if(calculoGripe(user.vaccinationDateFlu)){ 
+            boolFlu = true; //AUTOMATICO, TIENE VACUNA GRIPE VENCIDA
+          }
         } 
+        //AVISOS 
         if(boolCovid && boolFlu){ 
           alert("Se le asigno una vacuna para el covid y para la gripe"); 
         }else if(boolCovid){ 
