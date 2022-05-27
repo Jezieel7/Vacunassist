@@ -10,12 +10,12 @@ function App(){
     <div className="bg-slate-300 h-screen text-black flex">
       <AuthProvider>
         <Routes>
-          <Route path="/" element={
+          <Route path="/data" element={
             <ProtectedRoute>
               <Home />
             </ProtectedRoute>
           }/>
-          <Route path="/MyTurns" element={
+          <Route path="/" element={
             <ProtectedRoute>
               <MyTurns />
             </ProtectedRoute>

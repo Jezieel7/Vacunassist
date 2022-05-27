@@ -72,25 +72,38 @@ export function Form() {
         await signup(user.email, user.password);
         await createUserDocument(user)
         MySwal.fire(`Su codigo de validación es: ${user.key}, por favor, anotela`)
-        console.log(user.doseAmountCovid)
-        if((calculoDeEdad(user.birthDate) > 60)){ //si es mayor de 60 años (riesgo)
-          if((user.doseAmountCovid < 2)){ //si no tiene las 2 dosis de covid, se asigna automatico
-            MySwal.fire("Se le asigno un turno para la vacuna del COVID-19 automaticamente");
-          }
-          if((user.hasVaccineFlu == false)||(calculoGripe(user.vaccinationDateFlu) > 1)){
-            MySwal.fire("Se le asigno un turno para la vacuna de la gripe dentro de los proximos 3 meses automaticamente");
-          }
-        }else if(user.riskFactor == true){ //si no tiene 60 años, pero tiene factores de riesgo, se asigna automaticamente
-          MySwal.fire("Se le asigno un turno para la vacuna del COVID-19 automaticamente");
-        }else if(!(user.doseAmountCovid == 2)){ //si no tiene las 2 dosis, se asigna manual
-          MySwal.fire("Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19");
-        }else{
-          MySwal.fire("Se le asigno un turno para la vacuna de la gripe dentro de los proximos 6 meses automaticamente");
-        }
-        navigate('/')
+        let boolCovid = false; 
+        let boolFlu = false; 
+        if((calculoDeEdad(user.birthDate) > 60)){ 
+          if((user.doseAmountCovid < 2)){ 
+            boolCovid = true; 
+          } 
+        }else if(user.riskFactor == true){ 
+          boolCovid = true; 
+        }else{ 
+          boolCovid = true; 
+        } 
+        //VACUNA GRIPE 
+        if((calculoDeEdad(user.birthDate) > 60) || (user.hasVaccineFlu == false)){ 
+          boolFlu = true; 
+        }else{ 
+          if(user.hasVaccineFlu == false){ 
+            boolFlu = true; 
+          }else if(calculoGripe(user.vaccinationDateFlu)){ 
+            boolFlu = true; 
+          } 
+        } 
+        if(boolCovid && boolFlu){ 
+          alert("Se le asigno una vacuna para el covid y para la gripe"); 
+        }else if(boolCovid){ 
+          alert("Se le asigno una vacuna para el covid"); 
+        }else if(boolFlu){ 
+          alert("Se le asigno una vacuna para la gripe"); 
+        } 
+        navigate('/') 
     } catch (error) {
         if(error.code === "auth/weak-password"){
-            setError("Contrasenia debil, deberia tener al menos 6 caracteres")
+            setError("Contraseña debil, deberia tener al menos 6 caracteres")
         }
         setError(error.message);
     }
@@ -111,19 +124,19 @@ export function Form() {
                  setPage((currPage) => currPage - 1);
                }}
              >
-               {page === FormTitles.length - 1 ? "Prev" : ""}
+               {page === FormTitles.length - 1 ? "Volver" : ""}
              </button>
              <button
                onClick={() => {
                  if (page === FormTitles.length - 1) {
-                   alert("FORM SUBMITTED");
+                   //alert("FORM SUBMITTED");
                    console.log(user);
                  } else {
                    setPage((currPage) => currPage + 1);
                  }
                }}
              >
-               {page === FormTitles.length - 1 ? "Submit" : "Next"}
+               {page === FormTitles.length - 1 ? "Registrate" : "Próxima hoja"}
              </button>
            </div>
          </div>

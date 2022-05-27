@@ -200,7 +200,7 @@ export function Home(){
                     <div className="text-x1 mb-4">
                         <br></br>
                         <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">
-                            <a href="./MyTurns">VER MIS TURNOS</a>
+                            <a href="./">VER MIS TURNOS</a>
                         </button>
                     </div> 
                 </div>

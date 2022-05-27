@@ -13,7 +13,6 @@ export default function MyTurns(){
     const [ turnFlu, setTurnFlu ] = useState('')
     const [ turnYellowFever, setTurnYellowFever ] = useState('')
     const [hasYellowFever, setHasYellowFever] =useState('')
-    //se debe mirar si ya tiene vacuna amarilla
     const update = async (e) => { //e es un evento
         e.preventDefault() //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`) //traemos todos los datos a product
@@ -52,6 +51,13 @@ export default function MyTurns(){
             <div className='row'>
                 <div className='col'>
                 <h1 className="text-x1 mb-4">Bienvenido {user.email}</h1>
+                <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
+                    <div className="text-x1 mb-4">
+                    <br></br>    
+                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">
+                        <a href="./data">VER MI PERFIL</a>
+                    </button>
+                </div>
                     <h1>MIS Turnos</h1>
                     <form onSubmit={update}>
                         <div className='mb-3'>
@@ -83,11 +89,6 @@ export default function MyTurns(){
                         </div>
                         <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA</button>
                     </form>
-                        <p></p>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">
-                            <a href="/">VOLVER AL MENU</a>
-                        </button>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
                 </div>
             </div>
         </div>

@@ -81,11 +81,11 @@ export function Login(){
                     <input type="number" name="key" placeholder="1234" id="key" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
                 </div>
                 <div className="flex items-center justify-between">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">login</button>
-                    <a href="#!" className="inline-block align baseline font-bold text-sm text-blue-500 hover:text-blue-800" onClick={handleResetPassword}>No te acordas?</a>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Inicia sesión</button>
+                    <a href="#!" className="inline-block align baseline font-bold text-sm text-blue-500 hover:text-blue-800" onClick={handleResetPassword}>¿No te acordas la contraseña?</a>
                 </div>
             </form>
-            <p className="my-4 text-sm flex justify-between px-3">No tenei una cuenta? <Link to='/register'>Registrate pai</Link></p>
+            <p className="my-4 text-sm flex justify-between px-3">¿No tenés una cuenta? <Link to='/register'>Registrate ya!</Link></p>
         </div>
     );
 }
