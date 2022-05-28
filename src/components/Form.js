@@ -48,7 +48,7 @@ export function Form() {
     console.log(BirthDate)
     let edad = hoy.getFullYear() - cumpleanios.getFullYear();
     let m = hoy.getMonth() - cumpleanios.getMonth();
-    if (m < 0 || (m == 0 && hoy.getDate() < cumpleanios.getDate())) { //aca no seria m==0 en vez de m===0 ???
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanios.getDate())) { //aca no seria m==0 en vez de m===0 ???
         edad--;
     }
     console.log(edad);
@@ -59,7 +59,7 @@ export function Form() {
     let ultimaVacGripe = new Date(vaccinationDateFlu)
     let años= hoy.getFullYear() - ultimaVacGripe.getFullYear();
     let m = hoy.getMonth() - ultimaVacGripe.getMonth();
-    if (m < 0 || (m == 0 && hoy.getDate() < ultimaVacGripe.getDate())) { //aca no seria m==0 en vez de m===0 ???
+    if (m < 0 || (m === 0 && hoy.getDate() < ultimaVacGripe.getDate())) { //aca no seria m==0 en vez de m===0 ???
         años--;
     }
     return años;
@@ -79,7 +79,7 @@ export function Form() {
             boolCovid = true; //AUTOMATICO, DE RIESGO = MAYOR DE 60, CON MENOS DE 2 DOSIS
           } 
         }else{ 
-          if(user.riskFactor == "true"){
+          if(user.riskFactor === "true"){
             if(user.doseAmountCovid < 2){
               boolCovid = true; //AUTOMATICO, DE RIESGO = MENOR DE 60, PERO CON FACTORES DE RIESGO Y MENOS DE 2 DOSIS
             }  
@@ -90,7 +90,7 @@ export function Form() {
           }
         }   
         //VACUNA GRIPE 
-        if(user.hasVaccineFlu == "false"){ //MIRAR CASO DE SI TIENE +60 AÑOS, SIN VACUNA, Y CON VACUNA VENCIDA, ESTO EN FIREBASE.JS
+        if(user.hasVaccineFlu === "false"){ //MIRAR CASO DE SI TIENE +60 AÑOS, SIN VACUNA, Y CON VACUNA VENCIDA, ESTO EN FIREBASE.JS
           boolFlu = true; //AUTOMATICO, NO TIENE VACUNA GRIPE
         }else{
           if(calculoGripe(user.vaccinationDateFlu)){ 

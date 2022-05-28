@@ -33,7 +33,7 @@ export default function Cargar({ user, setUser }){
                           <input type="radio" name="hasVaccineFlu" className='form-control' value={true} onChange={handleChange} required/> Si
                           <input type="radio" name="hasVaccineFlu" className='form-control' value={false} onChange={handleChange} required/> No
                       </div>
-                      { (user.hasVaccineFlu == "true") ?
+                      { (user.hasVaccineFlu === "true") ?
                       <div className='mb-3'>
                           <label className='form-label' htmlFor="vaccinationDateFlu">¿En qué fecha se la dió?</label>
                           <input type="date" name="vaccinationDateFlu" className='form-control' onChange={handleChange} required />    
@@ -45,7 +45,7 @@ export default function Cargar({ user, setUser }){
                           <input type="radio" name="hasYellowFever" className='form-control' value={true} onChange={handleChange} required/> Si 
                           <input type="radio" name="hasYellowFever" className='form-control' value={false} onChange={handleChange} required/> No
                       </div>
-                      { (user.hasYellowFever == "true") ?
+                      { (user.hasYellowFever === "true") ?
                             <div className='mb-3'>
                                 <label className='form-label' htmlFor="doseYearYellowFever">Año en que se la aplicó</label>
                                 <input type="number" name="doseYearYellowFever" className='form-control' onChange={handleChange} min={1900} max={2022} required/>    

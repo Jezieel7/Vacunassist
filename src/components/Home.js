@@ -1,9 +1,8 @@
 import { useAuth } from "../context/AuthContext";
 import React, { useState, useEffect } from 'react'
-import { Link,useParams } from 'react-router-dom'
-import {collection, getDocs, getDoc, deleteDoc, doc, updateDoc} from 'firebase/firestore'
+import {getDoc, doc, updateDoc} from 'firebase/firestore';
 import { db } from "../firebase";
-import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png'
+import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 
 export function Home(){
     const {user, logout, loading} = useAuth();
@@ -69,7 +68,7 @@ export function Home(){
         <div className='container'>
             <div className='row'>
                 <div className='col'>
-                <img src={Logo_VacunAssist_1} width={200}/> 
+                <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/> 
                 <h1 className="text-x1 mb-4">Bienvenido {user.email}</h1>
                     <h1>MIS DATOS</h1>
                     <form onSubmit={update}>

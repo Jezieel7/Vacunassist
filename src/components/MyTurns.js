@@ -1,10 +1,9 @@
 import { useAuth } from "../context/AuthContext";
 import React, { useState, useEffect } from 'react'
-import { Link,useParams } from 'react-router-dom'
-import {collection, getDocs, getDoc, deleteDoc, doc, updateDoc} from 'firebase/firestore'
+import {getDoc, doc, updateDoc} from 'firebase/firestore';
 import { db } from "../firebase";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 export default function MyTurns(){
@@ -16,7 +15,7 @@ export default function MyTurns(){
     const update = async (e) => { //e es un evento
         e.preventDefault() //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`) //traemos todos los datos a product
-        if(hasYellowFever == "true"){
+        if(hasYellowFever === "true"){
             await updateDoc(product, {"user.turnYellowFever": ""})             
             MySwal.fire(`No puede solicitar un turno para esta vacuna, usted ya la tiene`)
         }else{
