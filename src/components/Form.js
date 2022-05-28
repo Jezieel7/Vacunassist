@@ -69,7 +69,7 @@ export function Form() {
     e.preventDefault();
     setError('');
     try {
-        if(user.DNI == "000000"){
+        if(user.DNI === "000000"){
           MySwal.fire(`DNI INVALIDO`)
           throw(error)
         }

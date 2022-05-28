@@ -20,7 +20,7 @@ export default function MyTurns(){
             await updateDoc(product, {"user.turnYellowFever": ""})             
             MySwal.fire(`No puede solicitar un turno para esta vacuna, usted ya la tiene`)
         }else{
-            if(turnYellowFever != "Solicitud aceptada. Se te asignará un turno en los próximos días"){
+            if(turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días"){
                 await updateDoc(product, {"user.turnYellowFever": "Solicitud aceptada. Se te asignará un turno en los próximos días"}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
                 MySwal.fire("Solicitud aceptada. Se te asignará un turno en los próximos días")
                 number = 1
@@ -97,7 +97,7 @@ export default function MyTurns(){
                                 disabled
                             />      
                         </div>
-                        { ((turnYellowFever != "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(number==0)) ?
+                        { ((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(number===0)) ?
                                 <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA</button> : 
                                 ""
                         }
