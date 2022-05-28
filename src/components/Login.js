@@ -26,6 +26,10 @@ export function Login(){
             //aca ver lo del codigo de validacion
             const userRef = doc(db,`Persona/${user.email}`)
             const snapshot = await getDoc(userRef)
+            if(snapshot._document == null){ //mensaje si mail no existe
+                MySwal.fire(`El email ingresado no esta registrado en el sistema`)
+                throw error;
+            }
             //los console log estos devuelven la clave
             //console.log(snapshot.data().user.clave)
             //console.log(user.clave)

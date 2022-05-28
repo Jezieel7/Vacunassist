@@ -69,9 +69,13 @@ export function Form() {
     e.preventDefault();
     setError('');
     try {
+        if(user.DNI == "000000"){
+          MySwal.fire(`DNI INVALIDO`)
+          throw(error)
+        }
         await signup(user.email, user.password);
         await createUserDocument(user)
-        MySwal.fire(`Su codigo de validación es: ${user.key}, por favor, anotela`)
+        MySwal.fire(`Su codigo de validación es: ${user.key}, por favor, anotelo`)
         let boolCovid = false; 
         let boolFlu = false; 
         if((calculoDeEdad(user.birthDate) > 60)){ 
