@@ -140,6 +140,7 @@ export function Home(){
                                 type="number"
                                 className='form-control'
                                 min={0} max={2}
+                                disabled
                             />    
                         </div>
                         <div className='mb-3'>
