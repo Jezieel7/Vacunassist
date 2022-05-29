@@ -1,7 +1,8 @@
 import {Routes, Route} from 'react-router-dom';
 import { Home } from './components/Home';
 import { Login } from './components/Login';
-import { Form } from './components/Form';
+import { Register } from './components/Register';
+import { Cargar } from './components/Cargar';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import MyTurns from './components/MyTurns';
@@ -20,8 +21,13 @@ function App(){
               <MyTurns />
             </ProtectedRoute>
           }/>
+          <Route path="/cargar" element={
+            <ProtectedRoute>
+              <Cargar />
+            </ProtectedRoute>
+          }/>
           <Route path="login" element={<Login/>}/>
-          <Route path="register" element={<Form/>}/>
+          <Route path="register" element={<Register/>}/>
         </Routes>
       </AuthProvider>
     </div>

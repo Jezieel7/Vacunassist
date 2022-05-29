@@ -1,5 +1,5 @@
 import { useAuth } from "../context/AuthContext";
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import {getDoc, doc, updateDoc} from 'firebase/firestore';
 import { db } from "../firebase";
 import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
