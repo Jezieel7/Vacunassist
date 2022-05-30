@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Alert } from "./Alert";
 import { createUserDocumentVaccinator } from "../firebase";
-export function Register(){
+export function RegisterOnlyVaccinator(){
     const [user, setUser] = useState({
         email: '',
         password: '',
