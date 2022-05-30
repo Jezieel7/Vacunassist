@@ -3,6 +3,7 @@ import { Home } from './components/Home';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
 import { Cargar } from './components/Cargar';
+import { RegisterOnlyVaccinator } from './components/RegisterOnlyVaccinator';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import MyTurns from './components/MyTurns';
@@ -28,6 +29,7 @@ function App(){
           }/>
           <Route path="login" element={<Login/>}/>
           <Route path="register" element={<Register/>}/>
+          <Route path="/registervaccinator" element={<RegisterOnlyVaccinator/>}/>
         </Routes>
       </AuthProvider>
     </div>

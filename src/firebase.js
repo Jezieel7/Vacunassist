@@ -43,6 +43,14 @@ function calculoGripe(vaccinationDateFlu){ //esta funcion es igual a la de calcu
   return años;
 }
 
+export const createUserDocumentVaccinator = async (user) =>{
+  if(!user) return; //esto por si meten huevadas, igual no se si funciona, no lo probe
+  //crear referencia al documento (uso email para identificar a los panas)
+  const userRef = doc(db,`Persona/${user.email}`)
+   // crea el documento del user que se esta registrando
+  await setDoc(userRef, {user});
+} //MATI ESTUVO POR ACÁ
+
 export const createUserDocument = async (user) =>{
   if(!user) return; //esto por si meten huevadas, igual no se si funciona, no lo probe
   //crear referencia al documento (uso email para identificar a los panas)
