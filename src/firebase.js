@@ -1,10 +1,7 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import {getAuth} from 'firebase/auth';
 import { getFirestore, doc, setDoc, updateDoc } from '@firebase/firestore'
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
+import DatePicker from "react-datepicker";
 const firebaseConfig = {
   apiKey: "AIzaSyBHFWuuXgq4KZFuuYkMDjszxzLPk7Oc6tk",
   authDomain: "vacunassist-97fc7.firebaseapp.com",
@@ -17,7 +14,6 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app)
 export const db= getFirestore(app)
-
 function calculoDeEdad(BirthDate) {
   let hoy = new Date();
   console.log(hoy)
@@ -25,56 +21,47 @@ function calculoDeEdad(BirthDate) {
   console.log(BirthDate)
   let edad = hoy.getFullYear() - cumpleanios.getFullYear();
   let m = hoy.getMonth() - cumpleanios.getMonth();
-  if (m < 0 || (m == 0 && hoy.getDate() < cumpleanios.getDate())) { //aca no seria m==0 en vez de m===0 ???
+  if (m < 0 || (m === 0 && hoy.getDate() < cumpleanios.getDate())) { //aca no seria m==0 en vez de m===0 ???
       edad--;
   }
-  console.log(edad);
   return edad;
 }
-
 function calculoGripe(vaccinationDateFlu){ //esta funcion es igual a la de calculo de edad pero weno
   let hoy = new Date()
   let ultimaVacGripe = new Date(vaccinationDateFlu)
   let años= hoy.getFullYear() - ultimaVacGripe.getFullYear();
   let m = hoy.getMonth() - ultimaVacGripe.getMonth();
-  if (m < 0 || (m == 0 && hoy.getDate() < ultimaVacGripe.getDate())) { //aca no seria m==0 en vez de m===0 ???
+  if (m < 0 || (m === 0 && hoy.getDate() < ultimaVacGripe.getDate())) { //aca no seria m==0 en vez de m===0 ???
       años--;
   }
   return años;
 }
-
 export const createUserDocumentVaccinator = async (user) =>{
-  if(!user) return; //esto por si meten huevadas, igual no se si funciona, no lo probe
-  //crear referencia al documento (uso email para identificar a los panas)
+  if(!user) return;
   const userRef = doc(db,`Persona/${user.email}`)
-   // crea el documento del user que se esta registrando
   await setDoc(userRef, {user});
-} //MATI ESTUVO POR ACÁ
-
+}
 export const createUserDocument = async (user) =>{
-  if(!user) return; //esto por si meten huevadas, igual no se si funciona, no lo probe
-  //crear referencia al documento (uso email para identificar a los panas)
+  if(!user) return;
   const userRef = doc(db,`Persona/${user.email}`)
   let numero= Math.floor(Math.random()*10000);
   while(numero < 1000 || numero > 10000){
     numero= Math.floor(Math.random()*10000);
   }
   user.key= numero 
-   // crea el documento del user que se esta registrando
   await setDoc(userRef, {user});
-} //MATI ESTUVO POR ACÁ
-
+}
 export const asignTurn = async (birthDate, turnCovid, turnFlu, turnYellowFever, doseAmountCovid, zone, riskFactor, hasVaccineFlu, vaccinationDateFlu, email) =>{
   let hoy = new Date(); //si mas adelante quiero guardar fechas, crear otro hoy, antes de las operaciones de gripe pero despues de covid
   //VACUNA COVID 
   if((calculoDeEdad(birthDate) > 60)){ 
     if((doseAmountCovid < 2)){ 
-       //AUTOMATICO, DE RIESGO = MAYOR DE 60, CON MENOS DE 2 DOSIS, LE ASIGNO EN 3 DIAS
+      //AUTOMATICO, DE RIESGO = MAYOR DE 60, CON MENOS DE 2 DOSIS, LE ASIGNO EN 3 DIAS
       hoy.setDate(hoy.getDate() + 3) 
       turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 12:00 horas, en el vacunatorio ${zone}`
     } 
   }else{ 
-    if(riskFactor == "true"){
+    if(riskFactor === "true"){
       if(doseAmountCovid < 2){
         hoy.setDate(hoy.getDate() + 4)
         //AUTOMATICO, DE RIESGO = MENOR DE 60, PERO CON FACTORES DE RIESGO Y MENOS DE 2 DOSIS, LE ASIGNO EN 4 DIAS
@@ -89,7 +76,7 @@ export const asignTurn = async (birthDate, turnCovid, turnFlu, turnYellowFever, 
   }   
   //VACUNA GRIPE
   if((calculoDeEdad(birthDate) > 60)){
-    if(hasVaccineFlu == "false"){ // +60 AÑOS, SIN VACUNA
+    if(hasVaccineFlu === "false"){ // +60 AÑOS, SIN VACUNA
       hoy.setDate(hoy.getDate() - 1) //ESTO LO HICE PARA QUE NO QUEDE MISMO DIA QUE COVID
       hoy.setMonth(hoy.getMonth() + 2) //+1 MES, PUSE 2 PORQUE EL GETMONTH TOMA ENERO COMO 0, ENTONCES MAYO POR EJEMPLO ES EL MES 4 EN VEZ DE 5
       turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 14:00 horas, en el vacunatorio ${zone}`
@@ -102,7 +89,7 @@ export const asignTurn = async (birthDate, turnCovid, turnFlu, turnYellowFever, 
       }
     }
   }else{ 
-    if(hasVaccineFlu == "false"){ //-60 AÑOS, SIN VACUNA
+    if(hasVaccineFlu === "false"){ //-60 AÑOS, SIN VACUNA
       hoy.setDate(hoy.getDate() - 3)
       hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
       turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:00 horas, en el vacunatorio ${zone}`

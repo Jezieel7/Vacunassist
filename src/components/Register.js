@@ -26,10 +26,10 @@ export function Register(){
         turnCovid: '',
         turnFlu: '',
         turnYellowFever: '' 
-      });
+    });
     const {signup}= useAuth();
     const [error, setError] = useState();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const handleChange = ({target: {name, value}}) => {
         setUser({...user, [name]: value});
     };
@@ -46,13 +46,9 @@ export function Register(){
             MySwal.fire(`Su codigo de validación es: ${user.key}, por favor, anotelo`)
             navigate('/cargar');
         } catch (error) {
-            if(error.code === "auth/weak-password"){
-                setError("Contraseña debil, deberia tener al menos 6 caracteres")
-            }
             setError(error.message);
         }
     };
-    
     return (
         <div>
             <form onSubmit={handleSubmit}>

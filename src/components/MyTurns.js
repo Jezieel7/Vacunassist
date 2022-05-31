@@ -5,7 +5,6 @@ import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
-
 export default function MyTurns(){
     const {user, logout, loading} = useAuth();
     const [ turnCovid, setTurnCovid ] = useState('')
@@ -42,13 +41,10 @@ export default function MyTurns(){
             console.log('el producto no existe')
         }
     }
-    
     useEffect( () => {
         getProductById(`Persona/${user.email}`)
         // eslint-disable-next-time
     }, [])
-
-
     const handleLogout = async () => {
         await logout();
     }
@@ -107,5 +103,5 @@ export default function MyTurns(){
             </div>
         </div>
     )
-    }
+}
 //<button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"  disabled onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA</button> ESTO PARA MOSTRAR BOTON DESHABILITADO

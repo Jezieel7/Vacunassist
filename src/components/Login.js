@@ -23,16 +23,12 @@ export function Login(){
         e.preventDefault();
         setError('');
         try {
-            //aca ver lo del codigo de validacion
             const userRef = doc(db,`Persona/${user.email}`)
             const snapshot = await getDoc(userRef)
-            if(snapshot._document == null){ //mensaje si mail no existe
+            if(snapshot._document == null){
                 MySwal.fire(`El email ingresado no esta registrado en el sistema`)
                 throw error;
             }
-            //los console log estos devuelven la clave
-            //console.log(snapshot.data().user.clave)
-            //console.log(user.clave)
             if (snapshot.exists){
                 if(snapshot.data().user.key === ''){
                     await login(user.email, user.password);
@@ -61,7 +57,6 @@ export function Login(){
             }
             setError(error.message);
         }
-        
     };
     const handleResetPassword = async () => {
         if(!user.email) return setError("ingresa un email");

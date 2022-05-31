@@ -26,9 +26,6 @@ export function RegisterOnlyVaccinator(){
             await createUserDocumentVaccinator(user);
             alert("Usuario Vacunador creado satisfactoriamente");
         } catch (error) {
-            if(error.code === "auth/weak-password"){
-                setError("Contraseña debil, deberia tener al menos 6 caracteres");
-            }
             setError(error.message);
         }
     };
