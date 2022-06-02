@@ -7,67 +7,59 @@ export function Cargar(){
     const {user, loading} = useAuth();
     console.log(user);
     const [error, setError] = useState();
-    const navigate = useNavigate()
-
-    const [birthDate, setBirthDate] =useState('')
-    const [zone, setZone] =useState('')
-    const [doseAmountCovid, setDoseAmountCovid] =useState('')
-    const [doseYearYellowFever, setDoseYearYellowFever] =useState('')
-    const [hasVaccineFlu, setHasVaccineFlu] =useState('')
-    const [hasYellowFever, setHasYellowFever] =useState('')
-    const [riskFactor, setRiskFactor] =useState('')
-    const [vaccinationDateFlu, setVaccinationDateFlu] =useState('')
-    const [turnCovid, setTurnCovid] =useState('')
-    const [turnFlu, setTurnFlu] =useState('')
-    const [turnYellowFever, setTurnYellowFever] =useState('')
-
+    const navigate = useNavigate();
+    const [birthDate, setBirthDate] = useState('');
+    const [zone, setZone] = useState('');
+    const [doseAmountCovid, setDoseAmountCovid] = useState('');
+    const [doseYearYellowFever, setDoseYearYellowFever] = useState('');
+    const [hasVaccineFlu, setHasVaccineFlu] = useState('');
+    const [hasYellowFever, setHasYellowFever] = useState('');
+    const [riskFactor, setRiskFactor] = useState('');
+    const [vaccinationDateFlu, setVaccinationDateFlu] = useState('');
+    const [turnCovid, setTurnCovid] = useState('');
+    const [turnFlu, setTurnFlu] = useState('');
+    const [turnYellowFever, setTurnYellowFever] = useState('');
     const getProductById = async (id) => {
-        const userRef = doc(db,id)
-        const snapshot = await getDoc(userRef)
+        const userRef = doc(db,id);
+        const snapshot = await getDoc(userRef);
         if(snapshot.exists()){
-            setBirthDate(snapshot.data().user.birthDate)
-            setZone(snapshot.data().user.zone)
-            setDoseAmountCovid(snapshot.data().user.doseAmountCovid)
-            setDoseYearYellowFever(snapshot.data().user.doseYearYellowFever)
-            setHasVaccineFlu(snapshot.data().user.hasVaccineFlu)
-            setHasYellowFever(snapshot.data().user.hasYellowFever)
-            setRiskFactor(snapshot.data().user.riskFactor)
-            setVaccinationDateFlu(snapshot.data().user.vaccinationDateFlu)
+            setBirthDate(snapshot.data().user.birthDate);
+            setZone(snapshot.data().user.zone);
+            setDoseAmountCovid(snapshot.data().user.doseAmountCovid);
+            setDoseYearYellowFever(snapshot.data().user.doseYearYellowFever);
+            setHasVaccineFlu(snapshot.data().user.hasVaccineFlu);
+            setHasYellowFever(snapshot.data().user.hasYellowFever);
+            setRiskFactor(snapshot.data().user.riskFactor);
+            setVaccinationDateFlu(snapshot.data().user.vaccinationDateFlu);
         }else{
-            console.log('el producto no existe')
+            console.log('el producto no existe');
         }
     }
-    
     useEffect( () => {
-        getProductById(`Persona/${user.email}`)
+        getProductById(`Persona/${user.email}`);
         // eslint-disable-next-time
     }, [])
-
     if(loading) return <h1>loading</h1>
     function calculoDeEdad(BirthDate) {
         let hoy = new Date();
-        console.log(hoy)
         let cumpleanios = new Date(BirthDate);
-        console.log(BirthDate)
         let edad = hoy.getFullYear() - cumpleanios.getFullYear();
         let m = hoy.getMonth() - cumpleanios.getMonth();
-        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanios.getDate())) { //aca no seria m==0 en vez de m===0 ???
+        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanios.getDate())) {
             edad--;
         }
-        console.log(edad);
         return edad;
     }
-    function calculoGripe(vaccinationDateFlu){ //esta funcion es igual a la de calculo de edad pero weno
-        let hoy = new Date()
-        let ultimaVacGripe = new Date(vaccinationDateFlu)
-        let años= hoy.getFullYear() - ultimaVacGripe.getFullYear();
+    function calculoGripe(vaccinationDateFlu){
+        let hoy = new Date();
+        let ultimaVacGripe = new Date(vaccinationDateFlu);
+        let anios= hoy.getFullYear() - ultimaVacGripe.getFullYear();
         let m = hoy.getMonth() - ultimaVacGripe.getMonth();
-        if (m < 0 || (m === 0 && hoy.getDate() < ultimaVacGripe.getDate())) { //aca no seria m==0 en vez de m===0 ???
-            años--;
+        if (m < 0 || (m === 0 && hoy.getDate() < ultimaVacGripe.getDate())) {
+            anios--;
         }
-        return años;
+        return anios;
     }
-    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -113,7 +105,6 @@ export function Cargar(){
             setError(error.message);
         }
     };
-
     return (
         <div className='container'>
             <form onSubmit={handleSubmit}>

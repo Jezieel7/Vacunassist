@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {getAuth} from 'firebase/auth';
 import { getFirestore, doc, setDoc, updateDoc } from '@firebase/firestore'
-import DatePicker from "react-datepicker";
 const firebaseConfig = {
   apiKey: "AIzaSyBHFWuuXgq4KZFuuYkMDjszxzLPk7Oc6tk",
   authDomain: "vacunassist-97fc7.firebaseapp.com",
@@ -41,7 +40,7 @@ export const createUserDocumentVaccinator = async (user) =>{
   const userRef = doc(db,`Persona/${user.email}`)
   await setDoc(userRef, {user});
 }
-export const createUserDocument = async (user) =>{
+export const createUserDocument = async (user, turns) =>{
   if(!user) return;
   const userRef = doc(db,`Persona/${user.email}`)
   let numero= Math.floor(Math.random()*10000);

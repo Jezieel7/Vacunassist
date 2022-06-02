@@ -25,7 +25,10 @@ export function Register(){
         doseYearYellowFever: '',
         turnCovid: '',
         turnFlu: '',
-        turnYellowFever: '' 
+        turnYellowFever: '',
+        turns: {
+            0: ''
+        }
     });
     const {signup}= useAuth();
     const [error, setError] = useState();

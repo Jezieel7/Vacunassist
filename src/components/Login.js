@@ -4,9 +4,9 @@ import { Alert } from "./Alert";
 import { Link, useNavigate } from "react-router-dom";
 import { doc, getDoc } from '@firebase/firestore'
 import { db } from "../firebase";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-const MySwal = withReactContent(Swal)
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
 export function Login(){
     const [user, setUser] = useState({
         email: '',
@@ -23,10 +23,10 @@ export function Login(){
         e.preventDefault();
         setError('');
         try {
-            const userRef = doc(db,`Persona/${user.email}`)
-            const snapshot = await getDoc(userRef)
+            const userRef = doc(db,`Persona/${user.email}`);
+            const snapshot = await getDoc(userRef);
             if(snapshot._document == null){
-                MySwal.fire(`El email ingresado no esta registrado en el sistema`)
+                MySwal.fire(`El email ingresado no esta registrado en el sistema`);
                 throw error;
             }
             if (snapshot.exists){
@@ -50,10 +50,10 @@ export function Login(){
         } catch (error) {
             console.log(error.code) //si chilla, borrar esto
             if(error.code === "auth/wrong-password"){
-                setError("Contrasenia debil, deberia tener al menos 6 caracteres")
+                setError("Contrasenia debil, deberia tener al menos 6 caracteres");
             }
             if(error.code === "Cannot read properties of undefined (reading 'user')"){
-                setError("Email no registrado")
+                setError("Email no registrado");
             }
             setError(error.message);
         }
