@@ -29,12 +29,16 @@ export default function MyTurns(){
             setVaccination({...vaccination, [name]: value});
         }
     };
+    const getLengthOfObject = (obj) => { 
+        let lengthOfObject = Object.keys(obj).length; 
+        return lengthOfObject
+    }
     const submitDose = async (e) => {
         e.preventDefault();
         setError('');
         try {
             const docRef = doc(db,`Persona/${user.email}`);
-            const docSnap = await getDoc(docRef);
+            const docSnap = await getDoc(docRef); 
             //Busca el correo del chabón, si no existe muestra error, si existe:
             if (docSnap.exists()) {
                 //Recuperar los datos de dosis covid.
@@ -44,17 +48,21 @@ export default function MyTurns(){
                     MySwal.fire(`El usuario ya tiene el maximo de vacunas del covid permitidas`);
                     throw error;
                 }else{
-                    //Aumenta el doseAmount en 1 y ademas, marca el turno covid como vacio.
+                    //obtenemos tamaño de users.turns
+                    let mati= docSnap.data().user.turns       //docSnap = snapshot       
+                    let size= getLengthOfObject(mati);
+                    //let stringturndireccion = `user.turns.${size}`
+                    //ya tenemos lenght y ahora como hacemo
                     setUser({...user, doseAmountCovid: (docSnap.data().user.doseAmountCovid + 1)});
                     await updateDoc(docRef, {
-                        "user.doseAmountCovid": user.doseAmountCovid, "user.turnCovid": user.turnCovid, `user.turns.${user.doseAmountCovid}`: ""
+                        "user.doseAmountCovid": user.doseAmountCovid, "user.turnCovid": user.turnCovid, "user.turns.${size}": ""
                     });
                     /**Se agrega un nuevo registro en el array de vacunas que contiene:
                     El tipo de vacuna.
                     El numero de la dosis que fue suministrada.
                     La fecha en la que se dio.
                     Observaciones.
-                    **/
+                    **/ 
                 }
             } else {
                 MySwal.fire(`El email ingresado no pertenece a un usuario del sistema`);

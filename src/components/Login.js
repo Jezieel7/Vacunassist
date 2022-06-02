@@ -25,6 +25,9 @@ export function Login(){
         try {
             const userRef = doc(db,`Persona/${user.email}`);
             const snapshot = await getDoc(userRef);
+            
+            
+
             if(snapshot._document == null){
                 MySwal.fire(`El email ingresado no esta registrado en el sistema`);
                 throw error;

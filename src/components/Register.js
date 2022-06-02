@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import { Alert } from "./Alert";
 import { createUserDocument } from "../firebase";
@@ -27,7 +29,16 @@ export function Register(){
         turnFlu: '',
         turnYellowFever: '',
         turns: {
-            0: ''
+            0: '',
+            1: '',
+            2: '',
+            3: '',
+            4: '',
+            5: '',
+            6: '',
+            7: '',
+            8: '',
+            9: ''
         }
     });
     const {signup}= useAuth();
