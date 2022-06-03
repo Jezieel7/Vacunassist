@@ -5,19 +5,17 @@ import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
-export default function MyTurns(){
+export function RegisterAppliedDose(){
     const [ error, setError ] = useState();
     const { logout, loading } = useAuth();
     const [ vaccination, setVaccination] = useState({
         type: '',
         dose: '',
-        vaccinationDate: new Date(),
+        vaccinationDate: (new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear()),
         observations: ''
     });
     const [ user, setUser ] = useState({
-        email: '',
-        doseAmountCovid: '',
-        turnCovid: ''
+        email: ''
     });
     const handleLogout = async () => {
         await logout();
@@ -29,9 +27,14 @@ export default function MyTurns(){
             setVaccination({...vaccination, [name]: value});
         }
     };
-    const getLengthOfObject = (obj) => { 
-        let lengthOfObject = Object.keys(obj).length; 
-        return lengthOfObject
+    const addVaccinationTurnData = (userTurns, doseAmountIncrement) => {
+        let i = 0;
+        while(userTurns[i] !== ''){
+            i++;
+        }
+        userTurns[i] = "{type:" + vaccination.type + ",dose:" + doseAmountIncrement + ",date:" + vaccination.vaccinationDate + ",observations:" + vaccination.observations + "}";
+        return userTurns;
+        //Object.keys(userTurns).length
     }
     const submitDose = async (e) => {
         e.preventDefault();
@@ -42,27 +45,23 @@ export default function MyTurns(){
             //Busca el correo del chabón, si no existe muestra error, si existe:
             if (docSnap.exists()) {
                 //Recuperar los datos de dosis covid.
-                setUser({...user, doseAmountCovid: docSnap.data().user.doseAmountCovid});
+                let doseAmountIncrement = docSnap.data().user.doseAmountCovid;
                 // Si el usuario tiene un 2 en doseAmount, no deja registrar la dosis, ya que tiene el máximo de dosis permitido sino
-                if(user.doseAmountCovid === "2"){
+                if(doseAmountIncrement === "2"){
                     MySwal.fire(`El usuario ya tiene el maximo de vacunas del covid permitidas`);
                     throw error;
                 }else{
-                    //obtenemos tamaño de users.turns
-                    let mati= docSnap.data().user.turns       //docSnap = snapshot       
-                    let size= getLengthOfObject(mati);
-                    //let stringturndireccion = `user.turns.${size}`
-                    //ya tenemos lenght y ahora como hacemo
-                    setUser({...user, doseAmountCovid: (docSnap.data().user.doseAmountCovid + 1)});
-                    await updateDoc(docRef, {
-                        "user.doseAmountCovid": user.doseAmountCovid, "user.turnCovid": user.turnCovid, "user.turns.${size}": ""
-                    });
+                    //obtenemos users.turns
+                    let userTurns = docSnap.data().user.turns;
                     /**Se agrega un nuevo registro en el array de vacunas que contiene:
-                    El tipo de vacuna.
-                    El numero de la dosis que fue suministrada.
-                    La fecha en la que se dio.
-                    Observaciones.
-                    **/ 
+                        El tipo de vacuna.
+                        El numero de la dosis que fue suministrada.
+                        La fecha en la que se dio.
+                        Observaciones.
+                    **/
+                    const turnData = addVaccinationTurnData(userTurns, ++doseAmountIncrement);
+                    //Aumenta el doseAmount en 1 y ademas, marca el turno covid como vacio.
+                    await updateDoc(docRef, {"user.doseAmountCovid": doseAmountIncrement, "user.turnCovid": '', "user.turns": turnData});
                 }
             } else {
                 MySwal.fire(`El email ingresado no pertenece a un usuario del sistema`);
@@ -109,7 +108,7 @@ export default function MyTurns(){
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Observaciones: </label>
-                            <input value={vaccination.observations} type="text" className='form-control'/>      
+                            <input name="observations" type="text" className='form-control' onChange={handleChange}/>      
                         </div>
                         <button onClick={submitDose}>Registrar dosis</button>
                     </form>

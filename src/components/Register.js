@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import { Alert } from "./Alert";
 import { createUserDocument } from "../firebase";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 export function Register(){
     const [user, setUser] = useState({
@@ -52,8 +50,8 @@ export function Register(){
         setError('');
         try {
             if(user.DNI === "000000"){
-              MySwal.fire(`DNI INVALIDO`)
-              throw(error)
+              MySwal.fire(`DNI INVALIDO`);
+              throw(error);
             }
             await signup(user.email, user.password);
             await createUserDocument(user);

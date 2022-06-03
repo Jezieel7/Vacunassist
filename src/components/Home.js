@@ -3,67 +3,60 @@ import React, { useState, useEffect } from 'react';
 import {getDoc, doc, updateDoc} from 'firebase/firestore';
 import { db } from "../firebase";
 import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
-
 export function Home(){
     const {user, logout, loading} = useAuth();
     const handleLogout = async () => {
         await logout();
     }
-    
-    const [ name, setName ] = useState('') //valor x defecto
-    const [LastName, setLastName] = useState('') //valor x defecto
-    const [birthDate, setBirthDate] = useState('')
-    const [DNI, setDNI] = useState('')
-    const [password, setPassword] = useState('')
-    const [zone, setZone] =useState('')
-    const [doseAmountCovid, setDoseAmountCovid] =useState('')
-    const [doseYearYellowFever, setDoseYearYellowFever] =useState('')
-    const [hasVaccineFlu, setHasVaccineFlu] =useState('')
-    const [hasYellowFever, setHasYellowFever] =useState('')
-    const [riskFactor, setRiskFactor] =useState('')
-    const [vaccinationDateFlu, setVaccinationDateFlu] =useState('')
-    const [email, setEmail] =useState('')
-    const [key, setKey] =useState('')
-
-
+    const [ name, setName ] = useState(''); //valor x defecto
+    const [LastName, setLastName] = useState(''); //valor x defecto
+    const [birthDate, setBirthDate] = useState('');
+    const [DNI, setDNI] = useState('');
+    const [password, setPassword] = useState('');
+    const [zone, setZone] =useState('');
+    const [doseAmountCovid, setDoseAmountCovid] =useState('');
+    const [doseYearYellowFever, setDoseYearYellowFever] =useState('');
+    const [hasVaccineFlu, setHasVaccineFlu] =useState('');
+    const [hasYellowFever, setHasYellowFever] =useState('');
+    const [riskFactor, setRiskFactor] =useState('');
+    const [vaccinationDateFlu, setVaccinationDateFlu] =useState('');
+    const [email, setEmail] =useState('');
+    const [key, setKey] =useState('');
     const update = async (e) => { //e es un evento
-        e.preventDefault() //para evitar comportamiento por defecto
-        const product= doc(db,`Persona/${user.email}`) //traemos todos los datos a product
+        e.preventDefault(); //para evitar comportamiento por defecto
+        const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
         await updateDoc(product, {"user.name": name, "user.LastName": LastName, "user.birthDate": birthDate, "user.DNI": DNI
         , "user.password": password, "user.zone": zone, "user.doseAmountCovid": doseAmountCovid, "user.doseYearYellowFever": doseYearYellowFever
         , "user.hasVaccineFlu": hasVaccineFlu, "user.hasYellowFever": hasYellowFever, "user.riskFactor": riskFactor, "user.vaccinationDateFlu": vaccinationDateFlu, 
-        "user.email": email, "user.key": key}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
+        "user.email": email, "user.key": key}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
     }
     const getProductById = async (id) => {
-        const userRef = doc(db,id)
-        const snapshot = await getDoc(userRef)
+        const userRef = doc(db,id);
+        const snapshot = await getDoc(userRef);
         if(snapshot.exists()){
-            setName(snapshot.data().user.name)
-            setLastName(snapshot.data().user.LastName)
-            setBirthDate(snapshot.data().user.birthDate)
-            setDNI(snapshot.data().user.DNI)
-            setPassword(snapshot.data().user.password)
-            setZone(snapshot.data().user.zone)
-            setDoseAmountCovid(snapshot.data().user.doseAmountCovid)
-            setDoseYearYellowFever(snapshot.data().user.doseYearYellowFever)
-            setHasVaccineFlu(snapshot.data().user.hasVaccineFlu)
-            setHasYellowFever(snapshot.data().user.hasYellowFever)
-            setRiskFactor(snapshot.data().user.riskFactor)
-            setVaccinationDateFlu(snapshot.data().user.vaccinationDateFlu)
-            setEmail(snapshot.data().user.email)
-            setKey(snapshot.data().user.key)
+            setName(snapshot.data().user.name);
+            setLastName(snapshot.data().user.LastName);
+            setBirthDate(snapshot.data().user.birthDate);
+            setDNI(snapshot.data().user.DNI);
+            setPassword(snapshot.data().user.password);
+            setZone(snapshot.data().user.zone);
+            setDoseAmountCovid(snapshot.data().user.doseAmountCovid);
+            setDoseYearYellowFever(snapshot.data().user.doseYearYellowFever);
+            setHasVaccineFlu(snapshot.data().user.hasVaccineFlu);
+            setHasYellowFever(snapshot.data().user.hasYellowFever);
+            setRiskFactor(snapshot.data().user.riskFactor);
+            setVaccinationDateFlu(snapshot.data().user.vaccinationDateFlu);
+            setEmail(snapshot.data().user.email);
+            setKey(snapshot.data().user.key);
         }else{
-            console.log('el producto no existe')
+            console.log('el producto no existe');
         }
     }
-    
     useEffect( () => {
-        getProductById(`Persona/${user.email}`)
+        getProductById(`Persona/${user.email}`);
         // eslint-disable-next-time
     }, [])    
-    
     if(loading) return <h1>loading</h1>
-
     return (
         <div className='container'>
             <div className='row'>
@@ -74,74 +67,31 @@ export function Home(){
                     <form onSubmit={update}>
                         <div className='mb-3'>
                             <label className='form-label'>Nombre: </label>
-                            <input
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                type="text"
-                                className='form-control'
-                                disabled
-                            />    
+                            <input value={name} onChange={(e) => setName(e.target.value)} type="text" className='form-control' disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Apellido: </label>
-                            <input
-                                value={LastName} 
-                                onChange={(e) => setLastName(e.target.value)}
-                                type="text"
-                                className='form-control'
-                                disabled
-                            />    
+                            <input value={LastName}  onChange={(e) => setLastName(e.target.value)} type="text" className='form-control' disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Fecha de Nacimiento: </label>
-                            <input
-                                value={birthDate}
-                                onChange={(e) => setBirthDate(e.target.value)}
-                                type="text"
-                                className='form-control'
-                                disabled
-                            />    
+                            <input value={birthDate} onChange={(e) => setBirthDate(e.target.value)} type="text" className='form-control' disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>DNI: </label>
-                            <input
-                                value={DNI}
-                                onChange={(e) => setDNI(e.target.value)}
-                                type="text"
-                                className='form-control'
-                                disabled
-                            />    
+                            <input value={DNI} onChange={(e) => setDNI(e.target.value)} type="text" className='form-control' disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Clave: </label>
-                            <input
-                                value={key}
-                                onChange={(e) => setKey(e.target.value)}
-                                type="text"
-                                className='form-control'
-                                disabled
-                            />    
+                            <input value={key} onChange={(e) => setKey(e.target.value)} type="text" className='form-control' disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Contraseña: </label>
-                            <input
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                type="text"
-                                className='form-control'
-                                disabled
-                            />    
+                            <input value={password} onChange={(e) => setPassword(e.target.value)} type="text" className='form-control' disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Dosis de COVID-19: </label>
-                            <input
-                                value={doseAmountCovid}
-                                onChange={(e) => setDoseAmountCovid(e.target.value)}
-                                type="number"
-                                className='form-control'
-                                min={0} max={2}
-                                disabled
-                            />    
+                            <input value={doseAmountCovid} onChange={(e) => setDoseAmountCovid(e.target.value)} type="number" className='form-control' min={0} max={2} disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Vacuna de la gripe: </label>
@@ -152,13 +102,7 @@ export function Home(){
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Fecha que se dió vacuna de la gripe: </label>
-                            <input
-                                value={vaccinationDateFlu}
-                                onChange={(e) => setVaccinationDateFlu(e.target.value)}
-                                type="date"
-                                className='form-control'
-                                
-                            />    
+                            <input value={vaccinationDateFlu} onChange={(e) => setVaccinationDateFlu(e.target.value)} type="date" className='form-control'/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Vacuna de la fiebre amarilla: </label>
@@ -169,13 +113,7 @@ export function Home(){
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Año que se dió la vacuna de la fiebre amarilla: </label>
-                            <input
-                                value={doseYearYellowFever}
-                                onChange={(e) => setDoseYearYellowFever(e.target.value)}
-                                type="number"
-                                className='form-control'
-                                min={1900} max={2022}
-                            />    
+                            <input value={doseYearYellowFever} onChange={(e) => setDoseYearYellowFever(e.target.value)} type="number" className='form-control' min={1900} max={2022}/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Persona con factores de riesgo: </label>
@@ -207,5 +145,5 @@ export function Home(){
             </div>
         </div>
     )
-    }
-export default Home
+}
+export default Home;
