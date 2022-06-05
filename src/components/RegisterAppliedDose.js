@@ -32,7 +32,7 @@ export function RegisterAppliedDose(){
         while(userTurns[i] !== ''){
             i++;
         }
-        userTurns[i] = "{type:" + vaccination.type + ",dose:" + doseAmountIncrement + ",date:" + vaccination.vaccinationDate + ",observations:" + vaccination.observations + "}";
+        userTurns[i] = "type:" + vaccination.type + ",dose:" + doseAmountIncrement + ",date:" + vaccination.vaccinationDate + ",observations:" + vaccination.observations + "";
         return userTurns;
         //Object.keys(userTurns).length
     }

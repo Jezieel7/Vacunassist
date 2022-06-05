@@ -88,8 +88,9 @@ export function Login(){
                 </div>
                 <div className="flex items-center justify-between">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Inicia sesión</button>
-                    <a href="#!" className="inline-block align baseline font-bold text-sm text-blue-500 hover:text-blue-800" onClick={handleResetPassword}>¿No te acordas la contraseña?</a>
                 </div>
+                <div className="mb-4"></div>
+                <a href="#!" className="inline-block align baseline font-bold text-sm text-blue-500 hover:text-blue-800" onClick={handleResetPassword}>¿No te acordas la contraseña?</a>
             </form>
             <p className="my-4 text-sm flex justify-between px-3">¿No tenés una cuenta? <Link to='/register'>Registrate ya!</Link></p>
         </div>

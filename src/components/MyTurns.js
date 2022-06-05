@@ -11,23 +11,21 @@ export default function MyTurns(){
     const [ turnFlu, setTurnFlu ] = useState('');
     const [ turnYellowFever, setTurnYellowFever ] = useState('');
     const [ hasYellowFever, setHasYellowFever ] = useState('');
-    let number = 0;
+    let numberaux = 0;
     const update = async (e) => { //e es un evento
         e.preventDefault(); //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
-        if(hasYellowFever === "true"){
-            await updateDoc(product, {"user.turnYellowFever": ""});            
-            MySwal.fire(`No puede solicitar un turno para esta vacuna, usted ya la tiene`);
-        }else{
-            if(turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días"){
-                await updateDoc(product, {"user.turnYellowFever": "Solicitud aceptada. Se te asignará un turno en los próximos días"});//dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
-                MySwal.fire("Solicitud aceptada. Se te asignará un turno en los próximos días");
-                number = 1;
-            }
-            else{
-                console.log("ya esta marcado pesao"); //MECANISMO PARA QUE HAYA UN SOLO SWEET ALERT TODAVIA NO FUNCIONA. TODAVIA SI APRETAS SIN ACTUALIZAR TE SIGUE DANDO SWEETS INFINITOS. CUANDO ACTUALIZAS, EL BOTON SE DESHABILITA
-            }
+        if (numberaux==1){
+            e.cancelable(); //esta funcion no existe, aun asi lo que tiene que hacer lo hace asi que estamos bien. Cancelable hace que no se ejecute mas de un Sweet.
+            //console.log("se cancelo el evento xD")
         }
+        if((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)){
+            await updateDoc(product, {"user.turnYellowFever": "Solicitud aceptada. Se te asignará un turno en los próximos días"});//dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
+            MySwal.fire("Solicitud aceptada. Se te asignará un turno en los próximos días.");
+            numberaux++;
+        }
+        else
+            numberaux=0; //esto para testing, borrar si algo sale mal
     }
     const getProductById = async (id) => {
         const userRef = doc(db,id);
@@ -53,14 +51,18 @@ export default function MyTurns(){
         <div className='container'>
             <div className='row'>
                 <div className='col'>
-                <h1 className="text-x1 mb-4">Bienvenido {user.email}</h1>
-                <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
+                    <h1 className="text-x1 mb-4">Bienvenido a VacunAssist {user.email}</h1>
                     <div className="text-x1 mb-4">
-                    <br></br>    
-                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">
-                        <a href="./data">VER MI PERFIL</a>
-                    </button>
-                </div>
+                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
+                    <br></br>
+                    </div>
+                    <div className="text-x1 mb-4">  
+                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./data">VER MI PERFIL</a></button>
+                    <br></br>
+                    </div>
+                    <div className="text-x1 mb-4">    
+                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./record">VER MI HISTORIAL DE VACUNACIÓN</a></button>
+                    </div>
                     <h1>Mis Turnos</h1>
                     <form onSubmit={update}>
                         <div className='mb-3'>
@@ -75,9 +77,9 @@ export default function MyTurns(){
                             <label className='form-label'>Turno de la vacuna de fiebre amarilla: </label>
                             <input value={turnYellowFever} type="text" size={75} className='form-control' disabled/>      
                         </div>
-                        {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(number===0)) ?
+                        {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")) ?
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA</button> : 
-                            ""
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update} disabled>SOLICITAR VACUNA DE FIEBRE AMARILLA</button>
                         }
                         <p>Direcciones de vacunatorios: Municipalidad (51 e/10 y 11 Nro. 770), Terminal (3 e/ 41 y 42 Nro. 480), Cementerio (138 e/73 y 74 Nro. 2035).</p>
                     </form>

@@ -7,6 +7,7 @@ import { RegisterOnlyVaccinator } from './components/RegisterOnlyVaccinator';
 import { RegisterAppliedDose } from './components/RegisterAppliedDose';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import Record from './components/Record';
 import MyTurns from './components/MyTurns';
 function App(){
   return ( 
@@ -36,6 +37,11 @@ function App(){
           <Route path="/registerapplieddose" element={
             <ProtectedRoute>
               <RegisterAppliedDose/>
+            </ProtectedRoute>
+          }/>
+          <Route path="/record" element={
+            <ProtectedRoute>
+              <Record/>
             </ProtectedRoute>
           }/>
           <Route path="login" element={<Login/>}/>
