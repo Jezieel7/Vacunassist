@@ -7,8 +7,10 @@ import { RegisterOnlyVaccinator } from './components/RegisterOnlyVaccinator';
 import { RegisterAppliedDose } from './components/RegisterAppliedDose';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import Record from './components/Record';
-import MyTurns from './components/MyTurns';
+import  Record from './components/Record';
+import  MyTurns from './components/MyTurns';
+import  HomeVaccinator from './components/HomeVaccinator';
+import HomeAdmin from './components/HomeAdmin';
 function App(){
   return ( 
     <div className="bg-slate-300 h-screen text-black flex">
@@ -42,6 +44,16 @@ function App(){
           <Route path="/record" element={
             <ProtectedRoute>
               <Record/>
+            </ProtectedRoute>
+          }/>
+          <Route path="/HomeVaccinator" element={
+            <ProtectedRoute>
+              <HomeVaccinator />
+            </ProtectedRoute>
+          }/>
+          <Route path="/HomeAdmin" element={
+            <ProtectedRoute>
+              <HomeAdmin />
             </ProtectedRoute>
           }/>
           <Route path="login" element={<Login/>}/>

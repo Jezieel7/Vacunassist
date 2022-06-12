@@ -34,18 +34,27 @@ export function Login(){
             }
             if (snapshot.exists){
                 if(snapshot.data().user.key === ''){
-                    await login(user.email, user.password);
-                    navigate('/HomeVaccinator');
+                    //COMENTARIO VALIOSO PARA HU INICIAR SESION ADMIN
+                    if((snapshot.data().user.email === 'lautaro@gmail.com') || (snapshot.data().user.email === 'agustina@gmail.com')){
+                        await login(user.email, user.password);
+                        navigate('/HomeAdmin');
+                    }
+                    else{
+                        await login(user.email, user.password);
+                        navigate('/HomeVaccinator');
+                    }
                 }
-                const mismaClave= (Number (snapshot.data().user.key)) !== (Number (user.key))
-                if(!mismaClave){
-                    await login(user.email, user.password);
-                    navigate('/');
-                }            
                 else{
-                    MySwal.fire(`Codigo de validación incorrecto`)
-                    throw error;                    
+                    const mismaClave= (Number (snapshot.data().user.key)) !== (Number (user.key))
+                    if(!mismaClave){
+                        await login(user.email, user.password);
+                        navigate('/');
+                    }            
+                    else{
+                        MySwal.fire(`Codigo de validación incorrecto`)
+                        throw error;                    
                 }
+                }   
             }
             else{
                 throw error;

@@ -1,12 +1,12 @@
 import { useAuth } from "../context/AuthContext";
 import React, { useState, useEffect } from 'react'
-import {getDoc, doc, updateDoc} from 'firebase/firestore';
+import {getDoc, doc} from 'firebase/firestore';
 import { db } from "../firebase"; 
 //import "bootstrap/dist/css/bootstrap.min.css" para ver todo re loko
 
 export default function Record(){
 
-    const { user, logout, loading } = useAuth();
+    const { user } = useAuth();
     const [ col0, setCol0 ] = useState('');
     const [ col1, setCol1 ] = useState('');
     const [ col2, setCol2 ] = useState('');

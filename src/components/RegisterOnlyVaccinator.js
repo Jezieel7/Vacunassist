@@ -11,7 +11,8 @@ export function RegisterOnlyVaccinator(){
         birthDate: '',
         LastName: '',
         DNI: '',
-        key: ''
+        key: '',
+        vaccinator: false
     });
     const {signup}= useAuth();
     const [error, setError] = useState();
