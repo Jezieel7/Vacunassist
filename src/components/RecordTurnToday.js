@@ -19,14 +19,16 @@ export default function RecordTurnToday(){
         const flu = query(collection(db, string), where("user.turnFlu", "!=", ""));
         const covid = query(collection(db, string), where("user.turnCovid", "!=", ""));
         const yellow = query(collection(db, string), where("user.turnYellowFever", "!=", ""));
-
+        var arr1= []
+        var arr2= []
+        var arr3= []
         const querySnapshot1 = await getDocs(flu);
         querySnapshot1.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         let aux1= doc.data().user.turnFlu.split(' ')
         if (aux1[4] == today){
             if(!personas.includes(doc.data()))
-                personas.push(doc.data())
+                arr1.push(doc.data())
         }
         });
         const querySnapshot2 = await getDocs(covid);
@@ -34,7 +36,7 @@ export default function RecordTurnToday(){
         let aux2= doc.data().user.turnCovid.split(' ')
         if (aux2[4] == today){
             if(!personas2.includes(doc.data()))
-                personas2.push(doc.data())
+                arr2.push(doc.data())
         }
         });
         
@@ -43,9 +45,16 @@ export default function RecordTurnToday(){
         let aux3= doc.data().user.turnYellowFever.split(' ')
         if (aux3[4] == today){
           if(!personas3.includes(doc.data()))
-                personas3.push(doc.data())
+                arr3.push(doc.data())
         }
         });
+        arr1 = [...new Set(arr1)]
+        arr2 = [...new Set(arr2)]
+        arr3 = [...new Set(arr3)]
+        setPersonas(arr1)
+        setPersonas2(arr2)
+        setPersonas3(arr3)
+        setMati(1)
         
     }
     
@@ -74,8 +83,9 @@ export default function RecordTurnToday(){
             </tr>
             </thead>
             <tbody>
-            {personas.map( (persona) => (
-                            <tr key={persona.user.email}>
+            {mati == 1 ?
+            personas.map( (persona) => (
+                            <tr key={persona.id}>
                                 <td className="border px-8 py-4">{persona.user.email}</td>
                                 <td className="border px-8 py-4">{persona.user.name}</td>
                                 <td className="border px-8 py-4">{persona.user.LastName}</td>
@@ -84,20 +94,22 @@ export default function RecordTurnToday(){
                                 <td className="border px-8 py-4">-</td>
                                 <td className="border px-8 py-4">{persona.user.zone}</td>
                             </tr>
-                        ))}
-            {personas2.map( (persona) => (
-                            <tr key={persona.user.email}>
+                        )) : ""}
+            {mati == 1 ?
+            personas2.map( (persona) => (
+                            <tr key={persona.id}>
                                 <td className="border px-8 py-4">{persona.user.email}</td>
                                 <td className="border px-8 py-4">{persona.user.name}</td>
                                 <td className="border px-8 py-4">{persona.user.LastName}</td>
                                 <td className="border px-8 py-4">{persona.user.DNI}</td>
                                 <td className="border px-8 py-4">Covid</td>
-                                <td className="border px-8 py-4">{persona.user.doseAmountCovid === "0" ? "1" : "2"}</td>
+                                <td className="border px-8 py-4">{persona.user.doseAmountCovid == "0" ? "Primera" : "Segunda"}</td>
                                 <td className="border px-8 py-4">{persona.user.zone}</td>
                             </tr>
-                        ))}
-            {personas3.map( (persona) => (
-                            <tr key={persona.user.email}>
+                        )) : ""}
+            {mati == 1 ?
+            personas3.map( (persona) => (
+                            <tr key={persona.id}>
                                 <td className="border px-8 py-4">{persona.user.email}</td>
                                 <td className="border px-8 py-4">{persona.user.name}</td>
                                 <td className="border px-8 py-4">{persona.user.LastName}</td>
@@ -106,7 +118,7 @@ export default function RecordTurnToday(){
                                 <td className="border px-8 py-4">-</td>
                                 <td className="border px-8 py-4">{persona.user.zone}</td>
                             </tr>
-                        ))}
+                        )) : ""}
             </tbody>
         </table>
         </div>
