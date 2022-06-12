@@ -11,6 +11,9 @@ import  Record from './components/Record';
 import  MyTurns from './components/MyTurns';
 import  HomeVaccinator from './components/HomeVaccinator';
 import HomeAdmin from './components/HomeAdmin';
+import RecordTurnToday from './components/RecordTurnToday'
+import RecordVaccinators from './components/RecordVaccinators'
+
 function App(){
   return ( 
     <div className="bg-slate-300 h-screen text-black flex">
@@ -54,6 +57,16 @@ function App(){
           <Route path="/HomeAdmin" element={
             <ProtectedRoute>
               <HomeAdmin />
+            </ProtectedRoute>
+          }/>
+          <Route path="/recordTurnToday" element={
+            <ProtectedRoute>
+              <RecordTurnToday />
+            </ProtectedRoute>
+          }/>
+          <Route path="/recordVaccinators" element={
+            <ProtectedRoute>
+              <RecordVaccinators />
             </ProtectedRoute>
           }/>
           <Route path="login" element={<Login/>}/>
