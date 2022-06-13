@@ -11,7 +11,19 @@ export default function MyTurns(){
     const [ turnFlu, setTurnFlu ] = useState('');
     const [ turnYellowFever, setTurnYellowFever ] = useState('');
     const [ hasYellowFever, setHasYellowFever ] = useState('');
+    const [age, setAge] = useState(0)
     let numberaux = 0;
+
+    function calculoDeEdad(BirthDate) {
+        let hoy = new Date();
+        let cumpleanios = new Date(BirthDate);
+        let edad = hoy.getFullYear() - cumpleanios.getFullYear();
+        let m = hoy.getMonth() - cumpleanios.getMonth();
+        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanios.getDate())) {
+            edad--;
+        }
+        return edad;
+    }
     const update = async (e) => { //e es un evento
         e.preventDefault(); //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
@@ -31,6 +43,7 @@ export default function MyTurns(){
         const userRef = doc(db,id);
         const snapshot = await getDoc(userRef);
         if(snapshot.exists()){
+            setAge(calculoDeEdad(snapshot.data().user.birthDate))
             setTurnCovid(snapshot.data().user.turnCovid);
             setTurnFlu(snapshot.data().user.turnFlu);
             setTurnYellowFever(snapshot.data().user.turnYellowFever);
@@ -77,9 +90,9 @@ export default function MyTurns(){
                             <label className='form-label'>Turno de la vacuna de fiebre amarilla: </label>
                             <input value={turnYellowFever} type="text" size={75} className='form-control' disabled/>      
                         </div>
-                        {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")) ?
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA</button> : 
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update} disabled>SOLICITAR VACUNA DE FIEBRE AMARILLA</button>
+                        {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")&&(age<60)) ?
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update} disabled>SOLICITAR VACUNA DE FIEBRE AMARILLA </button>
                         }
                         <p>Direcciones de vacunatorios: Municipalidad (51 e/10 y 11 Nro. 770), Terminal (3 e/ 41 y 42 Nro. 480), Cementerio (138 e/73 y 74 Nro. 2035).</p>
                     </form>

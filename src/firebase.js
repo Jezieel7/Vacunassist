@@ -59,17 +59,22 @@ export const asignTurn = async (birthDate, turnCovid, turnFlu, turnYellowFever, 
       hoy.setDate(hoy.getDate() + 3) 
       turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 12:00 horas, en el vacunatorio ${zone}`
     } 
-  }else{ 
-    if(riskFactor === "true"){
-      if(doseAmountCovid < 2){
-        hoy.setDate(hoy.getDate() + 4)
-        //AUTOMATICO, DE RIESGO = MENOR DE 60, PERO CON FACTORES DE RIESGO Y MENOS DE 2 DOSIS, LE ASIGNO EN 4 DIAS
-        turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 12:30 horas, en el vacunatorio ${zone}`
-      }  
-    }else{
-      if(doseAmountCovid < 2){
-        //MANUAL, NO ES DE RIESGO = MENOR DE 60, MENOS DE 2 DOSIS
-        turnCovid = "Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19"
+  }else{
+    if(calculoDeEdad(birthDate) < 18)
+      //MANUAL, MENOR DE 18
+      turnCovid= ''
+    else{ 
+      if(riskFactor === "true"){
+        if(doseAmountCovid < 2){
+          hoy.setDate(hoy.getDate() + 4)
+          //AUTOMATICO, DE RIESGO = MENOR DE 60, PERO CON FACTORES DE RIESGO Y MENOS DE 2 DOSIS, LE ASIGNO EN 4 DIAS
+          turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 12:30 horas, en el vacunatorio ${zone}`
+        }  
+      }else{
+        if(doseAmountCovid < 2){
+          //MANUAL, NO ES DE RIESGO = MENOR DE 60, MENOS DE 2 DOSIS
+          turnCovid = "Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19"
+        }
       }
     }
   }   

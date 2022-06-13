@@ -80,7 +80,10 @@ export function Cargar(){
                         boolCovid = true; //MANUAL, NO ES DE RIESGO = MENOR DE 60, MENOS DE 2 DOSIS
                     }
                 }
-            }   
+            }
+            if((calculoDeEdad(user.birthDate) < 18)){
+                boolCovid= false;
+            }    
             //VACUNA GRIPE 
             if(user.hasVaccineFlu === "false"){ //MIRAR CASO DE SI TIENE +60 AÑOS, SIN VACUNA, Y CON VACUNA VENCIDA, ESTO EN FIREBASE.JS
                 boolFlu = true; //AUTOMATICO, NO TIENE VACUNA GRIPE

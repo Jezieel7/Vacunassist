@@ -1,10 +1,11 @@
 import { useAuth } from "../context/AuthContext";
+import { getAuth } from "firebase/auth";
 import React, { useState, useEffect } from 'react';
 import {getDoc, doc, updateDoc} from 'firebase/firestore';
 import { db } from "../firebase";
 import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 export function Home(){
-    const {user, logout, loading} = useAuth();
+    const {user, logout, loading, resetPassword} = useAuth();
     const handleLogout = async () => {
         await logout();
     }
@@ -22,9 +23,27 @@ export function Home(){
     const [vaccinationDateFlu, setVaccinationDateFlu] =useState('');
     const [email, setEmail] =useState('');
     const [key, setKey] =useState('');
+    const [change,setChange] = useState(false)
+    const [error, setError] = useState();
+
+    const handleResetPassword = async () => {
+        if(!user.email) return setError("ingresa un email");
+        try {
+            await resetPassword(user.email);
+            setError('Te enviamos una wea al correo para que recuperes la dignidad');
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
     const update = async (e) => { //e es un evento
         e.preventDefault(); //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+        const snapshot = await getDoc(product);
+        if(password != snapshot.data().user.password){
+            await resetPassword(user.email);
+            console.log('se te mando un mail')
+        }
         await updateDoc(product, {"user.name": name, "user.LastName": LastName, "user.birthDate": birthDate, "user.DNI": DNI
         , "user.password": password, "user.zone": zone, "user.doseAmountCovid": doseAmountCovid, "user.doseYearYellowFever": doseYearYellowFever
         , "user.hasVaccineFlu": hasVaccineFlu, "user.hasYellowFever": hasYellowFever, "user.riskFactor": riskFactor, "user.vaccinationDateFlu": vaccinationDateFlu, 
@@ -86,8 +105,8 @@ export function Home(){
                             <input value={key} onChange={(e) => setKey(e.target.value)} type="text" className='form-control' disabled/>    
                         </div>
                         <div className='mb-3'>
-                            <label className='form-label'>Contraseña: </label>
-                            <input value={password} onChange={(e) => setPassword(e.target.value)} type="text" className='form-control' disabled/>    
+                            <label className='form-label'>Contraseña (si la cambias, confirmar cambio de contraseña por mail también por motivos de seguridad): </label>
+                            <input value={password} onChange={(e) => setPassword(e.target.value)} type="text" className='form-control'/>  
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Dosis de COVID-19: </label>
@@ -97,23 +116,23 @@ export function Home(){
                             <label className='form-label'>Vacuna de la gripe: </label>
                             {hasVaccineFlu === "true" ? "Si" : "No"}  
                             <br></br>
-                            <input type="radio" name="hasVaccineFlu" className='form-control' value={true} onChange={(e) => setHasVaccineFlu(e.target.value)} /> Si
-                            <input type="radio" name="hasVaccineFlu" className='form-control' value={false} onChange={(e) => setHasVaccineFlu(e.target.value)} /> No    
+                            <input type="radio" name="hasVaccineFlu" className='form-control' value={true} onChange={(e) => setHasVaccineFlu(e.target.value)} disabled/> Si
+                            <input type="radio" name="hasVaccineFlu" className='form-control' value={false} onChange={(e) => setHasVaccineFlu(e.target.value)} disabled/> No    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Fecha que se dió vacuna de la gripe: </label>
-                            <input value={vaccinationDateFlu} onChange={(e) => setVaccinationDateFlu(e.target.value)} type="date" className='form-control'/>    
+                            <input value={vaccinationDateFlu} onChange={(e) => setVaccinationDateFlu(e.target.value)} type="date" className='form-control'disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Vacuna de la fiebre amarilla: </label>
                             {hasYellowFever === "true" ? "Si" : "No"}  
                             <br></br>                           
-                            <input type="radio" name="hasYellowFever" className='form-control' value={true} onChange={(e) => setHasYellowFever(e.target.value)} /> Si 
-                            <input type="radio" name="hasYellowFever" className='form-control' value={false} onChange={(e) => setHasYellowFever(e.target.value)} /> No     
+                            <input type="radio" name="hasYellowFever" className='form-control' value={true} onChange={(e) => setHasYellowFever(e.target.value)}disabled /> Si 
+                            <input type="radio" name="hasYellowFever" className='form-control' value={false} onChange={(e) => setHasYellowFever(e.target.value)}disabled /> No     
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Año que se dió la vacuna de la fiebre amarilla: </label>
-                            <input value={doseYearYellowFever} onChange={(e) => setDoseYearYellowFever(e.target.value)} type="number" className='form-control' min={1900} max={2022}/>    
+                            <input value={doseYearYellowFever} onChange={(e) => setDoseYearYellowFever(e.target.value)} type="number" className='form-control' min={1900} max={2022}disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Persona con factores de riesgo: </label>
