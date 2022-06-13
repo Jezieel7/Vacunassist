@@ -22,6 +22,14 @@ export default function Record(){
                     </div>
                     <div className="text-x1 mb-4">
                         <br></br>
+                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" ><a href="./RegisterOnlyVaccinators">REGISTRAR PERSONA</a></button>
+                    </div>
+                    <div className="text-x1 mb-4">
+                        <br></br>
+                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" ><a href="./registerAppliedDose">REGISTRAR DOSIS APLICADA</a></button>
+                    </div> 
+                    <div className="text-x1 mb-4">
+                        <br></br>
                         <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
                     </div> 
                 </div>

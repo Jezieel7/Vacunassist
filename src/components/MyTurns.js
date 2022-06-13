@@ -197,8 +197,8 @@ export default function MyTurns(){
                 <div className='col'>
                     <h1 className="text-x1 mb-4">Bienvenido a VacunAssist {user.email}</h1>
                     <div className="text-x1 mb-4">
-                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
-                    <br></br>
+                      <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
+                      <br></br>
                     </div>
                     <div className="text-x1 mb-4">  
                     <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./data">VER MI PERFIL</a></button>
