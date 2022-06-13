@@ -11,8 +11,9 @@ export function RegisterAppliedDose(){
     const [ vaccination, setVaccination] = useState({
         type: '',
         dose: '',
-        vaccinationDate: (new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear()),
-        observations: ''
+        vaccinationDate: (new Date().getDate() + "/0" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()),
+        observations: '',
+        presence: ''
     });
     const [ user, setUser ] = useState({
         email: ''
@@ -27,12 +28,21 @@ export function RegisterAppliedDose(){
             setVaccination({...vaccination, [name]: value});
         }
     };
-    const addVaccinationTurnData = (userTurns, doseAmountIncrement) => {
+    const addVaccinationTurnDataCovid = (userTurns, doseAmountIncrement) => {
         let i = 0;
         while(userTurns[i] !== ''){
             i++;
         }
-        userTurns[i] = "type:" + vaccination.type + ",dose:" + doseAmountIncrement + ",date:" + vaccination.vaccinationDate + ",observations:" + vaccination.observations + "";
+        userTurns[i] = vaccination.type + "," + doseAmountIncrement + "," + vaccination.vaccinationDate + "," + vaccination.observations + "," + vaccination.presence;
+        return userTurns;
+        //Object.keys(userTurns).length
+    }
+    const addVaccinationTurnData = (userTurns) => {
+        let i = 0;
+        while(userTurns[i] !== ''){
+            i++;
+        }
+        userTurns[i] = vaccination.type + "," + 1 + "," + vaccination.vaccinationDate + "," + vaccination.observations + "," + vaccination.presence;
         return userTurns;
         //Object.keys(userTurns).length
     }
@@ -44,13 +54,18 @@ export function RegisterAppliedDose(){
             const docSnap = await getDoc(docRef); 
             //Busca el correo del chabón, si no existe muestra error, si existe:
             if (docSnap.exists()) {
+                if(vaccination.presence === "absent"){
+                    let userTurns = docSnap.data().user.turns;
+                    const turnData = addVaccinationTurnData(userTurns);
+                    await updateDoc(docRef, {"user.turns": turnData});
+                }
                 //Recuperar los datos de dosis covid.
                 let doseAmountIncrement = docSnap.data().user.doseAmountCovid;
                 // Si el usuario tiene un 2 en doseAmount, no deja registrar la dosis, ya que tiene el máximo de dosis permitido sino
-                if(doseAmountIncrement === "2"){
+                if(vaccination.type === "covid" && doseAmountIncrement === "2"){
                     MySwal.fire(`El usuario ya tiene el maximo de vacunas del covid permitidas`);
                     throw error;
-                }else{
+                }else if(vaccination.type === "covid" && vaccination.presence === "present"){
                     //obtenemos users.turns
                     let userTurns = docSnap.data().user.turns;
                     /**Se agrega un nuevo registro en el array de vacunas que contiene:
@@ -59,9 +74,19 @@ export function RegisterAppliedDose(){
                         La fecha en la que se dio.
                         Observaciones.
                     **/
-                    const turnData = addVaccinationTurnData(userTurns, ++doseAmountIncrement);
+                    const turnData = addVaccinationTurnDataCovid(userTurns, ++doseAmountIncrement);
                     //Aumenta el doseAmount en 1 y ademas, marca el turno covid como vacio.
                     await updateDoc(docRef, {"user.doseAmountCovid": doseAmountIncrement, "user.turnCovid": '', "user.turns": turnData});
+                }
+                if(vaccination.type === "flu" && vaccination.presence === "present"){
+                    let userTurns = docSnap.data().user.turns;
+                    const turnData = addVaccinationTurnData(userTurns);
+                    await updateDoc(docRef, {"user.turnFlu": '', "user.turns": turnData});
+                }
+                if(vaccination.type === "yellowFever" && vaccination.presence === "present"){
+                    let userTurns = docSnap.data().user.turns;
+                    const turnData = addVaccinationTurnData(userTurns);
+                    await updateDoc(docRef, {"user.turnYellowFever": '', "user.turns": turnData});
                 }
             } else {
                 MySwal.fire(`El email ingresado no pertenece a un usuario del sistema`);
@@ -88,6 +113,17 @@ export function RegisterAppliedDose(){
                         <div className='mb-3'>
                             <label className='form-label'>Email: </label>
                             <input type="email" className='form-control' name="email" value={user.email} onChange={handleChange}/>     
+                        </div>
+                        <div className='mb-3'> 
+                            <label className='form-label'>Presencia: </label>
+                            <div className='mb-3'> 
+                                <label className='form-label'>Ausente: </label>
+                                <input type="radio" name="presence" className='form-control' value={"absent"} onChange={handleChange}/>
+                            </div>
+                            <div className='mb-3'> 
+                                <label className='form-label'>Presente: </label>
+                                <input type="radio" name="presence" className='form-control' value={"present"} onChange={handleChange}/>
+                            </div>
                         </div>
                         <div className='mb-3'> 
                             <label className='form-label'>Dosis posibles </label>

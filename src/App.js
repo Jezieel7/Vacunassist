@@ -13,6 +13,8 @@ import  HomeVaccinator from './components/HomeVaccinator';
 import HomeAdmin from './components/HomeAdmin';
 import RecordTurnToday from './components/RecordTurnToday'
 import RecordVaccinators from './components/RecordVaccinators'
+import GoTurns from './components/GoTurns'
+import RegisterOnlyVaccinators from './components/RegisterOnlyVaccinators';
 
 function App(){
   return ( 
@@ -67,6 +69,16 @@ function App(){
           <Route path="/recordVaccinators" element={
             <ProtectedRoute>
               <RecordVaccinators />
+            </ProtectedRoute>
+          }/>
+          <Route path="/goTurns" element={
+            <ProtectedRoute>
+              <GoTurns />
+            </ProtectedRoute>
+          }/>
+          <Route path="/registerOnlyVaccinators" element={
+            <ProtectedRoute>
+              <RegisterOnlyVaccinators />
             </ProtectedRoute>
           }/>
           <Route path="login" element={<Login/>}/>

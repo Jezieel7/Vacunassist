@@ -18,9 +18,11 @@ export default function MyTurns(){
     const [doseAmountCovid, setDoseAmountCovid] =useState('');
     const [zone, setZone] =useState('');
     const [age, setAge] = useState(0)
+    const [turns, setTurns] = useState([])
     let numberaux = 0;
     let numberaux2 = 0;
     let numberaux3 = 0;
+    let minMesesCovid= 9999;
 
 
     function calculoDeEdad(BirthDate) {
@@ -171,7 +173,12 @@ export default function MyTurns(){
             setDoseAmountCovid(snapshot.data().user.doseAmountCovid);
             setVaccinationDateFlu(snapshot.data().user.vaccinationDateFlu);
             setBirthDate(snapshot.data().user.birthDate);
-            //comprobarMenoraMayorDeEdad(id);
+            setTurns(snapshot.data().user.turns)
+            if((age >= 18 )&& (turnCovid == "Menores de 18 no reciben turno para vacuna de COVID-19") ){
+                asignTurnCovid(birthDate, turnCovid, doseAmountCovid, zone, riskFactor, user.email)
+            }
+        
+            //ver como calcular que pasen 3 meses, para volver a darse covid
         }else{
             console.log('el producto no existe');
         }

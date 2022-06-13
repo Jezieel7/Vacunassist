@@ -55,6 +55,7 @@ export default function Record(){
             <th className="bg-green-100 border text-left px-20 py-1">Dosis</th>
             <th className="bg-green-100 border text-left px-20 py-1">Fecha</th>
             <th className="bg-green-100 border text-left px-20 py-1">Observaciones</th>
+            <th className="bg-green-100 border text-left px-20 py-1">Presencia</th>
         </tr>
         </thead>
         <tbody>
@@ -64,6 +65,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col0[1]}</td>
             <td className="border px-8 py-4">{col0[2]}</td>
             <td className="border px-8 py-4">{col0[3]}</td>
+            <td className="border px-8 py-4">{col0[4]}</td>
         </tr>
         : ""            
         }
@@ -73,6 +75,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col1[1]}</td>
             <td className="border px-8 py-4">{col1[2]}</td>
             <td className="border px-8 py-4">{col1[3]}</td>
+            <td className="border px-8 py-4">{col1[4]}</td>
         </tr>
         : ""            
         }
@@ -82,6 +85,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col2[1]}</td>
             <td className="border px-8 py-4">{col2[2]}</td>
             <td className="border px-8 py-4">{col2[3]}</td>
+            <td className="border px-8 py-4">{col2[4]}</td>
         </tr>
         : ""            
         }
@@ -91,6 +95,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col3[1]}</td>
             <td className="border px-8 py-4">{col3[2]}</td>
             <td className="border px-8 py-4">{col3[3]}</td>
+            <td className="border px-8 py-4">{col3[4]}</td>
         </tr>
         : ""            
         }
@@ -100,6 +105,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col4[1]}</td>
             <td className="border px-8 py-4">{col4[2]}</td>
             <td className="border px-8 py-4">{col4[3]}</td>
+            <td className="border px-8 py-4">{col4[4]}</td>
         </tr>
         : ""            
         }
@@ -109,6 +115,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col5[1]}</td>
             <td className="border px-8 py-4">{col5[2]}</td>
             <td className="border px-8 py-4">{col5[3]}</td>
+            <td className="border px-8 py-4">{col5[4]}</td>
         </tr>
         : ""            
         }
@@ -118,6 +125,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col6[1]}</td>
             <td className="border px-8 py-4">{col6[2]}</td>
             <td className="border px-8 py-4">{col6[3]}</td>
+            <td className="border px-8 py-4">{col6[4]}</td>
         </tr>
         : ""            
         }
@@ -127,6 +135,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col7[1]}</td>
             <td className="border px-8 py-4">{col7[2]}</td>
             <td className="border px-8 py-4">{col7[3]}</td>
+            <td className="border px-8 py-4">{col7[4]}</td>
         </tr>
         : ""            
         }
@@ -136,6 +145,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col8[1]}</td>
             <td className="border px-8 py-4">{col8[2]}</td>
             <td className="border px-8 py-4">{col8[3]}</td>
+            <td className="border px-8 py-4">{col8[4]}</td>
         </tr>
         : ""            
         }
@@ -145,6 +155,7 @@ export default function Record(){
             <td className="border px-8 py-4">{col9[1]}</td>
             <td className="border px-8 py-4">{col9[2]}</td>
             <td className="border px-8 py-4">{col9[3]}</td>
+            <td className="border px-8 py-4">{col9[4]}</td>
         </tr>
         : ""            
         }
