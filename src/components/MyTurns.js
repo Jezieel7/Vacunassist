@@ -8,11 +8,20 @@ const MySwal = withReactContent(Swal);
 export default function MyTurns(){
     const { user, logout, loading } = useAuth();
     const [ turnCovid, setTurnCovid ] = useState('');
+    const [birthDate, setBirthDate] = useState('');
     const [ turnFlu, setTurnFlu ] = useState('');
     const [ turnYellowFever, setTurnYellowFever ] = useState('');
     const [ hasYellowFever, setHasYellowFever ] = useState('');
+    const [riskFactor, setRiskFactor] =useState('');
+    const [vaccinationDateFlu, setVaccinationDateFlu] =useState('');
+    const [hasVaccineFlu, setHasVaccineFlu] =useState('');
+    const [doseAmountCovid, setDoseAmountCovid] =useState('');
+    const [zone, setZone] =useState('');
     const [age, setAge] = useState(0)
     let numberaux = 0;
+    let numberaux2 = 0;
+    let numberaux3 = 0;
+
 
     function calculoDeEdad(BirthDate) {
         let hoy = new Date();
@@ -24,7 +33,77 @@ export default function MyTurns(){
         }
         return edad;
     }
-    const update = async (e) => { //e es un evento
+
+
+    const asignTurnCovid = async (birthDate, turnCovid, doseAmountCovid, zone, riskFactor, email) =>{
+        let hoy = new Date(); //si mas adelante quiero guardar fechas, crear otro hoy, antes de las operaciones de gripe pero despues de covid
+        //VACUNA COVID 
+        if((calculoDeEdad(birthDate) > 60)){ 
+          if((doseAmountCovid < 2)){ 
+            //AUTOMATICO, DE RIESGO = MAYOR DE 60, CON MENOS DE 2 DOSIS, LE ASIGNO EN 3 DIAS
+            hoy.setDate(hoy.getDate() + 3) 
+            turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()} a las 12:00 horas, en el vacunatorio ${zone}`
+          } 
+        }else{
+          if(calculoDeEdad(birthDate) < 18)
+            //MANUAL, MENOR DE 18
+            turnCovid= 'Menores de 18 no reciben turno para vacuna de COVID-19'
+          else{ 
+            if(riskFactor === "true"){
+              if(doseAmountCovid < 2){
+                hoy.setDate(hoy.getDate() + 4)
+                //AUTOMATICO, DE RIESGO = MENOR DE 60, PERO CON FACTORES DE RIESGO Y MENOS DE 2 DOSIS, LE ASIGNO EN 4 DIAS
+                turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()} a las 12:30 horas, en el vacunatorio ${zone}`
+              }  
+            }else{
+              if(doseAmountCovid < 2){
+                //MANUAL, NO ES DE RIESGO = MENOR DE 60, MENOS DE 2 DOSIS
+                turnCovid = "Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19"
+              }
+            }
+          }
+        } 
+        const userRef= doc(db,`Persona/${email}`) //traemos todos los datos
+        MySwal.fire(turnCovid);
+        await updateDoc(userRef, {"user.turnCovid": turnCovid}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
+    }
+    const asignTurnFlu = async (birthDate, turnFlu, zone, hasVaccineFlu, vaccinationDateFlu, email) =>{
+        let hoy = new Date(); //si mas adelante quiero guardar fechas, crear otro hoy, antes de las operaciones de gripe pero despues de covid
+        if((calculoDeEdad(birthDate) > 60)){
+          if(hasVaccineFlu === "false"){ // +60 AÑOS, SIN VACUNA
+            hoy.setDate(hoy.getDate() - 1) //ESTO LO HICE PARA QUE NO QUEDE MISMO DIA QUE COVID
+            hoy.setMonth(hoy.getMonth() + 2) //+1 MES, PUSE 2 PORQUE EL GETMONTH TOMA ENERO COMO 0, ENTONCES MAYO POR EJEMPLO ES EL MES 4 EN VEZ DE 5
+            turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 14:00 horas, en el vacunatorio ${zone}`
+            //LE DOY TURNO PARA 1 MES, EN VACUNATORIO DE PREFERENCIA 
+          }else{
+            if(calculoDeEdad(vaccinationDateFlu)>=1){ //+60 AÑOS, CON VACUNA VENCIDA
+              hoy.setDate(hoy.getDate() - 2)
+              hoy.setMonth(hoy.getMonth() + 2) //+1 MES
+              turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 14:30 horas, en el vacunatorio ${zone}`
+            }
+          }
+        }else{ 
+          if(hasVaccineFlu === "false"){ //-60 AÑOS, SIN VACUNA
+            hoy.setDate(hoy.getDate() - 3)
+            hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
+            turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:00 horas, en el vacunatorio ${zone}`
+            //LE DOY TURNO PARA 5 MESES, EN VACUNATORIO DE PREFERENCIA. 
+          }else{
+            if(calculoDeEdad(vaccinationDateFlu)>=1){ //-60 AÑOS, CON VACUNA VENCIDA
+              hoy.setDate(hoy.getDate() - 4)
+              hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
+              turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:30 horas, en el vacunatorio ${zone}`
+            }
+          }
+        }
+         // SI ALGUN DIA SE QUIERE HACER MAS "PRO" EL TEMA DE TURNOS, UNA BUENA IDEA PODRÍA SER TENER UN CALENDARIO, CON UN LIMITE DE TURNOS POR DIA, Y TENER CADA 30 MINUTOS (PONELE) UN TURNO
+        const userRef= doc(db,`Persona/${email}`) //traemos todos los datos
+        MySwal.fire(turnFlu);
+        await updateDoc(userRef, {"user.turnFlu": turnFlu}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
+    }
+
+
+    const update = async (e) => { //CASO FIEBRE AMARILLA
         e.preventDefault(); //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
         if (numberaux==1){
@@ -39,15 +118,52 @@ export default function MyTurns(){
         else
             numberaux=0; //esto para testing, borrar si algo sale mal
     }
+    const update2 = async (e) => { //CASO COVID
+        e.preventDefault(); //para evitar comportamiento por defecto
+        const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+        if (numberaux2==1){
+            e.cancelable(); //esta funcion no existe, aun asi lo que tiene que hacer lo hace asi que estamos bien. Cancelable hace que no se ejecute mas de un Sweet.
+            //console.log("se cancelo el evento xD")
+        }
+        if((turnCovid == "")&&(numberaux2==0)){
+            asignTurnCovid(birthDate, turnCovid, doseAmountCovid, zone, riskFactor, user.email);
+            numberaux2++;
+        }
+        else
+            numberaux2=0; //esto para testing, borrar si algo sale mal
+    }
+    const update3 = async (e) => { //CASO GRIPE
+        e.preventDefault(); //para evitar comportamiento por defecto
+        const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+        if (numberaux3==1){
+            e.cancelable(); //esta funcion no existe, aun asi lo que tiene que hacer lo hace asi que estamos bien. Cancelable hace que no se ejecute mas de un Sweet.
+            //console.log("se cancelo el evento xD")
+        }
+        if((turnFlu == "")&&(numberaux3==0)){
+            asignTurnFlu(birthDate, turnFlu, zone, hasVaccineFlu, vaccinationDateFlu, user.email);
+            numberaux3++;
+        }
+        else
+            numberaux3=0; //esto para testing, borrar si algo sale mal
+    }
     const getProductById = async (id) => {
         const userRef = doc(db,id);
         const snapshot = await getDoc(userRef);
         if(snapshot.exists()){
             setAge(calculoDeEdad(snapshot.data().user.birthDate))
-            setTurnCovid(snapshot.data().user.turnCovid);
             setTurnFlu(snapshot.data().user.turnFlu);
             setTurnYellowFever(snapshot.data().user.turnYellowFever);
             setHasYellowFever(snapshot.data().user.hasYellowFever);
+            setHasVaccineFlu(snapshot.data().user.hasVaccineFlu);
+            setRiskFactor(snapshot.data().user.riskFactor);
+            setZone(snapshot.data().user.zone);
+            setDoseAmountCovid(snapshot.data().user.doseAmountCovid);
+            setVaccinationDateFlu(snapshot.data().user.vaccinationDateFlu);
+            setBirthDate(snapshot.data().user.birthDate);
+            //if((calculoDeEdad(birthDate)>=18)&&(snapshot.data().user.turnCovid == "Menores de 18 no reciben turno para vacuna de COVID-19"))
+            //    setTurnCovid("")
+            //else
+            //    setTurnCovid(snapshot.data().user.turnCovid);
         }else{
             console.log('el producto no existe');
         }
@@ -93,6 +209,16 @@ export default function MyTurns(){
                         {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")&&(age<60)) ?
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update} disabled>SOLICITAR VACUNA DE FIEBRE AMARILLA </button>
+                        }
+                        <br></br>
+                        {((turnCovid == "")&&(numberaux2==0)&&(doseAmountCovid < 2)&&(age>=18)) ?
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update2}>SOLICITAR VACUNA DE COVID </button> : 
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update2} disabled>SOLICITAR VACUNA DE COVID </button>
+                        }
+                        <br></br>
+                        {((turnFlu == "")&&(numberaux3==0)&&((((hasVaccineFlu == "true")&&(calculoDeEdad(vaccinationDateFlu)>=1)))||(hasVaccineFlu == "false"))) ?
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update3}>SOLICITAR VACUNA DE GRIPE</button> : 
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update3} disabled>SOLICITAR VACUNA DE GRIPE </button>
                         }
                         <p>Direcciones de vacunatorios: Municipalidad (51 e/10 y 11 Nro. 770), Terminal (3 e/ 41 y 42 Nro. 480), Cementerio (138 e/73 y 74 Nro. 2035).</p>
                     </form>

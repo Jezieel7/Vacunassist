@@ -23,18 +23,6 @@ export function Home(){
     const [vaccinationDateFlu, setVaccinationDateFlu] =useState('');
     const [email, setEmail] =useState('');
     const [key, setKey] =useState('');
-    const [change,setChange] = useState(false)
-    const [error, setError] = useState();
-
-    const handleResetPassword = async () => {
-        if(!user.email) return setError("ingresa un email");
-        try {
-            await resetPassword(user.email);
-            setError('Te enviamos una wea al correo para que recuperes la dignidad');
-        } catch (error) {
-            setError(error.message);
-        }
-    }
 
     const update = async (e) => { //e es un evento
         e.preventDefault(); //para evitar comportamiento por defecto

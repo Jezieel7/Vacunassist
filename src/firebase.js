@@ -57,18 +57,18 @@ export const asignTurn = async (birthDate, turnCovid, turnFlu, turnYellowFever, 
     if((doseAmountCovid < 2)){ 
       //AUTOMATICO, DE RIESGO = MAYOR DE 60, CON MENOS DE 2 DOSIS, LE ASIGNO EN 3 DIAS
       hoy.setDate(hoy.getDate() + 3) 
-      turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 12:00 horas, en el vacunatorio ${zone}`
+      turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()} a las 12:00 horas, en el vacunatorio ${zone}`
     } 
   }else{
     if(calculoDeEdad(birthDate) < 18)
       //MANUAL, MENOR DE 18
-      turnCovid= ''
+      turnCovid= 'Menores de 18 no reciben turno para vacuna de COVID-19'
     else{ 
       if(riskFactor === "true"){
         if(doseAmountCovid < 2){
           hoy.setDate(hoy.getDate() + 4)
           //AUTOMATICO, DE RIESGO = MENOR DE 60, PERO CON FACTORES DE RIESGO Y MENOS DE 2 DOSIS, LE ASIGNO EN 4 DIAS
-          turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 12:30 horas, en el vacunatorio ${zone}`
+          turnCovid = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()} a las 12:30 horas, en el vacunatorio ${zone}`
         }  
       }else{
         if(doseAmountCovid < 2){
@@ -86,7 +86,7 @@ export const asignTurn = async (birthDate, turnCovid, turnFlu, turnYellowFever, 
       turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 14:00 horas, en el vacunatorio ${zone}`
       //LE DOY TURNO PARA 1 MES, EN VACUNATORIO DE PREFERENCIA 
     }else{
-      if(calculoGripe(vaccinationDateFlu)){ //+60 AÑOS, CON VACUNA VENCIDA
+      if(calculoGripe(vaccinationDateFlu)>=1){ //+60 AÑOS, CON VACUNA VENCIDA
         hoy.setDate(hoy.getDate() - 2)
         hoy.setMonth(hoy.getMonth() + 2) //+1 MES
         turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 14:30 horas, en el vacunatorio ${zone}`
@@ -99,7 +99,7 @@ export const asignTurn = async (birthDate, turnCovid, turnFlu, turnYellowFever, 
       turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:00 horas, en el vacunatorio ${zone}`
       //LE DOY TURNO PARA 5 MESES, EN VACUNATORIO DE PREFERENCIA. 
     }else{
-      if(calculoGripe(vaccinationDateFlu)){ //-60 AÑOS, CON VACUNA VENCIDA
+      if(calculoGripe(vaccinationDateFlu)>=1){ //-60 AÑOS, CON VACUNA VENCIDA
         hoy.setDate(hoy.getDate() - 4)
         hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
         turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:30 horas, en el vacunatorio ${zone}`

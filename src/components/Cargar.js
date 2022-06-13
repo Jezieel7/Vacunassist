@@ -88,7 +88,7 @@ export function Cargar(){
             if(user.hasVaccineFlu === "false"){ //MIRAR CASO DE SI TIENE +60 AÑOS, SIN VACUNA, Y CON VACUNA VENCIDA, ESTO EN FIREBASE.JS
                 boolFlu = true; //AUTOMATICO, NO TIENE VACUNA GRIPE
             }else{
-                if(calculoGripe(user.vaccinationDateFlu)){ 
+                if(calculoGripe(user.vaccinationDateFlu)>=1){ 
                     boolFlu = true; //AUTOMATICO, TIENE VACUNA GRIPE VENCIDA
                 }
             }
