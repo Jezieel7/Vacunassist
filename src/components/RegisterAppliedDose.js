@@ -101,12 +101,9 @@ export function RegisterAppliedDose(){
         <div className='container'>
             <div className='row'>
                 <div className='col'>
-                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
                     <div className="text-x1 mb-4">
-                        <br></br>    
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">
-                            <a href="./data">VER MI PERFIL</a>
-                        </button>
+                        <br></br>
+                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./HomeVaccinator">VOLVER A HOME</a></button>
                     </div>
                     <h1>Registro de dosis aplicada</h1>
                     <form onSubmit={submitDose}>
