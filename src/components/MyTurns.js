@@ -118,6 +118,7 @@ export default function MyTurns(){
         else
             numberaux=0; //esto para testing, borrar si algo sale mal
     }
+
     const update2 = async (e) => { //CASO COVID
         e.preventDefault(); //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
@@ -125,13 +126,14 @@ export default function MyTurns(){
             e.cancelable(); //esta funcion no existe, aun asi lo que tiene que hacer lo hace asi que estamos bien. Cancelable hace que no se ejecute mas de un Sweet.
             //console.log("se cancelo el evento xD")
         }
-        if((turnCovid == "")&&(numberaux2==0)){
+        if(((turnCovid == "")||(turnCovid=="Menores de 18 no reciben turno para vacuna de COVID-19"))&&(numberaux2==0)){
             asignTurnCovid(birthDate, turnCovid, doseAmountCovid, zone, riskFactor, user.email);
             numberaux2++;
         }
         else
             numberaux2=0; //esto para testing, borrar si algo sale mal
     }
+
     const update3 = async (e) => { //CASO GRIPE
         e.preventDefault(); //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
@@ -146,12 +148,21 @@ export default function MyTurns(){
         else
             numberaux3=0; //esto para testing, borrar si algo sale mal
     }
+
+    /*const comprobarMenoraMayorDeEdad = async (id) => { //FUNCION PARA VER SI EL USER PASO A TENER 18 AÑOS 
+        const userRef = doc(db,id);
+        const snapshot = await getDoc(userRef);
+        if((age>=18)&&(snapshot.data().user.turnCovid == "Menores de 18 no reciben turno para vacuna de COVID-19")){
+            await updateDoc(userRef, {"user.turnCovid": ""})
+        }
+    }*/
     const getProductById = async (id) => {
         const userRef = doc(db,id);
         const snapshot = await getDoc(userRef);
         if(snapshot.exists()){
             setAge(calculoDeEdad(snapshot.data().user.birthDate))
             setTurnFlu(snapshot.data().user.turnFlu);
+            setTurnCovid(snapshot.data().user.turnCovid)
             setTurnYellowFever(snapshot.data().user.turnYellowFever);
             setHasYellowFever(snapshot.data().user.hasYellowFever);
             setHasVaccineFlu(snapshot.data().user.hasVaccineFlu);
@@ -160,10 +171,7 @@ export default function MyTurns(){
             setDoseAmountCovid(snapshot.data().user.doseAmountCovid);
             setVaccinationDateFlu(snapshot.data().user.vaccinationDateFlu);
             setBirthDate(snapshot.data().user.birthDate);
-            //if((calculoDeEdad(birthDate)>=18)&&(snapshot.data().user.turnCovid == "Menores de 18 no reciben turno para vacuna de COVID-19"))
-            //    setTurnCovid("")
-            //else
-            //    setTurnCovid(snapshot.data().user.turnCovid);
+            //comprobarMenoraMayorDeEdad(id);
         }else{
             console.log('el producto no existe');
         }
@@ -196,7 +204,10 @@ export default function MyTurns(){
                     <form onSubmit={update}>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna COVID-19: </label>
-                            <input value={turnCovid} type="text" size={82} className='form-control' disabled/>     
+                            {((turnCovid=="Menores de 18 no reciben turno para vacuna de COVID-19")&&(age>=18)) ?
+                            <input value={""} type="text" size={82} className='form-control' disabled/>:
+                            <input value={turnCovid} type="text" size={82} className='form-control' disabled/> 
+                            }   
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna de gripe: </label>
@@ -211,7 +222,7 @@ export default function MyTurns(){
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update} disabled>SOLICITAR VACUNA DE FIEBRE AMARILLA </button>
                         }
                         <br></br>
-                        {((turnCovid == "")&&(numberaux2==0)&&(doseAmountCovid < 2)&&(age>=18)) ?
+                        {(((turnCovid == "")||(turnCovid=="Menores de 18 no reciben turno para vacuna de COVID-19"))&&(numberaux2==0)&&(doseAmountCovid < 2)&&(age>=18)) ?
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update2}>SOLICITAR VACUNA DE COVID </button> : 
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update2} disabled>SOLICITAR VACUNA DE COVID </button>
                         }
