@@ -183,6 +183,15 @@ export default function MyTurns(){
             console.log('el producto no existe');
         }
     }
+    const informar1 = async (e) => { //CASO GRIPE
+      MySwal.fire("No puede solicitar turno para vacuna amarilla por 1 de las siguientes razones: Ya posee turno, o tiene más de 60 años, o tiene la vacuna");
+    }
+    const informar2 = async (e) => { //CASO GRIPE
+      MySwal.fire("No puede solicitar turno para covid por 1 de las siguientes razones: Ya posee turno, o tiene menos de 18 años, o ya tiene 2 dosis, o se dio la vacuna recientemente");
+    }
+    const informar3 = async (e) => { //CASO GRIPE
+      MySwal.fire("No puede solicitar turno para gripe por 1 de las siguientes razones: Ya posee turno, o tiene la vacuna, y todavia no esta vencida");
+    }
     useEffect( () => {
         getProductById(`Persona/${user.email}`);
         // eslint-disable-next-time
@@ -226,17 +235,17 @@ export default function MyTurns(){
                         </div>
                         {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")&&(age<60)) ?
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update} disabled>SOLICITAR VACUNA DE FIEBRE AMARILLA </button>
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={informar1} >SOLICITAR VACUNA DE FIEBRE AMARILLA </button>
                         }
                         <br></br>
                         {(((turnCovid == "")||(turnCovid=="Menores de 18 no reciben turno para vacuna de COVID-19"))&&(numberaux2==0)&&(doseAmountCovid < 2)&&(age>=18)) ?
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update2}>SOLICITAR VACUNA DE COVID </button> : 
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update2} disabled>SOLICITAR VACUNA DE COVID </button>
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={informar2} >SOLICITAR VACUNA DE COVID </button>
                         }
                         <br></br>
                         {((turnFlu == "")&&(numberaux3==0)&&((((hasVaccineFlu == "true")&&(calculoDeEdad(vaccinationDateFlu)>=1)))||(hasVaccineFlu == "false"))) ?
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update3}>SOLICITAR VACUNA DE GRIPE</button> : 
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update3} disabled>SOLICITAR VACUNA DE GRIPE </button>
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={informar3} >SOLICITAR VACUNA DE GRIPE </button>
                         }
                         <p>Direcciones de vacunatorios: Municipalidad (51 e/10 y 11 Nro. 770), Terminal (3 e/ 41 y 42 Nro. 480), Cementerio (138 e/73 y 74 Nro. 2035).</p>
                     </form>

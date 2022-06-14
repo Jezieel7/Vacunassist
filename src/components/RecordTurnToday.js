@@ -8,7 +8,10 @@ import { db } from "../firebase";
 export default function RecordTurnToday(){
     const { user } = useAuth();
     let hoy = new Date();
-    const today = `${hoy.getDate()}/0${hoy.getMonth()+1}/${hoy.getFullYear()}`
+    let today = ''
+    {hoy.getMonth() < 9 ? 
+     today = `${hoy.getFullYear()}-0${hoy.getMonth()+1}-${hoy.getDate()}` : 
+     today = `${hoy.getFullYear()}-${hoy.getMonth()+1}-${hoy.getDate()}` }
     const [personas, setPersonas] = useState( [] )
     const [personas2, setPersonas2] = useState( [] )
     const [personas3, setPersonas3] = useState( [] )

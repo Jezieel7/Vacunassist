@@ -5,17 +5,26 @@ import { db } from "../firebase";
 import { doc, updateDoc} from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import emailjs from '@emailjs/browser'; 
 const MySwal = withReactContent(Swal);
 export default function GoTurns(){
-    const inputRef= useRef(null);
+    const inputRefZone= useRef("vacunatorio");
+    const inputRefZone2= useRef("vacunatorio")
+    const inputRefEmail= useRef("mail");
+    const inputRefEmail2= useRef("mail")
+    const form = useRef(); 
+    //const inputRef= useRef(null);
+    //const inputRef2= useRef("vacunatorio")
     const { user } = useAuth();
     const [personasTurnCovid, setPersonasTurnCovid] = useState([]);
     const [personasTurnYellowFever, setPersonasTurnYellowFever] = useState([]);
     const [mati, setMati] = useState(0);
     const [zone, setZone] =useState('');
     const [turn, setTurn] = useState('');
+    const [turn2, setTurn2] = useState('');
     let numberaux = 0;
     let numberaux2 = 0;
+    
     const getPersonas = async (string) => {
         const personasCOVID = query(collection(db, string), where("user.turnCovid", "==", "Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19"));
         const personasAMARILLA = query(collection(db, string), where("user.turnYellowFever", "==", "Solicitud aceptada. Se te asignará un turno en los próximos días"));
@@ -39,31 +48,36 @@ export default function GoTurns(){
     }
     const updateCOVID = async (e) => { //e es un evento
         e.preventDefault();
-        const product= doc(db,`Persona/${inputRef.current.value}`); //traemos todos los datos a product
-        if (numberaux==1){
-            e.cancelable(); //esta funcion no existe, aun asi lo que tiene que hacer lo hace asi que estamos bien. Cancelable hace que no se ejecute mas de un Sweet.
-            //console.log("se cancelo el evento xD")
-        }
-        if(numberaux==0){
-            await updateDoc(product, {"user.turnCovid": turn}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
-            numberaux++;
+        if(turn!== ''){
+            const product= doc(db,`Persona/${inputRefEmail.current.value}`); //traemos todos los datos a product     
+            console.log(inputRefEmail.current.value);
+            console.log(turn);  
+            await updateDoc(product, {"user.turnCovid": `Tiene turno el día ${turn} a las 10:00 horas, en el vacunatorio ${inputRefZone.current.value}`}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
             MySwal.fire("Turno asignado");
+            emailjs.sendForm('service_043ut7d', 'template_hzbm87w', 'matiasadorno14@gmail.com' , 'YzH5_MFfCTng8tzFm')
+                .then((result) => {
+                    console.log(result.text);
+                }, (error) => {
+                    console.log(error.text);
+                }); 
+        //mandar mail
         }
     }
     const updateYellow = async (e) => { //e es un evento
         e.preventDefault();
-        const product= doc(db,`Persona/${inputRef.current.value}`); //traemos todos los datos a product
-        console.log(inputRef.current.value);
-        console.log(turn);
-        console.log(turn.toString());
-        console.log(turn.toString());
-        if(numberaux2==1){
-            e.cancelable();
-        }
-        if(numberaux2==0){
-            await updateDoc(product, {"user.turnYellowFever": turn}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
-            numberaux++;
+        if(turn2!== ''){
+            const product= doc(db,`Persona/${inputRefEmail2.current.value}`); //traemos todos los datos a product
+            console.log(inputRefEmail2.current.value);
+            console.log(turn2);
+            await updateDoc(product, {"user.turnYellowFever": `Tiene turno el día ${turn2} a las 13:30 horas, en el vacunatorio ${inputRefZone2.current.value}`}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
             MySwal.fire("Turno asignado");
+            emailjs.sendForm('service_043ut7d', 'template_hzbm87w', inputRefEmail2.current.value , 'YzH5_MFfCTng8tzFm')
+                .then((result) => {
+                    console.log(result.text);
+                }, (error) => {
+                    console.log(error.text);
+                }); 
+        //mandar mail
         }
     }
     useEffect( () => {
@@ -95,11 +109,11 @@ export default function GoTurns(){
                             </div>
                             <div className='mb-3'>    
                                 <label className='form-label'>Mail: </label>
-                                <input value={persona.user.email} ref={inputRef}  type="text" className='form-control' disabled/> 
+                                <input value={persona.user.email} ref={inputRefEmail}  type="text" className='form-control' disabled/> 
                             </div> 
                             <div className='mb-3'>  
                                 <label className='form-label'>Vacunatorio de preferencia: </label>
-                                <input value={persona.user.zone} type="text" className='form-control' disabled/>
+                                <input  value={persona.user.zone} ref={inputRefZone} type="text" className='form-control' disabled/>
                             </div>   
                             <div className='mb-3'> 
                                 <label className='form-label'>vacuna: </label>
@@ -107,20 +121,23 @@ export default function GoTurns(){
                             </div>
                             <div className='mb-3'>
                                 <label className='form-label'>turno: </label>
-                                <input name="turn" onChange={(e) => setTurn(e.target.value)}  type="text" className='form-control' />
+                                <input style={{"background-color" : "lime"}} name="turn" onChange={(e) => setTurn(e.target.value)}  type="date" className='form-control' />
                             </div>
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={updateCOVID}>ASIGNAR VACUNA DE COVID</button>
                             </tr>   
                         ))
+                        
                          
                         : "No hay turnos de covid "}
+                    {mati == 1 ?  
+                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"  ref={form} onClick={updateCOVID}>ASIGNAR VACUNA DE COVID</button> :
+                    ""}
                     {mati == 1 ?
                         personasTurnYellowFever.map( (persona) => (
                             <tr key= {persona.id}>
                             <h1>TURNO</h1>
                             <div className='mb-3'>
                                 <label className='form-label'>Nombre: </label>
-                                <input value={persona.user.name} type="text" className='form-control' disabled/>
+                                <input value={persona.user.name} name="name2" type="text" className='form-control' disabled/>
                             </div>
                             <div className='mb-3'>    
                                 <label className='form-label'>Apellido: </label>
@@ -128,11 +145,11 @@ export default function GoTurns(){
                             </div>
                             <div className='mb-3'>    
                                 <label className='form-label'>Mail: </label>
-                                <input value={persona.user.email} ref={inputRef} type="text" className='form-control' disabled/> 
+                                <input value={persona.user.email} name="email2" ref={inputRefEmail2} type="text" className='form-control' disabled/> 
                             </div> 
                             <div className='mb-3'>  
                                 <label className='form-label'>Vacunatorio de preferencia: </label>
-                                <input value={persona.user.zone}  onChange={(e) => setZone(e.target.value)} type="text" className='form-control' disabled/>
+                                <input  value={persona.user.zone} ref={inputRefZone2} type="text" className='form-control' disabled/>
                             </div>   
                             <div className='mb-3'> 
                                 <label className='form-label'>vacuna: </label>
@@ -140,13 +157,15 @@ export default function GoTurns(){
                             </div>
                             <div className='mb-3'>
                                 <label className='form-label'>turno: </label>
-                                <input name="turn" onChange={(e) => setTurn(e.target.value)} type="text" className='form-control' />
+                                <input style={{"background-color" : "yellow"}} name="turn2" onChange={(e) => setTurn2(e.target.value)} type="date" className='form-control' />
                             </div>
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={updateYellow}>ASIGNAR VACUNA DE FIEBRE AMARILLA</button>
                             </tr>   
                         ))
                          
-                        : " No hay turnos de Fiebre amarilla"}    
+                        : " No hay turnos de Fiebre amarilla"}
+                    {mati == 1 ?  
+                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" ref={form}  onClick={updateYellow}>ASIGNAR VACUNA DE FIEBRE AMARILLA</button> :
+                    ""}    
                 </div>
             </div>
         </div>

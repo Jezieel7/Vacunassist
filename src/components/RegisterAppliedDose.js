@@ -11,7 +11,7 @@ export function RegisterAppliedDose(){
     const [ vaccination, setVaccination] = useState({
         type: '',
         dose: '',
-        vaccinationDate: (new Date().getDate() + "/0" + (new Date().getMonth()+1) + "/" + new Date().getFullYear()),
+        vaccinationDate: (new Date().getFullYear() + "-0" + (new Date().getMonth()+1) + "-" + new Date().getDate()),
         observations: '',
         presence: ''
     });
