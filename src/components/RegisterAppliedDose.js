@@ -1,9 +1,10 @@
 import { useAuth } from "../context/AuthContext";
-import React, { useState } from 'react';
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import React, { useState, useEffect } from 'react';
+import { doc, getDoc, updateDoc, collection, query, where, getDocs} from "firebase/firestore";
 import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+
 const MySwal = withReactContent(Swal);
 export function RegisterAppliedDose(){
     const [ error, setError ] = useState();
@@ -15,12 +16,67 @@ export function RegisterAppliedDose(){
         observations: '',
         presence: ''
     });
+    let hoy = new Date();
+    let today = ''
+    {hoy.getMonth() < 9 ? 
+     today = `${hoy.getFullYear()}-0${hoy.getMonth()+1}-${hoy.getDate()}` : 
+     today = `${hoy.getFullYear()}-${hoy.getMonth()+1}-${hoy.getDate()}` }
+    const [personas, setPersonas] = useState( [] );
+    const [mati, setMati] = useState( 0 );
+
+    const getPersonasConTurno = async (string) => {
+        const flu = query(collection(db, string), where("user.turnFlu", "!=", ""));
+        const covid = query(collection(db, string), where("user.turnCovid", "!=", ""));
+        const yellow = query(collection(db, string), where("user.turnYellowFever", "!=", ""));
+        var arr1= [];
+        var arr2= [];
+        var arr3= [];
+        const querySnapshot1 = await getDocs(flu);
+        querySnapshot1.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        let aux1= doc.data().user.turnFlu.split(' ')
+        if (aux1[4] == today){
+            if(!personas.includes(doc.data()))
+                arr1.push(doc.data());
+        }
+        });
+        const querySnapshot2 = await getDocs(covid);
+        querySnapshot2.forEach((doc) => {
+        let aux2= doc.data().user.turnCovid.split(' ');
+        if (aux2[4] == today){
+            if(!personas.includes(doc.data()))
+                arr2.push(doc.data());
+        }
+        });
+        
+        const querySnapshot3 = await getDocs(yellow);
+        querySnapshot3.forEach((doc) => {
+        let aux3= doc.data().user.turnYellowFever.split(' ');
+        if (aux3[4] == today){
+          if(!personas.includes(doc.data()))
+                arr3.push(doc.data());
+        }
+        });
+        arr1 = [...new Set(arr1)];
+        arr2 = [...new Set(arr2)];
+        arr3 = [...new Set(arr3)];
+        setPersonas(arr1);
+        setMati(1);
+    }
+
+    useEffect( () => {
+        getPersonasConTurno("Persona");
+        // eslint-disable-next-time
+    }, [])
+
     const [ user, setUser ] = useState({
         email: ''
     });
+
     const handleLogout = async () => {
         await logout();
     }
+
     const handleChange = ({target: {name, value}}) => {
         if(name === "email"){
             setUser({...user, [name]: value});
@@ -28,6 +84,7 @@ export function RegisterAppliedDose(){
             setVaccination({...vaccination, [name]: value});
         }
     };
+    
     const addVaccinationTurnDataCovid = (userTurns, doseAmountIncrement) => {
         let i = 0;
         while(userTurns[i] !== ''){
@@ -107,10 +164,14 @@ export function RegisterAppliedDose(){
                     </div>
                     <h1>Registro de dosis aplicada</h1>
                     <form onSubmit={submitDose}>
-                        <div className='mb-3'>
-                            <label className='form-label'>Email: </label>
-                            <input type="email" className='form-control' name="email" value={user.email} onChange={handleChange}/>     
-                        </div>
+                    <label className='form-label'>Email: </label>
+                    {mati == 1 ?(
+                        <select>
+                            {personas.map( (persona) => (
+                                <option type="email" className='form-control' name="email" value={persona.user.email}>{persona.user.email}</option>
+                            ))} 
+                        </select>
+                    ): ""}
                         <div className='mb-3'> 
                             <label className='form-label'>Presencia: </label>
                             <div className='mb-3'> 

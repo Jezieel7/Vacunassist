@@ -17,7 +17,6 @@ export default function RecordTurnToday(){
     const [personas3, setPersonas3] = useState( [] )
     const [mati, setMati] = useState( 0 )
 
-
     const getCadaPersonaFiltrar = async (string) => {
         const flu = query(collection(db, string), where("user.turnFlu", "!=", ""));
         const covid = query(collection(db, string), where("user.turnCovid", "!=", ""));

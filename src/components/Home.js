@@ -123,13 +123,6 @@ export function Home(){
                             <input value={doseYearYellowFever} onChange={(e) => setDoseYearYellowFever(e.target.value)} type="number" className='form-control' min={1900} max={2022}disabled/>    
                         </div>
                         <div className='mb-3'>
-                            <label className='form-label'>Persona con factores de riesgo: </label>
-                            {riskFactor === "true" ? "Si" : "No"}  
-                            <br></br>                           
-                            <input type="radio" name="riskFactor" className='form-control' value={true} onChange={(e) => setRiskFactor(e.target.value)} /> Si
-                            <input type="radio" name="riskFactor" className='form-control' value={false} onChange={(e) => setRiskFactor(e.target.value)} /> No   
-                        </div>
-                        <div className='mb-3'>
                             <label className='form-label'>Centro de vacunación de preferencia: </label>                           
                             {zone}
                             <br></br>
@@ -139,7 +132,7 @@ export function Home(){
                             <br></br>
                             <input type="radio" name="zone" className='form-control' value={"Cementerio"} onChange={(e) => setZone(e.target.value)} /> Cementerio (138 e/73 y 74 Nro. 2035)                                   
                         </div>
-                        <button type='submit' className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">ACTUALIZAR DATOS</button>
+                        <button type='submit' className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">ACTUALIZAR CENTRO DE VACUNACION DE PREFERENCIA</button>
                         <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
                     </form>
                     <div className="text-x1 mb-4">

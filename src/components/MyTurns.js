@@ -4,6 +4,7 @@ import {getDoc, doc, updateDoc} from 'firebase/firestore';
 import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+
 const MySwal = withReactContent(Swal);
 export default function MyTurns(){
     const { user, logout, loading } = useAuth();
@@ -192,6 +193,47 @@ export default function MyTurns(){
     const informar3 = async (e) => { //CASO GRIPE
       MySwal.fire("No puede solicitar turno para gripe por 1 de las siguientes razones: Ya posee turno, o tiene la vacuna, y todavia no esta vencida");
     }
+
+    const cancelarTurnoCovid = async () => {
+      if((turnCovid !== "Menores de 18 no reciben turno para vacuna de COVID-19") || (turnCovid !== "")){
+        if(window.confirm("¿Está seguro que desea cancelar este turno?")){
+          setTurnCovid('');
+          const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+          await updateDoc(product, {"user.turnCovid": ""});
+          alert("Su turno ha sido cancelado, si desea puede solicitar otro.");
+        }
+      }else if(turnCovid == ""){
+        alert("No puede cancelar un turno que no fue dado");
+      }
+
+    }
+
+    const cancelarTurnoFlu = async () => {
+      if(turnFlu !== ""){
+        if(window.confirm("¿Está seguro que desea cancelar este turno?")){
+          setTurnFlu('');
+          const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+          await updateDoc(product, {"user.turnFlu": ""});
+          alert("Su turno ha sido cancelado, si desea puede solicitar otro.");
+        }
+      }else if(turnFlu == ""){
+        alert("No puede cancelar un turno que no fue dado");
+      }
+    }
+
+    const cancelarTurnoYellowFever = async () => {
+      if(turnYellowFever !== ""){
+        if(window.confirm("¿Está seguro que desea cancelar este turno?")){
+          setTurnYellowFever('');
+          const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+          await updateDoc(product, {"user.turnYellowFever": ""});
+          alert("Su turno ha sido cancelado, si desea puede solicitar otro.");
+        }
+      }else if(turnYellowFever == ""){
+        alert("No puede cancelar un turno que no fue dado");
+      }
+    }
+
     useEffect( () => {
         getProductById(`Persona/${user.email}`);
         // eslint-disable-next-time
@@ -221,17 +263,20 @@ export default function MyTurns(){
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna COVID-19: </label>
                             {((turnCovid=="Menores de 18 no reciben turno para vacuna de COVID-19")&&(age>=18)) ?
-                            <input value={""} type="text" size={82} className='form-control' disabled/>:
-                            <input value={turnCovid} type="text" size={82} className='form-control' disabled/> 
-                            }   
+                              <input value={""} type="text" size={82} className='form-control' disabled/>:
+                              <input value={turnCovid} type="text" size={82} className='form-control' disabled/> 
+                            }
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoCovid}>Cancelar turno </button>
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna de gripe: </label>
-                            <input value={turnFlu} type="text" size={84} className='form-control' disabled/>   
+                            <input value={turnFlu} type="text" size={84} className='form-control' disabled/>  
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoFlu}>Cancelar turno </button> 
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna de fiebre amarilla: </label>
-                            <input value={turnYellowFever} type="text" size={75} className='form-control' disabled/>      
+                            <input value={turnYellowFever} type="text" size={75} className='form-control' disabled/>
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoYellowFever}>Cancelar turno </button>      
                         </div>
                         {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")&&(age<60)) ?
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 

@@ -15,6 +15,7 @@ import RecordTurnToday from './components/RecordTurnToday'
 import RecordVaccinators from './components/RecordVaccinators'
 import GoTurns from './components/GoTurns'
 import RegisterOnlyVaccinators from './components/RegisterOnlyVaccinators';
+import ModificarFactorRiesgo from './components/ModificarFactorRiesgo';
 
 function App(){
   return ( 
@@ -79,6 +80,11 @@ function App(){
           <Route path="/registerOnlyVaccinators" element={
             <ProtectedRoute>
               <RegisterOnlyVaccinators />
+            </ProtectedRoute>
+          }/>
+          <Route path="/ModificarFactorRiesgo" element={
+            <ProtectedRoute>
+              <ModificarFactorRiesgo />
             </ProtectedRoute>
           }/>
           <Route path="login" element={<Login/>}/>
