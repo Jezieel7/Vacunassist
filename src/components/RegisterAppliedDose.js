@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, collection, query, where, getDocs} from "fireba
 import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { toBeDisabled } from "@testing-library/jest-dom/dist/matchers";
 
 const MySwal = withReactContent(Swal);
 export function RegisterAppliedDose(){
@@ -22,7 +23,12 @@ export function RegisterAppliedDose(){
      today = `${hoy.getFullYear()}-0${hoy.getMonth()+1}-${hoy.getDate()}` : 
      today = `${hoy.getFullYear()}-${hoy.getMonth()+1}-${hoy.getDate()}` }
     const [personas, setPersonas] = useState( [] );
+    const [personas2, setPersonas2] = useState( [] )
+    const [personas3, setPersonas3] = useState( [] )
     const [mati, setMati] = useState( 0 );
+    const [emailsFlu, setEmailsFlu] = useState( [] )
+    const [emailsCovid, setEmailsCovid] = useState( [] )
+    const [emailsYellow, setEmailsYellow] = useState( [] )
 
     const getPersonasConTurno = async (string) => {
         const flu = query(collection(db, string), where("user.turnFlu", "!=", ""));
@@ -38,14 +44,16 @@ export function RegisterAppliedDose(){
         if (aux1[4] == today){
             if(!personas.includes(doc.data()))
                 arr1.push(doc.data());
+                emailsFlu.push(doc.data().user.email)
         }
         });
         const querySnapshot2 = await getDocs(covid);
         querySnapshot2.forEach((doc) => {
         let aux2= doc.data().user.turnCovid.split(' ');
         if (aux2[4] == today){
-            if(!personas.includes(doc.data()))
+            if(!personas2.includes(doc.data()))
                 arr2.push(doc.data());
+                emailsCovid.push(doc.data().user.email)
         }
         });
         
@@ -53,14 +61,17 @@ export function RegisterAppliedDose(){
         querySnapshot3.forEach((doc) => {
         let aux3= doc.data().user.turnYellowFever.split(' ');
         if (aux3[4] == today){
-          if(!personas.includes(doc.data()))
+          if(!personas3.includes(doc.data()))
                 arr3.push(doc.data());
+                emailsYellow.push(doc.data().user.email)
         }
         });
         arr1 = [...new Set(arr1)];
         arr2 = [...new Set(arr2)];
         arr3 = [...new Set(arr3)];
         setPersonas(arr1);
+        setPersonas2(arr2)
+        setPersonas3(arr3)
         setMati(1);
     }
 
@@ -70,7 +81,7 @@ export function RegisterAppliedDose(){
     }, [])
 
     const [ user, setUser ] = useState({
-        email: ''
+        email: 'default'
     });
 
     const handleLogout = async () => {
@@ -78,7 +89,7 @@ export function RegisterAppliedDose(){
     }
 
     const handleChange = ({target: {name, value}}) => {
-        if(name === "email"){
+        if(name == "email"){
             setUser({...user, [name]: value});
         }else{
             setVaccination({...vaccination, [name]: value});
@@ -106,9 +117,25 @@ export function RegisterAppliedDose(){
     const submitDose = async (e) => {
         e.preventDefault();
         setError('');
+        console.log(user.email)
+        console.log(emailsFlu)
+        console.log(emailsCovid)
+        console.log(emailsYellow)
         try {
             const docRef = doc(db,`Persona/${user.email}`);
             const docSnap = await getDoc(docRef); 
+            if(emailsFlu.includes(user.email)){
+                vaccination.type= "flu"
+            }
+            else 
+                if(emailsCovid.includes(user.email)){
+                    vaccination.type= "covid"
+                }
+                else{
+                    if(emailsYellow.includes(user.email)){
+                        vaccination.type="yellowFever"
+                    }
+                }
             //Busca el correo del chabón, si no existe muestra error, si existe:
             if (docSnap.exists()) {
                 if(vaccination.presence === "absent"){
@@ -146,7 +173,7 @@ export function RegisterAppliedDose(){
                     await updateDoc(docRef, {"user.turnYellowFever": '', "user.turns": turnData});
                 }
             } else {
-                MySwal.fire(`El email ingresado no pertenece a un usuario del sistema`);
+                MySwal.fire(`Seleccione un email`);
                 throw error;
             }
         } catch (error) {
@@ -164,12 +191,19 @@ export function RegisterAppliedDose(){
                     </div>
                     <h1>Registro de dosis aplicada</h1>
                     <form onSubmit={submitDose}>
-                    <label className='form-label'>Email: </label>
+                    <label className='form-label'>Email (entre parentesis la dosis en la que tenía turno): </label>
                     {mati == 1 ?(
-                        <select>
+                        <select name="email" onChange={handleChange}>
+                            <option type="email" className='form-control' name="email">Selecciona un email</option>
                             {personas.map( (persona) => (
-                                <option type="email" className='form-control' name="email" value={persona.user.email}>{persona.user.email}</option>
-                            ))} 
+                                <option type="email" className='form-control' name="email" value={persona.user.email}>{persona.user.email} (GRIPE)</option>
+                            ))}
+                            {personas2.map( (persona) => (
+                                <option type="email" className='form-control' name="email" value={persona.user.email}>{persona.user.email} (COVID-19)</option>
+                            ))}
+                            {personas3.map( (persona) => (
+                                <option type="email" className='form-control' name="email" value={persona.user.email}>{persona.user.email} (FIEBRE AMARILLA)</option>
+                            ))}  
                         </select>
                     ): ""}
                         <div className='mb-3'> 
@@ -183,26 +217,9 @@ export function RegisterAppliedDose(){
                                 <input type="radio" name="presence" className='form-control' value={"present"} onChange={handleChange}/>
                             </div>
                         </div>
-                        <div className='mb-3'> 
-                            <label className='form-label'>Dosis posibles </label>
-                            <div className='mb-3'> 
-                                <label className='form-label'>Dosis covid: </label>
-                                <input type="radio" name="type" className='form-control' value={"covid"} onChange={handleChange}/>Covid-19
-                            </div>
-                            <br></br>
-                            <div className='mb-3'> 
-                                <label className='form-label'>Dosis gripe: </label>
-                                <input type="radio" name="type" className='form-control' value={"flu"} onChange={handleChange}/> Gripe
-                            </div>
-                            <br></br>
-                            <div className='mb-3'> 
-                                <label className='form-label'>Dosis fiebre amarilla: </label>
-                                <input type="radio" name="type" className='form-control' value={"yellowFever"} onChange={handleChange}/> Fiebre amarilla 
-                            </div>
-                        </div>
                         <div className='mb-3'>
-                            <label className='form-label'>Observaciones: </label>
-                            <input name="observations" type="text" className='form-control' onChange={handleChange}/>      
+                            <label className='form-label'>Observaciones: </label><div></div>
+                            <textarea name="observations" className='form-control' onChange={handleChange} placeholder={"Escribe aquí tus observaciones"} maxLength={200} rows="4" cols="40"></textarea>      
                         </div>
                         <button onClick={submitDose}>Registrar dosis</button>
                     </form>
@@ -210,4 +227,4 @@ export function RegisterAppliedDose(){
             </div>
         </div>
     )
-}
+}//ver si anda el select, y el textarea, mirar como hacer que el tipo de vacuna se registre solo.
