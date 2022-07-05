@@ -76,12 +76,18 @@ export default function MyTurns(){
           if(hasVaccineFlu === "false"){ // +60 AÑOS, SIN VACUNA
             hoy.setDate(hoy.getDate() - 1) //ESTO LO HICE PARA QUE NO QUEDE MISMO DIA QUE COVID
             hoy.setMonth(hoy.getMonth() + 2) //+1 MES, PUSE 2 PORQUE EL GETMONTH TOMA ENERO COMO 0, ENTONCES MAYO POR EJEMPLO ES EL MES 4 EN VEZ DE 5
+            if(hoy.getMonth() == 0){
+              hoy.setMonth(1)
+            }
             turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 14:00 horas, en el vacunatorio ${zone}`
             //LE DOY TURNO PARA 1 MES, EN VACUNATORIO DE PREFERENCIA 
           }else{
             if(calculoDeEdad(vaccinationDateFlu)>=1){ //+60 AÑOS, CON VACUNA VENCIDA
               hoy.setDate(hoy.getDate() - 2)
               hoy.setMonth(hoy.getMonth() + 2) //+1 MES
+              if(hoy.getMonth() == 0){
+                hoy.setMonth(1)
+              }
               turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 14:30 horas, en el vacunatorio ${zone}`
             }
           }
@@ -89,12 +95,18 @@ export default function MyTurns(){
           if(hasVaccineFlu === "false"){ //-60 AÑOS, SIN VACUNA
             hoy.setDate(hoy.getDate() - 3)
             hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
+            if(hoy.getMonth() == 0){
+              hoy.setMonth(1)
+            }
             turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:00 horas, en el vacunatorio ${zone}`
             //LE DOY TURNO PARA 5 MESES, EN VACUNATORIO DE PREFERENCIA. 
           }else{
             if(calculoDeEdad(vaccinationDateFlu)>=1){ //-60 AÑOS, CON VACUNA VENCIDA
               hoy.setDate(hoy.getDate() - 4)
               hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
+              if(hoy.getMonth() == 0){
+                hoy.setMonth(1)
+              }
               turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:30 horas, en el vacunatorio ${zone}`
             }
           }
@@ -106,7 +118,7 @@ export default function MyTurns(){
     }
 
 
-    const update = async (e) => { //CASO FIEBRE AMARILLA
+    const update1 = async (e) => { //CASO FIEBRE AMARILLA
         e.preventDefault(); //para evitar comportamiento por defecto
         const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
         if (numberaux==1){
@@ -184,6 +196,10 @@ export default function MyTurns(){
             console.log('el producto no existe');
         }
     }
+    const update = async (e) => {
+      e.preventDefault();
+      console.log("probando a ver si anda ahorita")
+    }
     const informar1 = async (e) => { //CASO GRIPE
       MySwal.fire("No puede solicitar turno para vacuna amarilla por 1 de las siguientes razones: Ya posee turno, o tiene más de 60 años, o tiene la vacuna");
     }
@@ -195,14 +211,14 @@ export default function MyTurns(){
     }
 
     const cancelarTurnoCovid = async () => {
-      if((turnCovid !== "Menores de 18 no reciben turno para vacuna de COVID-19") || (turnCovid !== "")){
+      if((turnCovid !== "Menores de 18 no reciben turno para vacuna de COVID-19") && (turnCovid !== "")){
         if(window.confirm("¿Está seguro que desea cancelar este turno?")){
           setTurnCovid('');
           const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
           await updateDoc(product, {"user.turnCovid": ""});
           alert("Su turno ha sido cancelado, si desea puede solicitar otro.");
         }
-      }else if(turnCovid == ""){
+      }else if((turnCovid == "")||(turnCovid == "Menores de 18 no reciben turno para vacuna de COVID-19")){
         alert("No puede cancelar un turno que no fue dado");
       }
 
@@ -279,7 +295,7 @@ export default function MyTurns(){
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoYellowFever}>Cancelar turno </button>      
                         </div>
                         {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")&&(age<60)) ?
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 
+                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update1}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={informar1} >SOLICITAR VACUNA DE FIEBRE AMARILLA </button>
                         }
                         <br></br>
