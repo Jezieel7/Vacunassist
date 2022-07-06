@@ -135,9 +135,13 @@ export function RegisterAppliedDose(){
                     if(emailsYellow.includes(user.email)){
                         vaccination.type="yellowFever"
                     }
+                    else{
+                        if(user.email!=="otro")
+                            user.email="otra"
+                    }
                 }
             //Busca el correo del chabón, si no existe muestra error, si existe:
-            if (docSnap.exists()) {
+            if (docSnap.exists()&&(user.email!=="otro"||user.email!=="otra")) {
                 if(vaccination.presence === "absent" && vaccination.type === "flu"){
                     let userTurns = docSnap.data().user.turns;
                     const turnData = addVaccinationTurnData(userTurns);
@@ -182,9 +186,24 @@ export function RegisterAppliedDose(){
                     const turnData = addVaccinationTurnData(userTurns);
                     await updateDoc(docRef, {"user.turnYellowFever": '', "user.turns": turnData, "user.doseYearYellowFever": hoy.getFullYear(), "user.hasYellowFever": "true"});
                 }
-                MySwal.fire(`Se ha registrado correctamente`);
+                if(vaccination.presence===""){
+                    MySwal.fire(`Seleccione si estuvo presente o ausente la persona`);
+                }
+                else{
+                    MySwal.fire(`Se ha registrado correctamente`);
+                    setEmailsCovid(emailsCovid.filter((item)=> item !== user.email))
+                    setEmailsFlu(emailsFlu.filter((item)=> item !== user.email))
+                    setEmailsYellow(emailsYellow.filter((item)=> item !== user.email))
+                    user.email="otro"
+                }               
             } else {
-                MySwal.fire(`Seleccione un email`);
+                if(user.email=="otro"){
+                    MySwal.fire(`Ya se ha registrado este email, seleccione otro`);
+                }
+                else{
+                    if(user.email=="otra")
+                        MySwal.fire(`Seleccione un email valido`);
+                }
                 throw error;
             }
         } catch (error) {
@@ -218,7 +237,7 @@ export function RegisterAppliedDose(){
                         </select>
                     ): ""}
                         <div className='mb-3'> 
-                            <label className='form-label'>Presencia: </label>
+                            <label className='form-label' aria-required>Presencia: </label>
                             <div className='mb-3'> 
                                 <label className='form-label'>Ausente: </label>
                                 <input type="radio" name="presence" className='form-control' value={"absent"} onChange={handleChange}/>
