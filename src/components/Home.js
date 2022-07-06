@@ -109,7 +109,7 @@ export function Home(){
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Fecha que se dió vacuna de la gripe: </label>
-                            <input value={vaccinationDateFlu} onChange={(e) => setVaccinationDateFlu(e.target.value)} type="date" className='form-control'disabled/>    
+                            <input value={vaccinationDateFlu} onChange={(e) => setVaccinationDateFlu(e.target.value)} type="text" className='form-control'disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Vacuna de la fiebre amarilla: </label>
