@@ -236,6 +236,11 @@ export default function MyTurns(){
         }
       }else if(turnFlu == ""){
         alert("No puede cancelar un turno que no fue dado");
+      }else if(turnCovid == "Solicitud aceptada. Se te asignará un turno en los próximos días"){
+        setTurnFlu('');
+        const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+        await updateDoc(product, {"user.turnFlu": ""});
+        alert("Su solicitud ha sido cancelada, si desea puede solicitar otro.");
       }
     }
 
@@ -298,7 +303,12 @@ export default function MyTurns(){
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna de gripe: </label>
                             <input value={turnFlu} type="text" size={84} className='form-control' disabled/>
-                              <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoFlu}>Cancelar turno</button>
+                            {
+                              (turnFlu !== "Solicitud aceptada. Se te asignará un turno en los próximos días")?
+                              <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoFlu}>Cancelar  turno</button>:
+                              <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoFlu}>Cancelar Solicitud</button>
+                            }
+                              
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna de fiebre amarilla: </label>
