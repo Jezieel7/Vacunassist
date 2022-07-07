@@ -25,7 +25,6 @@ export default function MyTurns(){
     let numberaux3 = 0;
     let minMesesCovid= 9999;
 
-
     function calculoDeEdad(BirthDate) {
         let hoy = new Date();
         let cumpleanios = new Date(BirthDate);
@@ -36,7 +35,6 @@ export default function MyTurns(){
         }
         return edad;
     }
-
 
     const asignTurnCovid = async (birthDate, turnCovid, doseAmountCovid, zone, riskFactor, email) =>{
         let hoy = new Date(); //si mas adelante quiero guardar fechas, crear otro hoy, antes de las operaciones de gripe pero despues de covid
@@ -70,6 +68,7 @@ export default function MyTurns(){
         MySwal.fire(turnCovid);
         await updateDoc(userRef, {"user.turnCovid": turnCovid}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
     }
+
     const asignTurnFlu = async (birthDate, turnFlu, zone, hasVaccineFlu, vaccinationDateFlu, email) =>{
         let hoy = new Date(); //si mas adelante quiero guardar fechas, crear otro hoy, antes de las operaciones de gripe pero despues de covid
         if((calculoDeEdad(birthDate) > 60)){
@@ -116,7 +115,6 @@ export default function MyTurns(){
         MySwal.fire(turnFlu);
         await updateDoc(userRef, {"user.turnFlu": turnFlu}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
     }
-
 
     const update1 = async (e) => { //CASO FIEBRE AMARILLA
         e.preventDefault(); //para evitar comportamiento por defecto
@@ -220,8 +218,12 @@ export default function MyTurns(){
         }
       }else if((turnCovid == "")||(turnCovid == "Menores de 18 no reciben turno para vacuna de COVID-19")){
         alert("No puede cancelar un turno que no fue dado");
+      }else if(turnCovid == "Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19"){
+        setTurnCovid('');
+        const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+        await updateDoc(product, {"user.turnCovid": ""});
+        alert("Su solicitud ha sido cancelada, si desea puede solicitar otra.");
       }
-
     }
 
     const cancelarTurnoFlu = async () => {
@@ -247,6 +249,11 @@ export default function MyTurns(){
         }
       }else if(turnYellowFever == ""){
         alert("No puede cancelar un turno que no fue dado");
+      }else if(turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días"){
+        setTurnYellowFever('');
+        const product= doc(db,`Persona/${user.email}`); //traemos todos los datos a product
+        await updateDoc(product, {"user.turnYellowFever": ""});
+        alert("Su solicitud ha sido cancelada, si desea puede solicitar otra.");
       }
     }
 
@@ -282,17 +289,25 @@ export default function MyTurns(){
                               <input value={""} type="text" size={82} className='form-control' disabled/>:
                               <input value={turnCovid} type="text" size={82} className='form-control' disabled/> 
                             }
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoCovid}>Cancelar turno </button>
+                            {
+                              (turnCovid !== "Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19")?
+                              <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoCovid}>Cancelar turno</button>:
+                              <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoCovid}>Cancelar solicitud</button>
+                            }
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna de gripe: </label>
-                            <input value={turnFlu} type="text" size={84} className='form-control' disabled/>  
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoFlu}>Cancelar turno </button> 
+                            <input value={turnFlu} type="text" size={84} className='form-control' disabled/>
+                              <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoFlu}>Cancelar turno</button>
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna de fiebre amarilla: </label>
                             <input value={turnYellowFever} type="text" size={75} className='form-control' disabled/>
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoYellowFever}>Cancelar turno </button>      
+                            {
+                              (turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")?
+                              <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoYellowFever}>Cancelar turno</button>:
+                              <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={cancelarTurnoYellowFever}>Cancelar solicitud</button>
+                            }     
                         </div>
                         {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")&&(age<60)) ?
                             <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update1}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 
