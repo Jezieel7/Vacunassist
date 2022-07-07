@@ -54,6 +54,10 @@ export default function ModificarFactorRiesgo(){
                 MySwal.fire(`Ingrese un email`);
                 throw error;
             }
+            if(riesgo==''){
+                MySwal.fire(`Ingrese factor de riesgo`);
+                throw error;
+            }
             const docRef = doc(db,`Persona/${user.email}`);
             const docSnap = await getDoc(docRef); 
             if (docSnap.exists()) {
