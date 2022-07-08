@@ -88,7 +88,7 @@ export default function ModificarFactorRiesgo(){
                     <form onSubmit={submitRiesgo}>
                         <div className='mb-3'> 
                             <label className='form-label'>Email (entre parentesis si tiene riesgo actualmente): </label>
-                            <input type="search" name="email" list="personas" onChange={handleChange} inlist="personas"></input>
+                            <input type="search" name="email" list="personas" onChange={handleChange} autocomplete="off" inlist="personas"></input>
                             <datalist id="personas">
                             {mati == 1 ?
                                 personas.map( (persona) => (
