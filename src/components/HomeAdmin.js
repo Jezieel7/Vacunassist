@@ -18,6 +18,14 @@ export default function Record(){
                 <h1 className="text-x1 mb-4">Bienvenido administrador {user.email}</h1>
                     <div className="text-x1 mb-4">
                         <br></br>
+                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"> <a href="./recordTurnToday">VER PERSONAS CON TURNO HOY</a></button>
+                    </div>
+                    <div className="text-x1 mb-4">
+                        <br></br>
+                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"> <a href="./reportePersona">GENERAR REPORTE DE PERSONAS REGISTRADAS</a></button>
+                    </div>
+                    <div className="text-x1 mb-4">
+                        <br></br>
                         <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" ><a href="./recordVaccinators">VER LISTA DE VACUNADORES</a></button>
                     </div>
                     <div className="text-x1 mb-4">

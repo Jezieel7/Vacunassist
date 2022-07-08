@@ -67,9 +67,16 @@ export default function RecordTurnToday(){
 
   return (
         <div className='container'>
+            {user.email=="lautaro@gmail.com"? 
+            <h1 className="text-x1 mb-4">Bienvenido administrador {user.email}</h1>:
             <h1 className="text-x1 mb-4">Bienvenido vacunador {user.email}</h1>
+            }
+
             <div className="text-x1 mb-4">
+                {user.email=="lautaro@gmail.com"? 
+                <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./HomeAdmin">VOLVER A HOME</a></button>:
                 <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./HomeVaccinator">VOLVER A HOME</a></button>
+                }
             </div>
             <h1><center>Personas con turno hoy, {today}</center></h1>
             <table className="shadow-lg bg-white">
