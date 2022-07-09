@@ -17,6 +17,7 @@ import GoTurns from './components/GoTurns'
 import RegisterOnlyVaccinators from './components/RegisterOnlyVaccinators';
 import ModificarFactorRiesgo from './components/ModificarFactorRiesgo';
 import ReportePersona from './components/ReportePersona';
+import ReporteDosis from './components/ReporteDosis'
 
 function App(){
   return ( 
@@ -91,6 +92,11 @@ function App(){
           <Route path="/ReportePersona" element={
             <ProtectedRoute>
               <ReportePersona />
+            </ProtectedRoute>
+          }/>
+          <Route path="/ReporteDosis" element={
+            <ProtectedRoute>
+              <ReporteDosis />
             </ProtectedRoute>
           }/>
           <Route path="login" element={<Login/>}/>

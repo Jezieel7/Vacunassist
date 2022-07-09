@@ -41,7 +41,7 @@ export default function ReportePersona(){
         var dniString= dni.toString();
         var parecido;
         if((vacunatorio=="")&&(dni==0)){
-            MySwal.fire(`Para filtrar, ingrese un DNI para buscar similitudes (que sean o empiezen por el DNI ingresado), o un vacunatorio, o ambos`);
+            MySwal.fire(`Para filtrar, ingrese un DNI para buscar similitudes (que sean o empiecen por el DNI ingresado), o un vacunatorio, o ambos`);
         }else{
             if((vacunatorio=="")&&(dni!=0)){ //si no eligió vacunatorio, se hace solo el filtro de DNI
                 querySnapshot1.forEach((doc) => {
