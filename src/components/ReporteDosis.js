@@ -19,7 +19,7 @@ export default function ReportePersona(){
     const [desde, setDesde] = useState('') //para fecha
     const [hasta, setHasta] = useState('') //para fecha
     const [mati, setMati] = useState( 0 )
-    var [ user, setUser] = useState({
+    const [ user, setUser] = useState({
         email: '',
         name: '',
         LastName: '',
@@ -33,10 +33,10 @@ export default function ReportePersona(){
     const getListadoPersonas = async (string) => {
         const listado = query(collection(db, string), where("user.vaccinator", "!=", "true"));
         var arr1= [];
-        var arr2= [];
         var i;
         var corte;
         var campos= 0;
+        var string;
         const querySnapshot1 = await getDocs(listado);
         querySnapshot1.forEach((doc) => {
             if(doc.data().user.email !== "lautaro@gmail.com" && doc.data().user.email !== "mativacunador@gmail.com" && doc.data().user.email !== "jezielvacunador@gmail.com" && doc.data().user.email !== "dainavacunadora@gmail.com")
@@ -53,7 +53,8 @@ export default function ReportePersona(){
                         user.dosis=corte[1]
                         user.vaccinationDate= corte[2]
                         setUser(user)
-                        arr1[campos]= user
+                        string= `${user.email}+${user.name}+${user.LastName}+${user.DNI}+${user.zone}+${user.vacuna}+${user.dosis}+${user.vaccinationDate}`
+                        arr1[campos]= string.split('+')
                         campos++
                     }
                 }
@@ -121,15 +122,15 @@ export default function ReportePersona(){
                     <tbody>
                         {mati == 1 && dni == 0 && desde=="" && hasta==""? //caso base (sin filtros)
                             personas.map( (user) => (
-                                <tr key={user.email}>
-                                    <td className="border px-8 py-4">{user.email}</td>
-                                    <td className="border px-8 py-4">{user.name}</td>
-                                    <td className="border px-8 py-4">{user.LastName}</td>
-                                    <td className="border px-8 py-4">{user.DNI}</td>
-                                    <td className="border px-8 py-4">{user.zone}</td>
-                                    <td className="border px-8 py-4">{user.vacuna}</td>
-                                    <td className="border px-8 py-4">{user.dosis}</td>
-                                    <td className="border px-8 py-4">{user.vaccinationDate}</td>
+                                    <tr key={user.email}>
+                                    <td className="border px-8 py-4">{user[0]}</td>
+                                    <td className="border px-8 py-4">{user[1]}</td>
+                                    <td className="border px-8 py-4">{user[2]}</td>
+                                    <td className="border px-8 py-4">{user[3]}</td>
+                                    <td className="border px-8 py-4">{user[4]}</td>
+                                    <td className="border px-8 py-4">{user[5]}</td>
+                                    <td className="border px-8 py-4">{user[6]}</td>
+                                    <td className="border px-8 py-4">{user[7]}</td>
                                 </tr>
                         )) : ""}
                     </tbody>
