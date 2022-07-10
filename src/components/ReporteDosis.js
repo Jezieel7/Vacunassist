@@ -84,7 +84,7 @@ export default function ReportePersona(){
 
 
         if((dni==0)&&(vacuna=="")&&(desde=="")&&(hasta=="")){
-            MySwal.fire(`Para filtrar, seleccione y complete(en caso de las fechas) el/los criterio/s para la busqueda`);
+            MySwal.fire(`Para filtrar, seleccione el/los criterio/s para la busqueda. Si usa fechas, uselas de manera completa, para tener una búsqueda completa`);
         }
         else{
             if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna=="")&&(desde=="")&&(hasta=="")){ //DNI
@@ -297,7 +297,97 @@ export default function ReportePersona(){
                 yaHiceFiltro=true;
                 console.log("Checkpoint de Mati: filtro por fecha y DNI: DNI "+ dni  + " desde "+ desde)
             }
-            
+            if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna=="")&&(desde!="")&&(hasta!="")){ // DNI + DESDE + HASTA
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    fecha=persona[7].split('-')
+                    console.log(fecha)
+                    var f=new Date(fecha[0],fecha[1],fecha[2])
+                    console.log(f)
+                    var fdesde= new Date(desdeStringCortao[0],desdeStringCortao[1],desdeStringCortao[2])
+                    var fhasta= new Date(hastaStringCortao[0],hastaStringCortao[1],hastaStringCortao[2])
+                    f.setHours(0,0,0,0);
+                    fdesde.setHours(0,0,0,0);
+                    fhasta.setHours(0,0,0,0);
+                    if(fdesde>fhasta){
+                        MySwal.fire(`Para filtrar, la fecha en el campo "Desde" debe ser anterior a la fecha del campo "Hasta"`);
+                    }
+                    if(((persona[3] == dni)||(parecido.startsWith(dniString)))&&(f>=fdesde)&&(f<=fhasta)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por fecha y DNI: DNI "+ dni  + " desde "+ desde + " hasta "+ hasta)
+            }
+            if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna!="")&&(desde!="")&&(hasta!="")){ // DNI + VACUNA + DESDE + HASTA
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    fecha=persona[7].split('-')
+                    console.log(fecha)
+                    var f=new Date(fecha[0],fecha[1],fecha[2])
+                    console.log(f)
+                    var fdesde= new Date(desdeStringCortao[0],desdeStringCortao[1],desdeStringCortao[2])
+                    var fhasta= new Date(hastaStringCortao[0],hastaStringCortao[1],hastaStringCortao[2])
+                    f.setHours(0,0,0,0);
+                    fdesde.setHours(0,0,0,0);
+                    fhasta.setHours(0,0,0,0);
+                    if(fdesde>fhasta){
+                        MySwal.fire(`Para filtrar, la fecha en el campo "Desde" debe ser anterior a la fecha del campo "Hasta"`);
+                    }
+                    if(((persona[3] == dni)||(parecido.startsWith(dniString)))&&(f>=fdesde)&&(f<=fhasta)&&(persona[5] == vacuna)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por fecha, vacuna y DNI: DNI "+ dni  + " vacuna "+ vacuna + " desde "+ desde + " hasta "+ hasta)
+            }
+            if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna!="")&&(desde=="")&&(hasta!="")){ // DNI + VACUNA + HASTA
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    fecha=persona[7].split('-')
+                    console.log(fecha)
+                    var f=new Date(fecha[0],fecha[1],fecha[2])
+                    console.log(f)
+                    var fdesde= new Date(desdeStringCortao[0],desdeStringCortao[1],desdeStringCortao[2])
+                    var fhasta= new Date(hastaStringCortao[0],hastaStringCortao[1],hastaStringCortao[2])
+                    f.setHours(0,0,0,0);
+                    fdesde.setHours(0,0,0,0);
+                    fhasta.setHours(0,0,0,0);
+                    if(((persona[3] == dni)||(parecido.startsWith(dniString)))&&(f<=fhasta)&&(persona[5] == vacuna)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por fecha, vacuna y DNI: DNI "+ dni  + " vacuna "+ vacuna + " hasta "+ hasta)
+            }
+            if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna!="")&&(desde!="")&&(hasta=="")){ // DNI + VACUNA + DESDE
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    fecha=persona[7].split('-')
+                    console.log(fecha)
+                    var f=new Date(fecha[0],fecha[1],fecha[2])
+                    console.log(f)
+                    var fdesde= new Date(desdeStringCortao[0],desdeStringCortao[1],desdeStringCortao[2])
+                    var fhasta= new Date(hastaStringCortao[0],hastaStringCortao[1],hastaStringCortao[2])
+                    f.setHours(0,0,0,0);
+                    fdesde.setHours(0,0,0,0);
+                    fhasta.setHours(0,0,0,0);
+                    if(((persona[3] == dni)||(parecido.startsWith(dniString)))&&(f>=fdesde)&&(persona[5] == vacuna)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por fecha, vacuna y DNI: DNI "+ dni  + " vacuna "+ vacuna + " desde "+ desde)
+            }
+
         }
         setPersonas2(arr1);
         setMati(1);
