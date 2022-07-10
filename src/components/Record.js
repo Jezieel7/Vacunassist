@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import {getDoc, doc} from 'firebase/firestore';
 import { db } from "../firebase"; 
 //import "bootstrap/dist/css/bootstrap.min.css" para ver todo re loko
+import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
+
 
 export default function Record(){
 
@@ -41,13 +43,22 @@ export default function Record(){
         getProductById(`Persona/${user.email}`);
         // eslint-disable-next-time
     }, []) 
-    
+
   return (
     <div className='container'>
-        <h1 className="text-x1 mb-4">Bienvenido a VacunAssist {user.email}</h1>
-        <div className="text-x1 mb-4">
-            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./">VER MIS TURNOS</a></button>
+
+        <div className='barra'>
+            <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/> 
         </div>
+
+        <button className="botonbarra"><a href="./">VER MIS TURNOS</a></button>
+        <button className="botonbarra"><a href="./data">VER MI PERFIL</a></button>
+        
+        //ACA IRIA EL DE CERRAR SESION SI TAN SOLO ANDUVIERA
+        <br></br>
+        <br></br>
+        <h1 className="text-x1 mb-4"><b><big>Bienvenido a VacunAssist {user.email}</big></b></h1>
+        
         <table className="shadow-lg bg-white">
         <thead>
         <tr>

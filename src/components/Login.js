@@ -80,7 +80,8 @@ export function Login(){
         }
     }
     return (
-        <div className="w-full max-w-xs m-auto">
+        <div className="container">
+            <h1 className="text-x1 mb-4"><b><big>Bienvenido a VacunAssist</big></b></h1>
             {error && <Alert message={error}/>}
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <div className="mb-4">
@@ -96,7 +97,7 @@ export function Login(){
                     <input type="number" name="key" placeholder="1234" id="key" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
                 </div>
                 <div className="flex items-center justify-between">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Inicia sesión</button>
+                    <button className="botonbarra">Inicia sesión</button>
                 </div>
                 <div className="mb-4"></div>
                 <a href="#!" className="inline-block align baseline font-bold text-sm text-blue-500 hover:text-blue-800" onClick={handleResetPassword}>¿No te acordas la contraseña?</a>

@@ -5,6 +5,7 @@ import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { toBeDisabled } from "@testing-library/jest-dom/dist/matchers";
+import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 
 const MySwal = withReactContent(Swal);
 export function RegisterAppliedDose(){
@@ -215,11 +216,19 @@ export function RegisterAppliedDose(){
         <div className='container'>
             <div className='row'>
                 <div className='col'>
-                    <div className="text-x1 mb-4">
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./HomeVaccinator">VOLVER A HOME</a></button>
-                    </div>
-                    <h1>Registro de dosis aplicada</h1>
+
+                <div className='barra'>
+                    <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
+                </div>
+
+                <div className="text-x1 mb-4">
+                        <button className="botonbarravacunador"><a href="./HomeVaccinator">VOLVER A HOME</a></button>
+                </div>
+                <br></br>
+                <br></br>
+                <h1 className="text-x1 mb-4"><b><big>Bienvenido vacunador</big></b></h1>
+
+                    <h1><b><big>Registro de dosis aplicada</big></b></h1>
                     <form onSubmit={submitDose}>
                     <label className='form-label'>Email (entre parentesis la dosis en la que tenía turno): </label>
                     {mati == 1 ?(
@@ -251,7 +260,7 @@ export function RegisterAppliedDose(){
                             <label className='form-label'>Observaciones: </label><div></div>
                             <textarea name="observations" className='form-control' onChange={handleChange} placeholder={"Escribe aquí tus observaciones"} maxLength={200} rows="4" cols="40"></textarea>      
                         </div>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={submitDose}>Registrar dosis</button>
+                        <button className="botonbarravacunador" onClick={submitDose}>REGISTRAR DOSIS</button>
                     </form>
                 </div>
             </div>

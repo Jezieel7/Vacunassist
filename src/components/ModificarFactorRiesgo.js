@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, collection, query, where, getDocs} from "fireba
 import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 const MySwal = withReactContent(Swal);
 export default function ModificarFactorRiesgo(){
     const [ error, setError ] = useState();
@@ -80,11 +81,19 @@ export default function ModificarFactorRiesgo(){
         <div className='container'>
             <div className='row'>
                 <div className='col'>
-                    <div className="text-x1 mb-4">
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./HomeVaccinator">VOLVER A HOME</a></button>
-                    </div>
-                    <h1>Modificar factor de riesgo</h1>
+
+                <div className='barra'>
+                    <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
+                </div>
+
+                <button className="botonbarravacunador"><a href="./HomeVaccinator">VOLVER A HOME</a></button>
+
+                <br></br>
+                <br></br>
+                <h1 className="text-x1 mb-4"><b><big>Bienvenido vacunador</big></b></h1>
+                
+
+                    <h1><b><big>Modificar factor de riesgo</big></b></h1>
                     <form onSubmit={submitRiesgo}>
                         <div className='mb-3'> 
                             <label className='form-label'>Email (entre parentesis si tiene riesgo actualmente): </label>
@@ -102,7 +111,7 @@ export default function ModificarFactorRiesgo(){
                             <input type="radio" name="riskFactor" className='form-control' value={true} onChange={handleChange} required/> Si
                             <input type="radio" name="riskFactor" className='form-control' value={false} onChange={handleChange} required/> No
                         </div>
-                        <button onClick={submitRiesgo}>Registrar nuevo factor de riesgo</button>
+                        <button className="botonbarravacunador" onClick={submitRiesgo}>REGISTRAR NUEVO FACTOR DE RIESGO</button>
                     </form>
                 </div>
             </div>

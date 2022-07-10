@@ -1,3 +1,83 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.container {
+    width: 100%;
+    max-width: 2000px;
+    height: 500%;
+    max-height: 950px;
+    background-color: rgb(245, 245, 245);
+    padding: 25px;
+
+
+    float:left;
+    margin: 1px;
+    border:25px solid rgb(150,205,122);
+
+
+
+    font-size: 15px;
+    color: #3f3a3a;
+}
+
+.botones {
+   float:left;
+   margin:0px 0px;
+   background:rgb(150,205,122);
+
+  font-size: 15px;
+
+  text-align: center;
+  width: 500px;
+  height: 40px;
+}
+
+.botonbarra {
+    float:left;
+    margin:0px 0px;
+    background:rgb(150,205,122);
+    border: 1px solid rgb(245, 245, 245);
+    font-size: 15px;
+ 
+    text-align: center;
+    width: 467px;
+    height: 40px;
+ }
+
+ .botonbarravacunador {
+    float:left;
+    margin:0px 0px;
+    background:rgb(150,205,122);
+    border: 1px solid rgb(245, 245, 245);
+    font-size: 15px;
+ 
+    text-align: center;
+    width: 280px;
+    height: 40px;
+ }
+
+.barra {
+    width: 1400px;
+    margin: 0;
+    height: 150px;
+    background:rgb(150,205,122);
+    padding-top:0px;
+    text-align : center;
+}
+
+.botonbarraadmi {
+    float:left;
+    margin:0px 0px;
+    background:rgb(150,205,122);
+    border: 1px solid rgb(245, 245, 245);
+    font-size: 15px;
+ 
+    text-align: center;
+    width: 234px;
+    height: 50px;
+ }

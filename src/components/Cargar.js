@@ -3,6 +3,7 @@ import {getDoc, doc, updateDoc} from 'firebase/firestore';
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { db, asignTurn} from "../firebase";
+import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 export function Cargar(){
     const {user, loading} = useAuth();
     console.log(user);
@@ -113,8 +114,11 @@ export function Cargar(){
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col'>
+                    <div className='barra'>
+                        <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
+                    </div>
                         <div className='mb-3'>
-                            <label className='form-label' htmlFor="zone">Vacunatorio de preferencia</label>
+                            <label className='form-label' htmlFor="zone"><b><big>Vacunatorio de preferencia</big></b></label>
                             <br></br>
                             <input type="radio" name="zone" className='form-control' value={"Municipalidad"} onChange={(e) => setZone(e.target.value)} required/> Municipalidad (51 e/10 y 11 Nro. 770)
                             <br></br>
@@ -127,12 +131,12 @@ export function Cargar(){
                             <input type="radio" name="riskFactor" className='form-control' value={true} onChange={(e) => setRiskFactor(e.target.value)} required/> Si
                             <input type="radio" name="riskFactor" className='form-control' value={false} onChange={(e) => setRiskFactor(e.target.value)} required/> No 
                         </div>
-                        <h1> Datos Vacuna COVID-19 </h1>
+                        <h1><b><big>Datos Vacuna COVID-19</big></b></h1>
                         <div className='mb-3'>
                             <label className='form-label' htmlFor="doseAmountCovid">Cantidad de dosis de COVID-19 recibidas</label>
                             <input type="number" name="doseAmountCovid" className='form-control' onChange={(e) => setDoseAmountCovid(e.target.value)} required min={0} max={2}/>    
                         </div>
-                        <h1> Datos Vacuna GRIPE </h1>
+                        <h1><b><big>Datos Vacuna GRIPE</big></b></h1>
                         <div className='mb-3'>
                             <label className='form-label' htmlFor="hasVaccineFlu">¿Posee la vacuna para la gripe?</label>
                             <input type="radio" name="hasVaccineFlu" className='form-control' value={true} onChange={(e) => setHasVaccineFlu(e.target.value)} required/> Si
@@ -144,7 +148,7 @@ export function Cargar(){
                             <input type="date" name="vaccinationDateFlu" className='form-control' onChange={(e) => setVaccinationDateFlu(e.target.value)} required />    
                         </div>
                         : ""} 
-                        <h1> Datos Vacuna FIEBRE AMARILLA </h1>
+                        <h1><b><big> Datos Vacuna FIEBRE AMARILLA</big></b></h1>
                         <div className='mb-3'>
                             <label className='form-label' htmlFor="hasYellowFever">¿Tiene la vacuna de la fiebre amarilla?</label>
                             <input type="radio" name="hasYellowFever" className='form-control' value={true} onChange={(e) => setHasYellowFever(e.target.value)} required/> Si 

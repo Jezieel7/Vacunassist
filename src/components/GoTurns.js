@@ -6,6 +6,8 @@ import { doc, updateDoc} from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import emailjs from '@emailjs/browser'; 
+import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
+
 const MySwal = withReactContent(Swal);
 export default function GoTurns(){
     const inputRefZone= useRef("vacunatorio");
@@ -89,16 +91,27 @@ export default function GoTurns(){
     <div className='container'>
             <div className='row'>
                 <div className='col'>
-                    <h1 className="text-x1 mb-4">Bienvenido administrador {user.email}</h1>
-                    <div className="text-x1 mb-4">
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./HomeAdmin">VOLVER A HOME</a></button>
-                    </div>
-                    <h1><center>TURNOS PENDIENTES</center></h1>
+
+                <div className='barra'>
+                    <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
+                </div>
+                
+                <div className="text-x1 mb-4">
+                    <button className="botonbarraadmi"><a href="./HomeAdmin">VOLVER A HOME</a></button>
+                </div>
+
+                <br></br>
+                <br></br>
+
+                <h1 className="text-x1 mb-4"><b><big>Bienvenido administrador {user.email}</big></b></h1>
+                
+
+                    <h1><center><b><big>TURNOS PENDIENTES</big></b></center></h1>
                     {/* aca hacer el mapeo y que por cada coincidencia que aparezca esto, en vez de name y eso iria persona.user.name*/}
                     {mati == 1 ?
                         personasTurnCovid.map( (persona) => (
                             <tr key= {persona.id}>
-                            <h1>TURNO</h1>
+                            <h1><b><big>TURNO</big></b></h1>
                             <div className='mb-3'>
                                 <label className='form-label'>Nombre: </label>
                                 <input value={persona.user.name} type="text" className='form-control' disabled/>

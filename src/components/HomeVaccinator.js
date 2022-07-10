@@ -14,28 +14,23 @@ export default function Record(){
     <div className='container'>
             <div className='row'>
                 <div className='col'>
-                <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/> 
-                <h1 className="text-x1 mb-4">Bienvenido vacunador {user.email}</h1>
-                    <div className="text-x1 mb-4">
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"> <a href="./recordTurnToday">VER PERSONAS CON TURNO HOY</a></button>
-                    </div>
-                    <div className="text-x1 mb-4">
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" ><a href="./RegisterOnlyVaccinators">REGISTRAR PERSONA</a></button>
-                    </div>
-                    <div className="text-x1 mb-4">
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" ><a href="./registerAppliedDose">REGISTRAR DOSIS APLICADA</a></button>
-                    </div>
-                    <div className="text-x1 mb-4">
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" ><a href="./ModificarFactorRiesgo">MODIFICAR FACTOR DE RIESGO</a></button>
-                    </div> 
-                    <div className="text-x1 mb-4">
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
-                    </div> 
+
+                <div className='barra'>
+                    <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
+                </div>
+
+                <button className="botonbarravacunador"> <a href="./recordTurnToday">VER PERSONAS CON TURNO HOY</a></button>
+
+                <button className="botonbarravacunador" ><a href="./RegisterOnlyVaccinators">REGISTRAR PERSONA</a></button>
+
+                <button className="botonbarravacunador" ><a href="./registerAppliedDose">REGISTRAR DOSIS APLICADA</a></button>
+
+                <button className="botonbarravacunador" ><a href="./ModificarFactorRiesgo">MODIFICAR FACTOR DE RIESGO</a></button>
+
+                <button className="botonbarravacunador" onClick={handleLogout}>CERRAR SESIÓN</button>
+
+                <h1 className="text-x1 mb-4"><b><big>Bienvenido vacunador {user.email}</big></b></h1>
+
                 </div>
             </div>
         </div>

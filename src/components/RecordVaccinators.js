@@ -2,6 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import React, { useState, useEffect } from 'react'
 import {collection, query, where, getDocs} from 'firebase/firestore';
 import { db } from "../firebase"; 
+import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 //import "bootstrap/dist/css/bootstrap.min.css" para ver todo re loko
 
 export default function RecordVaccinators(){
@@ -28,11 +29,21 @@ export default function RecordVaccinators(){
     }, [])
   return (
         <div className='container'>
-            <h1 className="text-x1 mb-4">Bienvenido administrador {user.email}</h1>
+            <div className='barra'>
+                    <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
+                </div>
+            
             <div className="text-x1 mb-4">
-                <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./HomeAdmin">VOLVER A HOME</a></button>
+                <button className="botonbarraadmi"><a href="./HomeAdmin">VOLVER A HOME</a></button>
             </div>
-            <h1>Vacunadores</h1>
+
+            <br></br>
+            <br></br>
+
+            <h1 className="text-x1 mb-4"><b><big>Bienvenido administrador {user.email}</big></b></h1>
+
+            <h1><b><big>Vacunadores</big></b></h1>
+            <br></br>
             <table className="shadow-lg bg-white">
             <thead>
             <tr>

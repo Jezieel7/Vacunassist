@@ -68,9 +68,17 @@ export function Home(){
         <div className='container'>
             <div className='row'>
                 <div className='col'>
-                <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/> 
-                <h1 className="text-x1 mb-4">Bienvenido {user.email}</h1>
-                    <h1>MIS DATOS</h1>
+                    
+                <div className='barra'>
+                    <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
+                </div>
+                <button className="botonbarra"><a href="./">VER MIS TURNOS</a></button>
+                <button className="botonbarra"><a href="./record">VER MI HISTORIAL DE VACUNACIÓN</a></button>
+                <button className="botonbarra" onClick={handleLogout}>CERRAR SESIÓN</button>
+                <br></br>
+                <h1 className="text-x1 mb-4"><b><big>Bienvenido a VacunAssist {user.email}</big></b></h1>
+                        
+                    <h1><b><big>Mis datos</big></b></h1>
                     <form onSubmit={update}>
                         <div className='mb-3'>
                             <label className='form-label'>Nombre: </label>
@@ -132,15 +140,9 @@ export function Home(){
                             <br></br>
                             <input type="radio" name="zone" className='form-control' value={"Cementerio"} onChange={(e) => setZone(e.target.value)} /> Cementerio (138 e/73 y 74 Nro. 2035)                                   
                         </div>
-                        <button type='submit' className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">ACTUALIZAR CENTRO DE VACUNACION DE PREFERENCIA</button>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
+                        <button type='submit' className="botonbarra">ACTUALIZAR CENTRO DE VACUNACION DE PREFERENCIA</button>
+                        
                     </form>
-                    <div className="text-x1 mb-4">
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black">
-                            <a href="./">VER MIS TURNOS</a>
-                        </button>
-                    </div> 
                 </div>
             </div>
         </div>

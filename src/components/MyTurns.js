@@ -4,6 +4,7 @@ import {getDoc, doc, updateDoc} from 'firebase/firestore';
 import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 
 const MySwal = withReactContent(Swal);
 export default function MyTurns(){
@@ -274,19 +275,19 @@ export default function MyTurns(){
         <div className='container'>
             <div className='row'>
                 <div className='col'>
-                    <h1 className="text-x1 mb-4">Bienvenido a VacunAssist {user.email}</h1>
-                    <div className="text-x1 mb-4">
-                      <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={handleLogout}>CERRAR SESIÓN</button>
-                      <br></br>
-                    </div>
-                    <div className="text-x1 mb-4">  
-                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./data">VER MI PERFIL</a></button>
-                    <br></br>
-                    </div>
-                    <div className="text-x1 mb-4">    
-                    <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./record">VER MI HISTORIAL DE VACUNACIÓN</a></button>
-                    </div>
-                    <h1>Mis Turnos</h1>
+
+                <div className='barra'>
+                    <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
+                </div>
+                <button className="botonbarra"><a href="./data">VER MI PERFIL</a></button>
+                <button className="botonbarra"><a href="./record">VER MI HISTORIAL DE VACUNACIÓN</a></button>
+                <button className="botonbarra" onClick={handleLogout}>CERRAR SESIÓN</button>
+                <br></br>
+                <h1 className="text-x1 mb-4"><b><big>Bienvenido a VacunAssist {user.email}</big></b></h1>
+                    
+                    
+
+                    <h1><b><big>Mis Turnos</big></b></h1>
                     <form onSubmit={update}>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna COVID-19: </label>
@@ -320,19 +321,23 @@ export default function MyTurns(){
                             }     
                         </div>
                         {((turnYellowFever !== "Solicitud aceptada. Se te asignará un turno en los próximos días")&&(numberaux==0)&&(hasYellowFever !== "true")&&(age<60)) ?
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update1}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={informar1} >SOLICITAR VACUNA DE FIEBRE AMARILLA </button>
+                            <button className="botonbarra" onClick={update1}>SOLICITAR VACUNA DE FIEBRE AMARILLA </button> : 
+                            <button className="botonbarra" onClick={informar1} >SOLICITAR VACUNA DE FIEBRE AMARILLA </button>
                         }
+                        <br></br>
                         <br></br>
                         {(((turnCovid == "")||(turnCovid=="Menores de 18 no reciben turno para vacuna de COVID-19"))&&(numberaux2==0)&&(doseAmountCovid < 2)&&(age>=18)) ?
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update2}>SOLICITAR VACUNA DE COVID </button> : 
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={informar2} >SOLICITAR VACUNA DE COVID </button>
+                            <button className="botonbarra" onClick={update2}>SOLICITAR VACUNA DE COVID </button> : 
+                            <button className="botonbarra" onClick={informar2} >SOLICITAR VACUNA DE COVID </button>
                         }
                         <br></br>
+                        <br></br>
                         {((turnFlu == "")&&(numberaux3==0)&&((((hasVaccineFlu == "true")&&(calculoDeEdad(vaccinationDateFlu)>=1)))||(hasVaccineFlu == "false"))) ?
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={update3}>SOLICITAR VACUNA DE GRIPE</button> : 
-                            <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={informar3} >SOLICITAR VACUNA DE GRIPE </button>
+                            <button className="botonbarra" onClick={update3}>SOLICITAR VACUNA DE GRIPE</button> : 
+                            <button className="botonbarra" onClick={informar3} >SOLICITAR VACUNA DE GRIPE </button>
                         }
+                        <br></br>
+                        <br></br>
                         <p>Direcciones de vacunatorios: Municipalidad (51 e/10 y 11 Nro. 770), Terminal (3 e/ 41 y 42 Nro. 480), Cementerio (138 e/73 y 74 Nro. 2035).</p>
                     </form>
                 </div>

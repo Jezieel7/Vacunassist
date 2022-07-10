@@ -21,7 +21,7 @@ export default function Vacunatorios(){
             arr1.push(doc.data()); 
         }); 
         arr1 = [...new Set(arr1)]; 
-        setVacunatorios(arr1); //en personas voy a guardar los mails 
+        setVacunatorios(arr1);
         setMati(1); 
     } 
  
@@ -68,17 +68,17 @@ export default function Vacunatorios(){
                     <form onSubmit={submitVacunatorio}> 
                         <div className='mb-3'>  
                             <label className='form-label'>Vacunatorio: </label> 
-                            <input type="search" name="text" list="vacunatorios" onChange={handleChange} autocomplete="off" inlist="vacunatorios"></input> 
+                            <input type="search" name="text" list="vacunatorios" autocomplete="off" inlist="vacunatorios"></input> 
                             <datalist id="vacunatorios"> 
                             {mati == 1 ? 
                                 vacunatorios.map( (vacunatorio) => ( 
-                                    <option type="text" className='form-control' name="vacunatorio" value={vacunatorio.nombre}>{vacunatorio.nombre}{vacunatorio.direccion}</option> 
+                                    <option type="text" className='form-control' name="vacunatorio" value={vacunatorio.id}>{vacunatorio.direccion}</option>
                                 ))  
                             : ""} 
                             </datalist> 
                         </div> 
-                        <label className='form-label' htmlFor="nombre">Actualizar informacion: </label> 
-                        <div className='mb-3'>  
+                        <label className='form-label'>Actualizar informacion: </label> 
+                        <div className='mb-3'>
                             <label className='form-label' htmlFor="nombre">Nombre: </label> 
                             <input value={nombre} type="text" name="nombre" size={84} className='form-control' onChange={handleChange}/> 
                         </div> 
