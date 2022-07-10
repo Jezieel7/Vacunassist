@@ -177,6 +177,9 @@ export default function ReportePersona(){
                     f.setHours(0,0,0,0);
                     fdesde.setHours(0,0,0,0);
                     fhasta.setHours(0,0,0,0);
+                    if(fdesde>fhasta){
+                        MySwal.fire(`Para filtrar, la fecha en el campo "Desde" debe ser anterior a la fecha del campo "Hasta"`);
+                    }
                     if((f<=fhasta)&&(f>=fdesde)){
                         arr1[campos]=persona;
                         campos++
@@ -207,6 +210,94 @@ export default function ReportePersona(){
                 yaHiceFiltro=true;
                 console.log("Checkpoint de Mati: filtro por fecha y vacuna: vacuna "+ vacuna + " hasta "+ hasta)
             }
+            if((yaHiceFiltro==false)&&(dni==0)&&(vacuna!="")&&(desde!="")&&(hasta=="")){ //VACUNA + DESDE
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    fecha=persona[7].split('-')
+                    console.log(fecha)
+                    var f=new Date(fecha[0],fecha[1],fecha[2])
+                    console.log(f)
+                    var fdesde= new Date(desdeStringCortao[0],desdeStringCortao[1],desdeStringCortao[2])
+                    var fhasta= new Date(hastaStringCortao[0],hastaStringCortao[1],hastaStringCortao[2])
+                    f.setHours(0,0,0,0);
+                    fdesde.setHours(0,0,0,0);
+                    fhasta.setHours(0,0,0,0);
+                    if((f>=fdesde)&&(persona[5] == vacuna)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por fecha y vacuna: vacuna "+ vacuna + " desde "+ desde)
+            }
+            if((yaHiceFiltro==false)&&(dni==0)&&(vacuna!="")&&(desde!="")&&(hasta!="")){ //VACUNA + DESDE + HASTA
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    fecha=persona[7].split('-')
+                    console.log(fecha)
+                    var f=new Date(fecha[0],fecha[1],fecha[2])
+                    console.log(f)
+                    var fdesde= new Date(desdeStringCortao[0],desdeStringCortao[1],desdeStringCortao[2])
+                    var fhasta= new Date(hastaStringCortao[0],hastaStringCortao[1],hastaStringCortao[2])
+                    f.setHours(0,0,0,0);
+                    fdesde.setHours(0,0,0,0);
+                    fhasta.setHours(0,0,0,0);
+                    if(fdesde>fhasta){
+                        MySwal.fire(`Para filtrar, la fecha en el campo "Desde" debe ser anterior a la fecha del campo "Hasta"`);
+                    }
+                    if((f>=fdesde)&&(persona[5] == vacuna)&&(f<=fhasta)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por fecha y vacuna: vacuna "+ vacuna + " desde "+ desde + " hasta "+ hasta)
+            }
+            if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna=="")&&(desde=="")&&(hasta!="")){ // DNI + HASTA
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    fecha=persona[7].split('-')
+                    console.log(fecha)
+                    var f=new Date(fecha[0],fecha[1],fecha[2])
+                    console.log(f)
+                    var fdesde= new Date(desdeStringCortao[0],desdeStringCortao[1],desdeStringCortao[2])
+                    var fhasta= new Date(hastaStringCortao[0],hastaStringCortao[1],hastaStringCortao[2])
+                    f.setHours(0,0,0,0);
+                    fdesde.setHours(0,0,0,0);
+                    fhasta.setHours(0,0,0,0);
+                    if(((persona[3] == dni)||(parecido.startsWith(dniString)))&&(f<=fhasta)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por fecha y DNI: DNI "+ dni  + " hasta "+ hasta)
+            }
+            if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna=="")&&(desde!="")&&(hasta=="")){ // DNI + DESDE
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    fecha=persona[7].split('-')
+                    console.log(fecha)
+                    var f=new Date(fecha[0],fecha[1],fecha[2])
+                    console.log(f)
+                    var fdesde= new Date(desdeStringCortao[0],desdeStringCortao[1],desdeStringCortao[2])
+                    var fhasta= new Date(hastaStringCortao[0],hastaStringCortao[1],hastaStringCortao[2])
+                    f.setHours(0,0,0,0);
+                    fdesde.setHours(0,0,0,0);
+                    fhasta.setHours(0,0,0,0);
+                    if(((persona[3] == dni)||(parecido.startsWith(dniString)))&&(f>=fdesde)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por fecha y DNI: DNI "+ dni  + " desde "+ desde)
+            }
+            
         }
         setPersonas2(arr1);
         setMati(1);
@@ -255,8 +346,6 @@ export default function ReportePersona(){
                         <input type="radio" value={"covid"} name="vacuna" className="form-control" onChange={handleChange}/> COVID-19
                         <br></br>
                         <input type="radio" value={""} name="vacuna" className="form-control" onChange={handleChange} onSelect/> No Filtrar
-                        <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={getListadoFiltrado}>Filtrar</button>
                     </div></center>
                     <center><div className="text-x1 mb-4">
                         <p>Filtrar por fechas</p>
@@ -264,6 +353,9 @@ export default function ReportePersona(){
                         <input type="date" name="desde" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
                         <label htmlFor="hasta" >Hasta: </label>
                         <input type="date" name="hasta" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
+                    </div></center>
+                    <center><div className="text-x1 mb-4">
+                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={getListadoFiltrado}>Filtrar</button>
                     </div></center>
                     <h1><center>Reporte de vacunas aplicadas {dni} {desde} {hasta} {vacuna}</center></h1>
                     <center><table className="shadow-lg bg-white">
