@@ -14,10 +14,12 @@ export default function ReportePersona(){
     const [personas, setPersonas] = useState( [] ) //crear registro, dentro de ese registro que esten todos los campos necesarios, entonces, en personas va a estar directamente todos los datos necesarios para el output
     const [personas2, setPersonas2] = useState( [] )
     const [personas3, setPersonas3] = useState( [] )
+
     const [dni, setDni] = useState(0)
-    const [vacunatorio, setVacunatorio] = useState('')
+    const [vacuna, setVacuna] = useState('')
     const [desde, setDesde] = useState('') //para fecha
     const [hasta, setHasta] = useState('') //para fecha
+
     const [mati, setMati] = useState( 0 )
     const [ user, setUser] = useState({
         email: '',
@@ -43,7 +45,6 @@ export default function ReportePersona(){
                 for(i=0;i<10;i++){
                     corte= doc.data().user.turns[i].split(',')
                     if(corte[4]=="present"){
-                        console.log("presente "+doc.data().user.email)
                         user.email= doc.data().user.email
                         user.name= doc.data().user.name
                         user.LastName= doc.data().user.LastName
@@ -66,6 +67,62 @@ export default function ReportePersona(){
         console.log("personas size: "+personas.length)
         setMati(1);
     }
+
+    const getListadoFiltrado = async (e) => {
+        e.preventDefault()
+        var arr1= []; //arreglo que contiene cada string cortado
+        var i; //indice para el for
+        var corte; //string para cortar el string de turns[i]
+        var campos= 0; //para que no haya duplicados, y ademas esta variable nos dice el lenght
+        var string; //string resultado, basicamente es toda una fila resultante de datos
+        var yaHiceFiltro= false; //para que se entre por solo un foreach
+        var parecido; //dni de una persona pasada a string, sirve para ver si tiene coincidencia con el dni insertado por teclado
+        var dniString= dni.toString(); //dni que se ingresa por teclado, pasado a string
+
+        if((dni==0)&&(vacuna=="")&&(desde=="")&&(hasta=="")){
+            MySwal.fire(`Para filtrar, seleccione el/los criterio/s para la busqueda`);
+        }
+        else{
+            if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna=="")&&(desde=="")&&(hasta=="")){ //SOLO DNI
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    if((persona[3] == dni)||(parecido.startsWith(dniString))){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por DNI "+ dni)
+            }
+            if((yaHiceFiltro==false)&&(dni==0)&&(vacuna!="")&&(desde=="")&&(hasta=="")){ //SOLO VACUNA
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    if(persona[5] == vacuna){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por vacuna "+ vacuna)
+            }
+            if((yaHiceFiltro==false)&&(dni!=0)&&(vacuna!="")&&(desde=="")&&(hasta=="")){ //DNI + VACUNA
+                personas.forEach((persona) => {
+                    parecido=persona[3]
+                    if(((persona[3] == dni)||(parecido.startsWith(dniString)))&&(persona[5] == vacuna)){
+                        arr1[campos]=persona;
+                        campos++
+                    }
+                });
+                setPersonas2(arr1)
+                yaHiceFiltro=true;
+                console.log("Checkpoint de Mati: filtro por DNI "+ dni +" y vacuna " + vacuna)
+            }
+        }
+        setPersonas2(arr1);
+        setMati(1);
+    }
     
     useEffect( () => {
         getListadoPersonas("Persona");
@@ -76,7 +133,15 @@ export default function ReportePersona(){
             setDni(value); 
         }
         else{
-            setVacunatorio(value);
+            if(name==="desde"){
+                setDesde(value);
+            }else{
+                if(name==="hasta"){
+                    setHasta(value);
+                }else{
+                    setVacuna(value)
+                }
+            }
         }
     };
 
@@ -89,23 +154,30 @@ export default function ReportePersona(){
                         <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black"><a href="./HomeAdmin">VOLVER A HOME</a></button>
                     </div>
                     <center><div className="text-x1 mb-4">
-                        <label htmlFor="DNI" className="block text-gray-700 text-sm font-fold mb-2">Filtrar por DNI: </label>
+                        <label htmlFor="DNI" >Filtrar por DNI: </label>
                         <input type="number" name="DNI" placeholder="12345678" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
                     </div></center>
                     <center><div className="text-x1 mb-4">
-                        <label htmlFor="vacunatorio" className="form-control">Filtrar por vacunatorio: </label>
+                        <label htmlFor="vacuna" className="form-control">Filtrar por vacuna: </label>
                         <br></br>
-                        <input type="radio" value={"Terminal"} name="vacunatorio" className="form-control" onChange={handleChange}/> Terminal
+                        <input type="radio" value={"flu"} name="vacuna" className="form-control" onChange={handleChange}/> Gripe
                         <br></br>
-                        <input type="radio" value={"Municipalidad"} name="vacunatorio" className="form-control" onChange={handleChange}/> Municipalidad
+                        <input type="radio" value={"yellowFever"} name="vacuna" className="form-control" onChange={handleChange}/> Fiebre amarilla
                         <br></br>
-                        <input type="radio" value={"Cementerio"} name="vacunatorio" className="form-control" onChange={handleChange}/> Cementerio
+                        <input type="radio" value={"covid"} name="vacuna" className="form-control" onChange={handleChange}/> COVID-19
                         <br></br>
-                        <input type="radio" value={""} name="vacunatorio" className="form-control" onChange={handleChange} onSelect/> No Filtrar
+                        <input type="radio" value={""} name="vacuna" className="form-control" onChange={handleChange} onSelect/> No Filtrar
                         <br></br>
-                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" >Filtrar NO ANDA AGREGAR EL ONCLICK</button>
+                        <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={getListadoFiltrado}>Filtrar</button>
                     </div></center>
-                    <h1><center>Reporte de vacunas aplicadas</center></h1>
+                    <center><div className="text-x1 mb-4">
+                        <p>Filtrar por fechas</p>
+                        <label htmlFor="desde" >Desde: </label>
+                        <input type="date" name="desde" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
+                        <label htmlFor="hasta" >Hasta: </label>
+                        <input type="date" name="hasta" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={handleChange}/>
+                    </div></center>
+                    <h1><center>Reporte de vacunas aplicadas {dni} {desde} {hasta} {vacuna}</center></h1>
                     <center><table className="shadow-lg bg-white">
                     <thead>
                     <tr>
@@ -120,9 +192,22 @@ export default function ReportePersona(){
                     </tr>
                     </thead>
                     <tbody>
-                        {mati == 1 && dni == 0 && desde=="" && hasta==""? //caso base (sin filtros)
+                        {mati == 1 && dni == 0 && desde=="" && hasta=="" && vacuna==""? //caso base (sin filtros)
                             personas.map( (user) => (
-                                    <tr key={user.email}>
+                                <tr key={user.email}>
+                                    <td className="border px-8 py-4">{user[0]}</td>
+                                    <td className="border px-8 py-4">{user[1]}</td>
+                                    <td className="border px-8 py-4">{user[2]}</td>
+                                    <td className="border px-8 py-4">{user[3]}</td>
+                                    <td className="border px-8 py-4">{user[4]}</td>
+                                    <td className="border px-8 py-4">{user[5]}</td>
+                                    <td className="border px-8 py-4">{user[6]}</td>
+                                    <td className="border px-8 py-4">{user[7]}</td>
+                                </tr>
+                        )) : ""}
+                        {mati == 1 &&( (dni != 0) || (desde!="") || (hasta!="") || (vacuna!=""))? //caso con filtros
+                            personas2.map( (user) => (
+                                <tr key={user.email}>
                                     <td className="border px-8 py-4">{user[0]}</td>
                                     <td className="border px-8 py-4">{user[1]}</td>
                                     <td className="border px-8 py-4">{user[2]}</td>
