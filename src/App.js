@@ -18,6 +18,7 @@ import RegisterOnlyVaccinators from './components/RegisterOnlyVaccinators';
 import ModificarFactorRiesgo from './components/ModificarFactorRiesgo';
 import ReportePersona from './components/ReportePersona';
 import ReporteDosis from './components/ReporteDosis'
+import Vacunatorios from './components/Vacunatorios';
 
 function App(){
   return ( 
@@ -97,6 +98,11 @@ function App(){
           <Route path="/ReporteDosis" element={
             <ProtectedRoute>
               <ReporteDosis />
+            </ProtectedRoute>
+          }/>
+          <Route path="/Vacunatorios" element={
+            <ProtectedRoute>
+              <Vacunatorios />
             </ProtectedRoute>
           }/>
           <Route path="login" element={<Login/>}/>
