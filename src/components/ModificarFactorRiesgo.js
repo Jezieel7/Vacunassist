@@ -48,11 +48,15 @@ export default function ModificarFactorRiesgo(){
         console.log(user.email)
         try {
             if(user.email=="listo"){
-                MySwal.fire(`Ya actualizó el factor de riesgo, actualize la pagina para ver los cambios, o seleccione otro`);
+                MySwal.fire(`Ya actualizó el factor de riesgo, actualize la pagina para ver los cambios, o seleccione otro email`);
                 throw error;
             }
             if(user.email=="otro"){
                 MySwal.fire(`Ingrese un email`);
+                throw error;
+            }
+            if(user.email=="ya contaba"){
+                MySwal.fire(`El usuario ya contaba con este dato`);
                 throw error;
             }
             if(riesgo==''){
@@ -63,11 +67,18 @@ export default function ModificarFactorRiesgo(){
             const docSnap = await getDoc(docRef); 
             if (docSnap.exists()) {
                 await updateDoc(docRef, {"user.riskFactor": riesgo});
-                if(riesgo == "true")
+                if(riesgo==docSnap.data().user.riskFactor){
+                    MySwal.fire("El usuario ya contaba con este dato");
+                    user.email="ya contaba"
+                }else{
+                if(riesgo == "true"){
                     MySwal.fire("Se registro el nuevo factor de riesgo. Por favor, recuerdele a esta persona que si tiene turnos puede cancelarlos y pedir otros con mayor prioridad");
-                else
+                    user.email="listo"
+                }else{
                     MySwal.fire(`Se registro el nuevo factor de riesgo`);
-                user.email="listo"
+                    user.email="listo"
+                }
+                }
             } else {
                 MySwal.fire(`El email ingresado no pertenece a un usuario del sistema`);
                 throw error;
