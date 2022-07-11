@@ -5,6 +5,7 @@ import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
+import { async } from "@firebase/util";
 
 const MySwal = withReactContent(Swal);
 export default function MyTurns(){
@@ -20,6 +21,7 @@ export default function MyTurns(){
     const [doseAmountCovid, setDoseAmountCovid] =useState('');
     const [zone, setZone] =useState('');
     const [age, setAge] = useState(0)
+    const [notificacion, setNotificacion] = useState(0)
     const [turns, setTurns] = useState([])
     let numberaux = 0;
     let numberaux2 = 0;
@@ -190,6 +192,7 @@ export default function MyTurns(){
             setVaccinationDateFlu(snapshot.data().user.vaccinationDateFlu);
             setBirthDate(snapshot.data().user.birthDate);
             setTurns(snapshot.data().user.turns)
+            setNotificacion(snapshot.data().user.notificar)
             if((age >= 18 )&& (turnCovid == "Menores de 18 no reciben turno para vacuna de COVID-19") ){
                 asignTurnCovid(birthDate, turnCovid, doseAmountCovid, (zone == 1 || zone == 2 || zone == 3) ?
                   vacunatorios[zone-1].nombre : zone
@@ -294,11 +297,25 @@ export default function MyTurns(){
     if (docSnap.exists()) {
       let fecha = docSnap.data().user.birthDate.split('-');
       console.log(fecha);
-      fecha[0] = parseInt(fecha[0], 10) + 1;
+      fecha[0] = parseInt(fecha[0], 10) - 1;
       fecha[1] = parseInt(fecha[1], 10);
       fecha[2] = parseInt(fecha[2], 10);
+      var fechanueva= new Date(fecha[0],fecha[1],fecha[2])
       await updateDoc(docRef, {"user.birthDate": fecha[0] + "-" + fecha[1] + "-" + fecha[2]});
-      MySwal.fire("Se aumento la edad 1 anio");
+      if((docSnap.data().user.turnYellowFever=="Solicitud aceptada. Se te asignará un turno en los próximos días")&&(age==59)){
+          await updateDoc(docRef, {"user.turnYellowFever": ""});
+      }
+      age++;
+      MySwal.fire("Se aumento la edad 1 año");  //testear esto
+    }
+  }
+  const desactivarNotificacion = async (e) => {
+    e.preventDefault();
+    const docRef = doc(db,`Persona/${user.email}`);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      await updateDoc(docRef, {"user.notificar": "0"});
+      setNotificacion(0)
     }
   }
 
@@ -322,7 +339,17 @@ export default function MyTurns(){
                     
                     
 
-                    <h1><b><big>Mis Turnos</big></b></h1>
+                  <h1><b><big>Mis Turnos</big></b></h1>
+                  <div className='mb-3'>
+                  {(mati==1 && notificacion==1) ?
+                    <div style={{"background-color" : "lime"}}>NOTIFICACIÓN NUEVA: USTED TIENE NUEVOS TURNOS, REVISE LAS FECHAS!!!
+                    <br></br>
+                    <button className="botonbarra" onClick={desactivarNotificacion} >OK</button></div> :
+                    ""
+                  }
+                  </div>
+                  <br></br>
+                  <br></br>
                     <form onSubmit={update}>
                         <div className='mb-3'>
                             <label className='form-label'>Turno de la vacuna COVID-19: </label>
@@ -373,6 +400,7 @@ export default function MyTurns(){
                         }
                         <br></br>
                         <br></br>
+                        <p>Si usted cumple 60 años, al solicitar nuevos turnos usted tendrá una mayor prioridad. Personas de 60 años o mayores no pueden recibir la vacuna de fiebre amarilla </p>
                         {mati == 1 ? 
                         <p>Direcciones de vacunatorios: {vacunatorios[0].nombre} {vacunatorios[0].direccion}, {vacunatorios[1].nombre} {vacunatorios[1].direccion}, {vacunatorios[2].nombre} {vacunatorios[2].direccion}.</p> : " "}
                     </form>

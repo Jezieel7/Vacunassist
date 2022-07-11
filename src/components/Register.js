@@ -27,6 +27,7 @@ export function Register(){
         turnFlu: '',
         turnYellowFever: '',
         vaccinator: false,
+        notificar: '',
         turns: {
             0: '',
             1: '',

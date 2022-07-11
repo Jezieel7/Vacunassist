@@ -105,7 +105,7 @@ export function Cargar(){
                 alert("Se le asigno una vacuna para la gripe"); 
             }
             const userRef= doc(db,`Persona/${user.email}`) //traemos todos los datos a product
-            await updateDoc(userRef, {"user.zone": zone, "user.doseAmountCovid": doseAmountCovid, "user.doseYearYellowFever": doseYearYellowFever, "user.hasVaccineFlu": hasVaccineFlu, "user.hasYellowFever": hasYellowFever, "user.riskFactor": riskFactor, "user.vaccinationDateFlu": vaccinationDateFlu}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
+            await updateDoc(userRef, {"user.zone": zone, "user.doseAmountCovid": doseAmountCovid, "user.doseYearYellowFever": doseYearYellowFever, "user.hasVaccineFlu": hasVaccineFlu, "user.hasYellowFever": hasYellowFever, "user.riskFactor": riskFactor, "user.vaccinationDateFlu": vaccinationDateFlu,"user.notificar": "1"}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
             asignTurn(birthDate, turnCovid, turnFlu, turnYellowFever, doseAmountCovid, vacunatorios[zone-1].nombre, riskFactor, hasVaccineFlu, vaccinationDateFlu, user.email);
             navigate('/');
         } catch (error) {

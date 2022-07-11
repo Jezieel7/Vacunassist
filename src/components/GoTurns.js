@@ -77,7 +77,7 @@ export default function GoTurns(){
             const product= doc(db,`Persona/${inputRefEmail.current.value}`); //traemos todos los datos a product     
             console.log(inputRefEmail.current.value);
             console.log(turn);  
-            await updateDoc(product, {"user.turnCovid": `Tiene turno el día ${turn} a las 10:00 horas, en el vacunatorio ${inputRefZone.current.value}`}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
+            await updateDoc(product, {"user.turnCovid": `Tiene turno el día ${turn} a las 10:00 horas, en el vacunatorio ${inputRefZone.current.value}`,"user.notificar": "1"}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
             MySwal.fire("Turno asignado");
             emailjs.sendForm('service_043ut7d', 'template_hzbm87w', 'matiasadorno14@gmail.com' , 'YzH5_MFfCTng8tzFm')
                 .then((result) => {
@@ -110,7 +110,7 @@ export default function GoTurns(){
             else{
             console.log(inputRefEmail2.current.value);
             console.log(turn2);
-            await updateDoc(product, {"user.turnYellowFever": `Tiene turno el día ` + fturn.getDate()+"/"+fturn.getMonth()+"/"+fturn.getFullYear() + ` a las 13:30 horas, en el vacunatorio ${inputRefZone2.current.value}`}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
+            await updateDoc(product, {"user.turnYellowFever": `Tiene turno el día ` + fturn.getDate()+"/"+fturn.getMonth()+"/"+fturn.getFullYear() + ` a las 13:30 horas, en el vacunatorio ${inputRefZone2.current.value}`,"user.notificar": "1"}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
             MySwal.fire("Turno asignado");
             emailjs.sendForm('service_043ut7d', 'template_hzbm87w', inputRefEmail2.current.value , 'YzH5_MFfCTng8tzFm')
                 .then((result) => {
