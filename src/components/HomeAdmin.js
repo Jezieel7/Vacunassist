@@ -23,7 +23,7 @@ export default function Record(){
 
                     <button className="botonbarraadmi"> <a href="./reportePersona">GENERAR REPORTE DE PERSONAS REGISTRADAS</a></button>
 
-                    <button className="botonbarraadmi"> <a href="./reporteDosis">GENERAR REPORTE DE DOSIS</a></button>
+                    <button className="botonbarraadmi"> <a href="./reporteDosis">GENERAR REPORTE DE VACUNAS</a></button>
 
                     <button className="botonbarraadmi" ><a href="./recordVaccinators">VER LISTA DE VACUNADORES</a></button>
 
