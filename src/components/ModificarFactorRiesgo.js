@@ -55,10 +55,6 @@ export default function ModificarFactorRiesgo(){
                 MySwal.fire(`Ingrese un email`);
                 throw error;
             }
-            if(user.email=="ya contaba"){
-                MySwal.fire(`El usuario ya contaba con este dato`);
-                throw error;
-            }
             if(riesgo==''){
                 MySwal.fire(`Ingrese factor de riesgo`);
                 throw error;
@@ -69,7 +65,6 @@ export default function ModificarFactorRiesgo(){
                 await updateDoc(docRef, {"user.riskFactor": riesgo});
                 if(riesgo==docSnap.data().user.riskFactor){
                     MySwal.fire("El usuario ya contaba con este dato");
-                    user.email="ya contaba"
                 }else{
                 if(riesgo == "true"){
                     MySwal.fire("Se registro el nuevo factor de riesgo. Por favor, recuerdele a esta persona que si tiene turnos puede cancelarlos y pedir otros con mayor prioridad");

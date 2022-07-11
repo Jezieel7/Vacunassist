@@ -21,8 +21,8 @@ export function RegisterAppliedDose(){
     let hoy = new Date();
     let today = ''
     {hoy.getMonth() < 9 ? 
-     today = `${hoy.getFullYear()}-0${hoy.getMonth()+1}-${hoy.getDate()}` : 
-     today = `${hoy.getFullYear()}-${hoy.getMonth()+1}-${hoy.getDate()}` }
+     today = `${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}` : 
+     today = `${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}` }
     const [personas, setPersonas] = useState( [] );
     const [personas2, setPersonas2] = useState( [] )
     const [personas3, setPersonas3] = useState( [] )
