@@ -1,6 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import React, { useState, useEffect } from 'react'
-import {getDoc, doc, updateDoc} from 'firebase/firestore';
+import {getDoc, doc, updateDoc, query, getDocs, collection} from 'firebase/firestore';
 import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -25,6 +25,8 @@ export default function MyTurns(){
     let numberaux2 = 0;
     let numberaux3 = 0;
     let minMesesCovid= 9999;
+    const [vacunatorios, setVacunatorios] = useState( [] ); 
+    const [mati, setMati] = useState( 0 );
 
     function calculoDeEdad(BirthDate) {
         let hoy = new Date();
@@ -94,7 +96,7 @@ export default function MyTurns(){
         }else{ 
           if(hasVaccineFlu === "false"){ //-60 AÑOS, SIN VACUNA
             hoy.setDate(hoy.getDate() - 3)
-            hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
+            hoy.setMonth(hoy.getMonth() + 7) //+5 MESES
             if(hoy.getMonth() == 0){
               hoy.setMonth(1)
             }
@@ -103,7 +105,7 @@ export default function MyTurns(){
           }else{
             if(calculoDeEdad(vaccinationDateFlu)>=1){ //-60 AÑOS, CON VACUNA VENCIDA
               hoy.setDate(hoy.getDate() - 4)
-              hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
+              hoy.setMonth(hoy.getMonth() + 7) //+5 MESES
               if(hoy.getMonth() == 0){
                 hoy.setMonth(1)
               }
@@ -141,7 +143,8 @@ export default function MyTurns(){
             //console.log("se cancelo el evento xD")
         }
         if(((turnCovid == "")||(turnCovid=="Menores de 18 no reciben turno para vacuna de COVID-19"))&&(numberaux2==0)){
-            asignTurnCovid(birthDate, turnCovid, doseAmountCovid, zone, riskFactor, user.email);
+            asignTurnCovid(birthDate, turnCovid, doseAmountCovid, (zone == 1 || zone == 2 || zone == 3) ?
+            vacunatorios[zone-1].nombre : zone, riskFactor, user.email);
             numberaux2++;
         }
         else
@@ -156,7 +159,8 @@ export default function MyTurns(){
             //console.log("se cancelo el evento xD")
         }
         if((turnFlu == "")&&(numberaux3==0)){
-            asignTurnFlu(birthDate, turnFlu, zone, hasVaccineFlu, vaccinationDateFlu, user.email);
+            asignTurnFlu(birthDate, turnFlu, (zone == 1 || zone == 2 || zone == 3) ?
+            vacunatorios[zone-1].nombre : zone, hasVaccineFlu, vaccinationDateFlu, user.email);
             numberaux3++;
         }
         else
@@ -187,7 +191,9 @@ export default function MyTurns(){
             setBirthDate(snapshot.data().user.birthDate);
             setTurns(snapshot.data().user.turns)
             if((age >= 18 )&& (turnCovid == "Menores de 18 no reciben turno para vacuna de COVID-19") ){
-                asignTurnCovid(birthDate, turnCovid, doseAmountCovid, zone, riskFactor, user.email)
+                asignTurnCovid(birthDate, turnCovid, doseAmountCovid, (zone == 1 || zone == 2 || zone == 3) ?
+                  vacunatorios[zone-1].nombre : zone
+              , riskFactor, user.email)
             }
         
             //ver como calcular que pasen 3 meses, para volver a darse covid
@@ -265,8 +271,22 @@ export default function MyTurns(){
 
     useEffect( () => {
         getProductById(`Persona/${user.email}`);
+        getListadoVacunatorios("Vacunatorio"); 
         // eslint-disable-next-time
     }, [])
+
+    const getListadoVacunatorios = async (string) => { 
+      const listado = query(collection(db, string)); 
+      var arr1= []; 
+      const querySnapshot1 = await getDocs(listado); 
+      querySnapshot1.forEach((doc) => { 
+          arr1.push(doc.data()); 
+      }); 
+      arr1 = [...new Set(arr1)]; 
+      setVacunatorios(arr1);
+      setMati(1);
+  }
+
     const handleLogout = async () => {
         await logout();
     }
@@ -338,7 +358,8 @@ export default function MyTurns(){
                         }
                         <br></br>
                         <br></br>
-                        <p>Direcciones de vacunatorios: Municipalidad (51 e/10 y 11 Nro. 770), Terminal (3 e/ 41 y 42 Nro. 480), Cementerio (138 e/73 y 74 Nro. 2035).</p>
+                        {mati == 1 ? 
+                        <p>Direcciones de vacunatorios: {vacunatorios[0].nombre} {vacunatorios[0].direccion}, {vacunatorios[1].nombre} {vacunatorios[1].direccion}, {vacunatorios[2].nombre} {vacunatorios[2].direccion}.</p> : " "}
                     </form>
                 </div>
             </div>

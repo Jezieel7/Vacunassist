@@ -29,6 +29,8 @@ export default function Record(){
 
                     <button className="botonbarraadmi" ><a href="./goTurns">ASIGNAR TURNOS</a></button>
 
+                    <button className="botonbarraadmi" ><a href="./Vacunatorios">VACUNATORIOS</a></button>
+
                     <button className="botonbarraadmi" onClick={handleLogout}>CERRAR SESIÓN</button>
 
                     <h1 className="text-x1 mb-4"><b><big>Bienvenido administrador {user.email}</big></b></h1>

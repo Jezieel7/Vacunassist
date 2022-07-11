@@ -1,6 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import React, { useState, useEffect } from 'react'
-import {collection, query, where, getDocs} from 'firebase/firestore';
+import {query, where, getDocs, collection} from 'firebase/firestore';
 import { db } from "../firebase"; 
 import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 
@@ -11,12 +11,13 @@ export default function RecordTurnToday(){
     let hoy = new Date();
     let today = ''
     {hoy.getMonth() < 9 ? 
-     today = `${hoy.getFullYear()}-0${hoy.getMonth()+1}-${hoy.getDate()}` : 
-     today = `${hoy.getFullYear()}-${hoy.getMonth()+1}-${hoy.getDate()}` }
+        today = `${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}` : 
+        today = `${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}` }
     const [personas, setPersonas] = useState( [] )
     const [personas2, setPersonas2] = useState( [] )
     const [personas3, setPersonas3] = useState( [] )
     const [mati, setMati] = useState( 0 )
+    const [vacunatorios, setVacunatorios] = useState( [] );
 
     const getCadaPersonaFiltrar = async (string) => {
         const flu = query(collection(db, string), where("user.turnFlu", "!=", ""));
@@ -57,10 +58,19 @@ export default function RecordTurnToday(){
         setPersonas(arr1)
         setPersonas2(arr2)
         setPersonas3(arr3)
-        setMati(1)
+
+        const listado = query(collection(db, "Vacunatorio")); 
+        var arr1= []; 
+        const otra = await getDocs(listado); 
+        otra.forEach((doc) => { 
+            arr1.push(doc.data()); 
+        }); 
+        arr1 = [...new Set(arr1)]; 
+        setVacunatorios(arr1);
+        setMati(1);
         
     }
-    
+
     useEffect( () => {
         getCadaPersonaFiltrar("Persona");
         // eslint-disable-next-time
@@ -102,7 +112,7 @@ export default function RecordTurnToday(){
             </tr>
             </thead>
             <tbody>
-            {mati == 1 ?
+            {(mati == 1) ?
             personas.map( (persona) => (
                             <tr key={persona.id}>
                                 <td className="border px-8 py-4">{persona.user.email}</td>
@@ -111,7 +121,10 @@ export default function RecordTurnToday(){
                                 <td className="border px-8 py-4">{persona.user.DNI}</td>
                                 <td className="border px-8 py-4">Gripe</td>
                                 <td className="border px-8 py-4">-</td>
-                                <td className="border px-8 py-4">{persona.user.zone}</td>
+                                {(persona.user.zone == 1 || persona.user.zone == 2 || persona.user.zone == 3) ?
+                                    <td className="border px-8 py-4">{vacunatorios[persona.user.zone-1].nombre}</td> :
+                                    <td className="border px-8 py-4">{persona.user.zone}</td>
+                                }
                             </tr>
                         )) : ""}
             {mati == 1 ?
@@ -123,7 +136,10 @@ export default function RecordTurnToday(){
                                 <td className="border px-8 py-4">{persona.user.DNI}</td>
                                 <td className="border px-8 py-4">Covid</td>
                                 <td className="border px-8 py-4">{persona.user.doseAmountCovid == "0" ? "Primera" : "Segunda"}</td>
-                                <td className="border px-8 py-4">{persona.user.zone}</td>
+                                {(persona.user.zone == 1 || persona.user.zone == 2 || persona.user.zone == 3) ?
+                                    <td className="border px-8 py-4">{vacunatorios[persona.user.zone-1].nombre}</td> :
+                                    <td className="border px-8 py-4">{persona.user.zone}</td>
+                                }
                             </tr>
                         )) : ""}
             {mati == 1 ?
@@ -135,7 +151,10 @@ export default function RecordTurnToday(){
                                 <td className="border px-8 py-4">{persona.user.DNI}</td>
                                 <td className="border px-8 py-4">Fiebre amarilla</td>
                                 <td className="border px-8 py-4">-</td>
-                                <td className="border px-8 py-4">{persona.user.zone}</td>
+                                {(persona.user.zone == 1 || persona.user.zone == 2 || persona.user.zone == 3) ?
+                                    <td className="border px-8 py-4">{vacunatorios[persona.user.zone-1].nombre}</td> :
+                                    <td className="border px-8 py-4">{persona.user.zone}</td>
+                                }
                             </tr>
                         )) : ""}
             </tbody>

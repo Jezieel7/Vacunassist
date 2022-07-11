@@ -72,7 +72,7 @@ export default function Vacunatorios(){
                             <datalist id="vacunatorios"> 
                             {mati == 1 ? 
                                 vacunatorios.map( (vacunatorio) => ( 
-                                    <option type="text" className='form-control' name="vacunatorio" value={vacunatorio.id}>{vacunatorio.direccion}</option>
+                                    <option type="text" className='form-control' name="vacunatorio" value={vacunatorio.nombre}>{vacunatorio.direccion}</option>
                                 ))  
                             : ""} 
                             </datalist> 

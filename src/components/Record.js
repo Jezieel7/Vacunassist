@@ -8,7 +8,7 @@ import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 
 export default function Record(){
 
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const [ col0, setCol0 ] = useState('');
     const [ col1, setCol1 ] = useState('');
     const [ col2, setCol2 ] = useState('');
@@ -20,7 +20,10 @@ export default function Record(){
     const [ col8, setCol8 ] = useState('');
     const [ col9, setCol9 ] = useState('');
 
-    
+    const handleLogout = async () => {
+        await logout();
+    }
+
     const getProductById = async (id) => {
         const userRef = doc(db,id);
         const snapshot = await getDoc(userRef);
@@ -53,8 +56,7 @@ export default function Record(){
 
         <button className="botonbarra"><a href="./">VER MIS TURNOS</a></button>
         <button className="botonbarra"><a href="./data">VER MI PERFIL</a></button>
-        
-        //ACA IRIA EL DE CERRAR SESION SI TAN SOLO ANDUVIERA
+        <button className="botonbarra" onClick={handleLogout}>CERRAR SESIÓN</button>
         <br></br>
         <br></br>
         <h1 className="text-x1 mb-4"><b><big>Bienvenido a VacunAssist {user.email}</big></b></h1>

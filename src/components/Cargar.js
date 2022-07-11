@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {getDoc, doc, updateDoc} from 'firebase/firestore';
+import {getDoc, doc, updateDoc, query, getDocs, collection} from 'firebase/firestore';
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { db, asignTurn} from "../firebase";
 import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
 export function Cargar(){
     const {user, loading} = useAuth();
-    console.log(user);
     const [error, setError] = useState();
     const navigate = useNavigate();
     const [birthDate, setBirthDate] = useState('');
@@ -20,6 +19,9 @@ export function Cargar(){
     const [turnCovid, setTurnCovid] = useState('');
     const [turnFlu, setTurnFlu] = useState('');
     const [turnYellowFever, setTurnYellowFever] = useState('');
+    const [vacunatorios, setVacunatorios] = useState( [] ); 
+    const [mati, setMati] = useState( 0 );
+
     const getProductById = async (id) => {
         const userRef = doc(db,id);
         const snapshot = await getDoc(userRef);
@@ -38,6 +40,7 @@ export function Cargar(){
     }
     useEffect( () => {
         getProductById(`Persona/${user.email}`);
+        getListadoVacunatorios("Vacunatorio"); 
         // eslint-disable-next-time
     }, [])
     if(loading) return <h1>loading</h1>
@@ -103,12 +106,25 @@ export function Cargar(){
             }
             const userRef= doc(db,`Persona/${user.email}`) //traemos todos los datos a product
             await updateDoc(userRef, {"user.zone": zone, "user.doseAmountCovid": doseAmountCovid, "user.doseYearYellowFever": doseYearYellowFever, "user.hasVaccineFlu": hasVaccineFlu, "user.hasYellowFever": hasYellowFever, "user.riskFactor": riskFactor, "user.vaccinationDateFlu": vaccinationDateFlu}) //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
-            asignTurn(birthDate, turnCovid, turnFlu, turnYellowFever, doseAmountCovid, zone, riskFactor, hasVaccineFlu, vaccinationDateFlu, user.email);
+            asignTurn(birthDate, turnCovid, turnFlu, turnYellowFever, doseAmountCovid, vacunatorios[zone-1].nombre, riskFactor, hasVaccineFlu, vaccinationDateFlu, user.email);
             navigate('/');
         } catch (error) {
             setError(error.message);
         }
     };
+     
+    const getListadoVacunatorios = async (string) => { 
+        const listado = query(collection(db, string)); 
+        var arr1= []; 
+        const querySnapshot1 = await getDocs(listado); 
+        querySnapshot1.forEach((doc) => { 
+            arr1.push(doc.data()); 
+        }); 
+        arr1 = [...new Set(arr1)]; 
+        setVacunatorios(arr1);
+        setMati(1);
+    }
+
     return (
         <div className='container'>
             <form onSubmit={handleSubmit}>
@@ -119,12 +135,15 @@ export function Cargar(){
                     </div>
                         <div className='mb-3'>
                             <label className='form-label' htmlFor="zone"><b><big>Vacunatorio de preferencia</big></b></label>
+                            {mati == 1 ? 
+                            <div>
                             <br></br>
-                            <input type="radio" name="zone" className='form-control' value={"Municipalidad"} onChange={(e) => setZone(e.target.value)} required/> Municipalidad (51 e/10 y 11 Nro. 770)
+                            <input type="radio" name="zone" className='form-control' value={1} onChange={(e) => setZone(e.target.value)} required/> {vacunatorios[0].nombre} {vacunatorios[0].direccion}
                             <br></br>
-                            <input type="radio" name="zone" className='form-control' value={"Terminal"} onChange={(e) => setZone(e.target.value)} required/> Terminal (3 e/ 41 y 42 Nro. 480)
+                            <input type="radio" name="zone" className='form-control' value={2} onChange={(e) => setZone(e.target.value)} required/> {vacunatorios[1].nombre} {vacunatorios[1].direccion}
                             <br></br>
-                            <input type="radio" name="zone" className='form-control' value={"Cementerio"} onChange={(e) => setZone(e.target.value)} required/> Cementerio (138 e/73 y 74 Nro. 2035)    
+                            <input type="radio" name="zone" className='form-control' value={3} onChange={(e) => setZone(e.target.value)} required/> {vacunatorios[2].nombre} {vacunatorios[2].direccion}
+                            </div> : ""}
                         </div>
                         <div className='mb-3'>
                             <label className='form-label' htmlFor="riskFactor">¿Sos una persona con factores de riesgo?</label>

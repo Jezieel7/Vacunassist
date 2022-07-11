@@ -95,13 +95,13 @@ export const asignTurn = async (birthDate, turnCovid, turnFlu, turnYellowFever, 
   }else{ 
     if(hasVaccineFlu === "false"){ //-60 AÑOS, SIN VACUNA
       hoy.setDate(hoy.getDate() - 3)
-      hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
+      hoy.setMonth(hoy.getMonth() + 7) //+5 MESES
       turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:00 horas, en el vacunatorio ${zone}`
       //LE DOY TURNO PARA 5 MESES, EN VACUNATORIO DE PREFERENCIA. 
     }else{
       if(calculoGripe(vaccinationDateFlu)>=1){ //-60 AÑOS, CON VACUNA VENCIDA
         hoy.setDate(hoy.getDate() - 4)
-        hoy.setMonth(hoy.getMonth() + 6) //+5 MESES
+        hoy.setMonth(hoy.getMonth() + 7) //+5 MESES
         turnFlu = `Tiene turno el día ${hoy.getDate()}/${hoy.getMonth()}/${hoy.getFullYear()} a las 13:30 horas, en el vacunatorio ${zone}`
       }
     }

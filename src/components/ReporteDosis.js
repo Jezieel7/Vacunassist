@@ -1,6 +1,5 @@
-import { useAuth } from "../context/AuthContext";
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, updateDoc, collection, query, where, getDocs} from "firebase/firestore";
+import { collection, query, where, getDocs} from "firebase/firestore";
 import { db } from "../firebase";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -14,7 +13,7 @@ export default function ReportePersona(){
     const [personas, setPersonas] = useState( [] ) //crear registro, dentro de ese registro que esten todos los campos necesarios, entonces, en personas va a estar directamente todos los datos necesarios para el output
     const [personas2, setPersonas2] = useState( [] )
     const [personas3, setPersonas3] = useState( [] )
-
+    const [vacunatorios, setVacunatorios] = useState( [] ); 
     const [dni, setDni] = useState(0)
     const [vacuna, setVacuna] = useState('')
     const [desde, setDesde] = useState('') //para fecha
@@ -44,12 +43,13 @@ export default function ReportePersona(){
             if(doc.data().user.email !== "lautaro@gmail.com" && doc.data().user.email !== "mativacunador@gmail.com" && doc.data().user.email !== "jezielvacunador@gmail.com" && doc.data().user.email !== "dainavacunadora@gmail.com")
                 for(i=0;i<10;i++){
                     corte= doc.data().user.turns[i].split(',')
+                    
                     if(corte[4]=="present"){
                         user.email= doc.data().user.email
                         user.name= doc.data().user.name
                         user.LastName= doc.data().user.LastName
                         user.DNI= doc.data().user.DNI
-                        user.zone= doc.data().user.zone
+                        user.zone=  doc.data().user.zone
                         user.vacuna= corte[0]
                         user.dosis=corte[1]
                         user.vaccinationDate= corte[2]
@@ -392,11 +392,24 @@ export default function ReportePersona(){
         setPersonas2(arr1);
         setMati(1);
     }
-    
+
     useEffect( () => {
+        getListadoVacunatorios("Vacunatorio"); 
         getListadoPersonas("Persona");
         // eslint-disable-next-time
     }, [])
+
+    const getListadoVacunatorios = async (string) => { 
+        const listado = query(collection(db, string)); 
+        var arr1= []; 
+        const querySnapshot1 = await getDocs(listado); 
+        querySnapshot1.forEach((doc) => { 
+            arr1.push(doc.data()); 
+        }); 
+        arr1 = [...new Set(arr1)]; 
+        setVacunatorios(arr1);
+    }
+
     const handleChange = ({target: {name, value}}) => {
         if(name === "DNI"){
             setDni(value); 
@@ -447,7 +460,7 @@ export default function ReportePersona(){
                     <center><div className="text-x1 mb-4">
                         <button className="bg-slate-200 hover:bg-slate-300 rounded py-2 px-4 text-black" onClick={getListadoFiltrado}>Filtrar</button>
                     </div></center>
-                    <h1><center>Reporte de vacunas aplicadas {dni} {desde} {hasta} {vacuna}</center></h1>
+                    <h1><center>Reporte de vacunas aplicadas</center></h1>
                     <center><table className="shadow-lg bg-white">
                     <thead>
                     <tr>
@@ -469,7 +482,9 @@ export default function ReportePersona(){
                                     <td className="border px-8 py-4">{user[1]}</td>
                                     <td className="border px-8 py-4">{user[2]}</td>
                                     <td className="border px-8 py-4">{user[3]}</td>
-                                    <td className="border px-8 py-4">{user[4]}</td>
+                                    {(user[4] == 1 || user[4] == 2 || user[4] == 3) ?
+                                        <td className="border px-8 py-4">{vacunatorios[user[4]-1].nombre}</td> :
+                                        <td className="border px-8 py-4">{user[4]}</td>}
                                     <td className="border px-8 py-4">{user[5]}</td>
                                     <td className="border px-8 py-4">{user[6]}</td>
                                     <td className="border px-8 py-4">{user[7]}</td>
@@ -482,7 +497,9 @@ export default function ReportePersona(){
                                     <td className="border px-8 py-4">{user[1]}</td>
                                     <td className="border px-8 py-4">{user[2]}</td>
                                     <td className="border px-8 py-4">{user[3]}</td>
-                                    <td className="border px-8 py-4">{user[4]}</td>
+                                    {(user[4] == 1 || user[4] == 2 || user[4] == 3) ?
+                                        <td className="border px-8 py-4">{vacunatorios[user[4]-1].nombre}</td> :
+                                        <td className="border px-8 py-4">{user[4]}</td>}
                                     <td className="border px-8 py-4">{user[5]}</td>
                                     <td className="border px-8 py-4">{user[6]}</td>
                                     <td className="border px-8 py-4">{user[7]}</td>

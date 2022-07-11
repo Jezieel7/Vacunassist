@@ -1,9 +1,13 @@
 import { useAuth } from "../context/AuthContext";
 import { getAuth } from "firebase/auth";
 import React, { useState, useEffect } from 'react';
-import {getDoc, doc, updateDoc} from 'firebase/firestore';
+import {getDoc, doc, updateDoc, query, getDocs, collection} from 'firebase/firestore';
 import { db } from "../firebase";
 import Logo_VacunAssist_1 from '../img/Logo_VacunAssist_1.png';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
 export function Home(){
     const {user, logout, loading, resetPassword} = useAuth();
     const handleLogout = async () => {
@@ -23,6 +27,8 @@ export function Home(){
     const [vaccinationDateFlu, setVaccinationDateFlu] =useState('');
     const [email, setEmail] =useState('');
     const [key, setKey] =useState('');
+    const [vacunatorios, setVacunatorios] = useState( [] ); 
+    const [mati, setMati] = useState( 0 );
 
     const update = async (e) => { //e es un evento
         e.preventDefault(); //para evitar comportamiento por defecto
@@ -36,6 +42,7 @@ export function Home(){
         , "user.password": password, "user.zone": zone, "user.doseAmountCovid": doseAmountCovid, "user.doseYearYellowFever": doseYearYellowFever
         , "user.hasVaccineFlu": hasVaccineFlu, "user.hasYellowFever": hasYellowFever, "user.riskFactor": riskFactor, "user.vaccinationDateFlu": vaccinationDateFlu, 
         "user.email": email, "user.key": key}); //dentro de la llave, entramos al mapa user, y modificamos cada dato, updateDoc es de firestore, para actualizar los datos
+        MySwal.fire("Se modifico el vacunatorio de preferencia");
     }
     const getProductById = async (id) => {
         const userRef = doc(db,id);
@@ -61,14 +68,27 @@ export function Home(){
     }
     useEffect( () => {
         getProductById(`Persona/${user.email}`);
+        getListadoVacunatorios("Vacunatorio"); 
         // eslint-disable-next-time
-    }, [])    
+    }, [])   
+    
+    const getListadoVacunatorios = async (string) => { 
+        const listado = query(collection(db, string)); 
+        var arr1= []; 
+        const querySnapshot1 = await getDocs(listado); 
+        querySnapshot1.forEach((doc) => { 
+            arr1.push(doc.data()); 
+        }); 
+        arr1 = [...new Set(arr1)]; 
+        setVacunatorios(arr1);
+        setMati(1);
+    }
+
     if(loading) return <h1>loading</h1>
     return (
         <div className='container'>
             <div className='row'>
                 <div className='col'>
-                    
                 <div className='barra'>
                     <img src={Logo_VacunAssist_1} width={200} alt="VacunAssist Logo"/>
                 </div>
@@ -101,19 +121,13 @@ export function Home(){
                             <input value={key} onChange={(e) => setKey(e.target.value)} type="text" className='form-control' disabled/>    
                         </div>
                         <div className='mb-3'>
-                            <label className='form-label'>Contraseña (si la cambias, confirmar cambio de contraseña por mail también por motivos de seguridad): </label>
-                            <input value={password} onChange={(e) => setPassword(e.target.value)} type="text" className='form-control'/>  
-                        </div>
-                        <div className='mb-3'>
                             <label className='form-label'>Dosis de COVID-19: </label>
                             <input value={doseAmountCovid} onChange={(e) => setDoseAmountCovid(e.target.value)} type="number" className='form-control' min={0} max={2} disabled/>    
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Vacuna de la gripe: </label>
                             {hasVaccineFlu === "true" ? "Si" : "No"}  
-                            <br></br>
-                            <input type="radio" name="hasVaccineFlu" className='form-control' value={true} onChange={(e) => setHasVaccineFlu(e.target.value)} disabled/> Si
-                            <input type="radio" name="hasVaccineFlu" className='form-control' value={false} onChange={(e) => setHasVaccineFlu(e.target.value)} disabled/> No    
+                            <br></br> 
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Fecha que se dió vacuna de la gripe: </label>
@@ -122,26 +136,26 @@ export function Home(){
                         <div className='mb-3'>
                             <label className='form-label'>Vacuna de la fiebre amarilla: </label>
                             {hasYellowFever === "true" ? "Si" : "No"}  
-                            <br></br>                           
-                            <input type="radio" name="hasYellowFever" className='form-control' value={true} onChange={(e) => setHasYellowFever(e.target.value)}disabled /> Si 
-                            <input type="radio" name="hasYellowFever" className='form-control' value={false} onChange={(e) => setHasYellowFever(e.target.value)}disabled /> No     
+                            <br></br>                                
                         </div>
                         <div className='mb-3'>
                             <label className='form-label'>Año que se dió la vacuna de la fiebre amarilla: </label>
                             <input value={doseYearYellowFever} onChange={(e) => setDoseYearYellowFever(e.target.value)} type="number" className='form-control' min={1900} max={2022}disabled/>    
                         </div>
                         <div className='mb-3'>
-                            <label className='form-label'>Centro de vacunación de preferencia: </label>                           
-                            {zone}
+                            {mati == 1 ?
+                            <label className='form-label'>Centro de vacunación de preferencia: {(zone == 1 || zone == 2 || zone == 3) ? vacunatorios[zone-1].nombre : zone}</label> : ""}                          
+                            {mati == 1 ? 
+                            <div>
                             <br></br>
-                            <input type="radio" name="zone" className='form-control' value={"Municipalidad"} onChange={(e) => setZone(e.target.value)} /> Municipalidad (51 e/10 y 11 Nro. 770)
+                            <input type="radio" name="zone" className='form-control' value={1} onChange={(e) => setZone(e.target.value)} /> {vacunatorios[0].nombre} {vacunatorios[0].direccion}
                             <br></br>
-                            <input type="radio" name="zone" className='form-control' value={"Terminal"} onChange={(e) => setZone(e.target.value)} /> Terminal (3 e/ 41 y 42 Nro. 480)
+                            <input type="radio" name="zone" className='form-control' value={2} onChange={(e) => setZone(e.target.value)} /> {vacunatorios[1].nombre} {vacunatorios[1].direccion}
                             <br></br>
-                            <input type="radio" name="zone" className='form-control' value={"Cementerio"} onChange={(e) => setZone(e.target.value)} /> Cementerio (138 e/73 y 74 Nro. 2035)                                   
+                            <input type="radio" name="zone" className='form-control' value={3} onChange={(e) => setZone(e.target.value)} /> {vacunatorios[2].nombre} {vacunatorios[2].direccion}
+                            </div> : " "}                                   
                         </div>
                         <button type='submit' className="botonbarra">ACTUALIZAR CENTRO DE VACUNACION DE PREFERENCIA</button>
-                        
                     </form>
                 </div>
             </div>

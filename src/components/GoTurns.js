@@ -26,6 +26,7 @@ export default function GoTurns(){
     const [turn2, setTurn2] = useState('');
     let numberaux = 0;
     let numberaux2 = 0;
+    const [vacunatorios, setVacunatorios] = useState( [] ); 
     
     const getPersonas = async (string) => {
         const personasCOVID = query(collection(db, string), where("user.turnCovid", "==", "Se le notifico a los administradores su solicitud de turno para la vacuna del COVID-19"));
@@ -82,8 +83,20 @@ export default function GoTurns(){
         //mandar mail
         }
     }
+    const getListadoVacunatorios = async (string) => { 
+        const listado = query(collection(db, string)); 
+        var arr1= []; 
+        const querySnapshot1 = await getDocs(listado); 
+        querySnapshot1.forEach((doc) => { 
+            arr1.push(doc.data()); 
+        }); 
+        arr1 = [...new Set(arr1)]; 
+        setVacunatorios(arr1);
+        setMati(1);
+    }
     useEffect( () => {
         getPersonas("Persona");
+        getListadoVacunatorios("Vacunatorio"); 
         // eslint-disable-next-time onClick={setMail(persona.user.email)}
     }, [])
 
@@ -126,7 +139,9 @@ export default function GoTurns(){
                             </div> 
                             <div className='mb-3'>  
                                 <label className='form-label'>Vacunatorio de preferencia: </label>
-                                <input  value={persona.user.zone} ref={inputRefZone} type="text" className='form-control' disabled/>
+                                <input  value={persona.user.zone} ref={(persona.user.zone == 1 || persona.user.zone == 2 || persona.user.zone == 3) ?
+            vacunatorios[persona.user.zone-1].nombre : persona.user.zone} type="text" className='form-control' disabled/>{(persona.user.zone == 1 || persona.user.zone == 2 || persona.user.zone == 3) ?
+                vacunatorios[persona.user.zone-1].nombre : persona.user.zone}
                             </div>   
                             <div className='mb-3'> 
                                 <label className='form-label'>vacuna: </label>
@@ -162,7 +177,9 @@ export default function GoTurns(){
                             </div> 
                             <div className='mb-3'>  
                                 <label className='form-label'>Vacunatorio de preferencia: </label>
-                                <input  value={persona.user.zone} ref={inputRefZone2} type="text" className='form-control' disabled/>
+                                <input  value={persona.user.zone} ref={(persona.user.zone == 1 || persona.user.zone == 2 || persona.user.zone == 3) ?
+            vacunatorios[persona.user.zone-1].nombre : persona.user.zone} type="text" className='form-control' disabled/>{(persona.user.zone == 1 || persona.user.zone == 2 || persona.user.zone == 3) ?
+                vacunatorios[persona.user.zone-1].nombre : persona.user.zone}
                             </div>   
                             <div className='mb-3'> 
                                 <label className='form-label'>vacuna: </label>
