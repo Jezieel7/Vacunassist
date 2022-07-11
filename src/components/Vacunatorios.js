@@ -1,5 +1,5 @@
 import { useAuth } from "../context/AuthContext"; 
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react'; 
 import { doc, getDoc, updateDoc, collection, query, getDocs} from "firebase/firestore"; 
 import { db } from "../firebase"; 
 import Swal from 'sweetalert2'; 
@@ -9,10 +9,11 @@ export default function Vacunatorios(){
     const [ error, setError ] = useState(); 
     const { loading } = useAuth(); 
     const [ direccion, setDireccion] = useState(''); 
-    const [ nombre, setNombre] = useState(''); 
+    const [ nombre, setNombre] = useState('');
     const [vacunatorios, setVacunatorios] = useState( [] ); 
     const [mati, setMati] = useState( 0 ); 
-     
+    const inputRef= useRef(null);
+
     const getListadoVacunatorios = async (string) => { 
         const listado = query(collection(db, string)); 
         var arr1= []; 
@@ -36,19 +37,20 @@ export default function Vacunatorios(){
         }else{ 
             setDireccion(value); 
         } 
-    }; 
+    };
  
     const submitVacunatorio = async (e) => { 
         e.preventDefault(); 
         setError(''); 
         try { 
-            const docRef = doc(db,`Vacunatorio/${nombre}`); 
+            console.log(inputRef.current.value);
+            const docRef = doc(db,`Vacunatorio/${inputRef.current.value}`); 
             const docSnap = await getDoc(docRef);  
             if (docSnap.exists()) { 
                 await updateDoc(docRef, {"nombre": nombre, "direccion": direccion}); 
                 MySwal.fire(`Se registraron los cambios en el vacunatorio`); 
             } else { 
-                MySwal.fire(`El nombre ingresado no pertenece a un vacunatorio del sistema`); 
+                MySwal.fire(`El id no existe`); 
                 throw error; 
             } 
         } catch (error) { 
@@ -72,7 +74,7 @@ export default function Vacunatorios(){
                             <datalist id="vacunatorios"> 
                             {mati == 1 ? 
                                 vacunatorios.map( (vacunatorio) => ( 
-                                    <option type="text" className='form-control' name="vacunatorio" value={vacunatorio.nombre}>{vacunatorio.direccion}</option>
+                                    <option type="text" className='form-control' name="vacunatorio" value={vacunatorio.id} ref={inputRef}>{vacunatorio.nombre} {vacunatorio.direccion}</option>
                                 ))  
                             : ""} 
                             </datalist> 

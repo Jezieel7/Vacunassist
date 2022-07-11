@@ -287,6 +287,21 @@ export default function MyTurns(){
       setMati(1);
   }
 
+  const aumentarEdad = async (e) => {
+    e.preventDefault();
+    const docRef = doc(db,`Persona/${user.email}`);
+    const docSnap = await getDoc(docRef); 
+    if (docSnap.exists()) {
+      let fecha = docSnap.data().user.birthDate.split('-');
+      console.log(fecha);
+      fecha[0] = parseInt(fecha[0], 10) + 1;
+      fecha[1] = parseInt(fecha[1], 10);
+      fecha[2] = parseInt(fecha[2], 10);
+      await updateDoc(docRef, {"user.birthDate": fecha[0] + "-" + fecha[1] + "-" + fecha[2]});
+      MySwal.fire("Se aumento la edad 1 anio");
+    }
+  }
+
     const handleLogout = async () => {
         await logout();
     }
@@ -361,6 +376,7 @@ export default function MyTurns(){
                         {mati == 1 ? 
                         <p>Direcciones de vacunatorios: {vacunatorios[0].nombre} {vacunatorios[0].direccion}, {vacunatorios[1].nombre} {vacunatorios[1].direccion}, {vacunatorios[2].nombre} {vacunatorios[2].direccion}.</p> : " "}
                     </form>
+                    <button className="botonbarra" onClick={aumentarEdad} >AUMENTAR EDAD</button>
                 </div>
             </div>
         </div>
